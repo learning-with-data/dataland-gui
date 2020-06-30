@@ -1,0 +1,28 @@
+.gui-container {
+    width: 100%;
+    height: calc(100% - 3em);
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.editor-column {
+    flex: 2 640px;
+}
+
+.viz-data-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border: 1px dotted black;
+    flex: 1 320px;
+}
+
+.viz-container {
+    flex: 0 0 50%;
+}
+
+.data-container {
+    flex: 1 1 20px; /* https://stackoverflow.com/a/34155795 */
+    overflow-y: auto;
+}
