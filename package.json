@@ -33,7 +33,7 @@
     "copy-webpack-plugin": "^6.0.2",
     "css-loader": "^3.6.0",
     "cypress": "^4.9.0",
-    "dataland-interpreter": "git+https://github.com/learning-with-data/dataland-interpreter.git",
+    "dataland-interpreter": "git+https://github.com/learning-with-data/dataland-interpreter.git#768efc20e2eb823586c989f224207691f7a098e1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
