@@ -67,7 +67,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: "./node_modules/scratch-blocks/media",
+          from: "./node_modules/blockly/media",
           to: "./blocks-media/",
         },
       ],

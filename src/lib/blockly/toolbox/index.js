@@ -5,9 +5,8 @@ import VisualizationToolbox from "./visualization";
 
 import DebugToolbox from "./debug";
 
-/*eslint quotes: [2, "double", "avoid-escape"]*/
 const BlocklyToolbox = "" + 
-    '<xml id="toolbox" style="display: none">' +
+    "<xml id=\"toolbox\" style=\"display: none\">" +
     ControlToolbox +
     OperatorsToolbox +
     DataToolbox +

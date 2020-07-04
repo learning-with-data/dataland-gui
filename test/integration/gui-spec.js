@@ -3,14 +3,14 @@
 describe("The GUI", () => {
   function moveBlockfromToolbox(primitive_name, x, y) {
     cy.get(`[data-id="${primitive_name}"]`)
-      .trigger("mousedown", { button: 0, force: true })
-      .trigger("mousemove", { clientX: x, clientY: y, force: true });
+      .trigger("pointerdown", { button: 0, force: true })
+      .trigger("pointermove", { clientX: x, clientY: y, force: true });
 
     cy.get(".blocklyDragging.blocklySelected").as("newBlockId");
 
     cy.get("@newBlockId")
-      .trigger("mousemove", { clientX: x, clientY: y, force: true })
-      .trigger("mouseup", { force: true });
+      .trigger("pointermove", { clientX: x, clientY: y, force: true })
+      .trigger("pointerup", { force: true });
   }
 
   beforeEach(function () {
@@ -22,7 +22,27 @@ describe("The GUI", () => {
     cy.get(".gui-container").should("exist");
   });
 
+  it("opens every block category successfully", () => {
+    // Control category
+    cy.get("#blockly-1").click();
+    cy.get("[data-id='control_wait']");
+
+    // Operators category
+    cy.get("#blockly-2").click();
+    cy.get("[data-id='operator_boolean']");
+
+    // Data category
+    cy.get("#blockly-3").click();
+    cy.get("[data-id='data_filter']");
+
+    // Visualization category
+    cy.get("#blockly-4").click();
+    cy.get("[data-id='visualization_clear']");
+
+  });
+
   it("moves the block to coding areas", function () {
+    cy.get("#blockly-1").click();
     cy.get(".blocklySvg .blocklyWorkspace")
       .contains("⯈ on project start")
       .should("not.exist");

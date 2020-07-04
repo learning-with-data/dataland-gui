@@ -3,9 +3,12 @@ import React, { Component } from "react";
 import { connect, ReactReduxContext } from "react-redux";
 import PropTypes from "prop-types";
 
+import DataLandTheme from "../../lib/blockly/theme";
 import { PROJECT_CODE_UPDATED } from "../../redux/actionsTypes";
-import getCustomBlockly from "../../lib/blocks";
-import Toolbox from "../../lib/toolbox";
+import getCustomBlockly from "../../lib/blockly/blocks";
+import Toolbox from "../../lib/blockly/toolbox";
+
+import "./style.css";
 
 class EditorComponent extends Component {
   static contextType = ReactReduxContext;
@@ -32,27 +35,18 @@ class EditorComponent extends Component {
       toolbox: Toolbox,
       toolboxPosition: "start",
       horizontalLayout: false,
-      trashcan: false,
+      trashcan: true,
       sounds: false,
       zoom: {
         controls: true,
         wheel: true,
-        startScale: 0.9,
+        startScale: 0.85,
         maxScale: 4,
         minScale: 0.25,
         scaleSpeed: 1.1,
       },
-      colours: {
-        workspace: "#758B91",
-        flyout: "#4B4F51",
-        scrollbar: "#DCDCDC",
-        scrollbarHover: "#F7F8F9",
-        insertionMarker: "#FFFFFF",
-        insertionMarkerOpacity: 0.3,
-        fieldShadow: "rgba(255, 255, 255, 0.3)",
-        dragShadowOpacity: 0.6,
-        data: { primary: "#4b4a60", secondary: "#454458", tertiary: "#353444" },
-      },
+      theme: DataLandTheme,
+      renderer: "zelos",
     });
 
     if (this.props.initialCode) {

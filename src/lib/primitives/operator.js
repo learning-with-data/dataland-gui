@@ -1,34 +1,30 @@
 class OperatorPrimTable {
   constructor() {
-    this.operator_add = (b) => b.thread.getBlockArg(b, 0) + b.thread.getBlockArg(b, 1);
-    
-    this.operator_subtract = function (b) {
-      return b.thread.getBlockArg(b, 0) - b.thread.getBlockArg(b, 1);
-    };
-    this.operator_multiply = function (b) {
-      return b.thread.getBlockArg(b, 0) * b.thread.getBlockArg(b, 1);
-    };
-    this.operator_divide = function (b) {
-      return b.thread.getBlockArg(b, 0) / b.thread.getBlockArg(b, 1);
-    };
+    this.operator_arithmetic = (b) => this.primOperatorArithmetic(b);
     this.operator_random = (b) => this.primOperatorRandom(b);
 
-    this.operator_lt = (b) =>
-      b.thread.getBlockArg(b, 0) < b.thread.getBlockArg(b, 1);
-    this.operator_equals = (b) =>
-      b.thread.getBlockArg(b, 0) === b.thread.getBlockArg(b, 1);
-    this.operator_gt = (b) =>
-      b.thread.getBlockArg(b, 0) > b.thread.getBlockArg(b, 1);
+    this.operator_compare = (b) => this.primOperatorCompare(b);
+    this.operator_boolean = (b) => this.primOperatorBoolean(b);
+  }
 
-    this.operator_join = function (b) {
-      return b.thread.getBlockArg(b, 0) + b.thread.getBlockArg(b, 1);
-    };
-    this.operator_letter_of = (b) => this.primOperatorLetterOf(b);
-    this.operator_length = function (b) {
-      return b.thread.getBlockArg(b, 0).length;
-    };
-    // this.operator_mod = (b) => this.primOperatorMod(b);
-    // this.operator_mathop = (b) => this.primOperatorMathOp(b);
+  primOperatorArithmetic(block) {
+    const a = block.thread.getBlockArg(block, 0);
+    const op = block.thread.getBlockArg(block, 1);
+    const b = block.thread.getBlockArg(block, 2);
+
+    switch (op) {
+      case "add":
+        return a + b;
+      case "subtract":
+        return a - b;
+      case "multiply":
+        return a * b;
+      case "divide":
+        return a / b;
+      default:
+        console.warn("Got unknown arithmetic op:", op);
+        return 0;
+    }
   }
 
   primOperatorRandom(block) {
@@ -36,6 +32,47 @@ class OperatorPrimTable {
     var max = Math.floor(block.thread.getBlockArg(block, 1));
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  primOperatorCompare(block) {
+    const a = block.thread.getBlockArg(block, 0);
+    const op = block.thread.getBlockArg(block, 1);
+    const b = block.thread.getBlockArg(block, 2);
+
+    switch (op) {
+      case "eq":
+        return a == b;
+      case "neq":
+        return a !== b;
+      case "gt":
+        return a > b;
+      case "lt":
+        return a < b;
+      case "gte":
+        return a >= b;
+      case "lte":
+        return a <= b;
+      default:
+        console.warn("Got unknown comparison op:", op);
+        return false;
+    }
+  }
+
+  primOperatorBoolean(block) {
+    const a = block.thread.getBlockArg(block, 0);
+    const op = block.thread.getBlockArg(block, 1);
+    const b = block.thread.getBlockArg(block, 2);
+
+    switch (op) {
+      case "and":
+        return a && b;
+      case "or":
+        return a || b;
+      default:
+        console.warn("Got unknown boolean op:", op);
+        return false;
+    }
+  }
+
 }
 
 export default OperatorPrimTable;

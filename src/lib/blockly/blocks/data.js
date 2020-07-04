@@ -1,5 +1,3 @@
-import Blockly from "scratch-blocks";
-
 function DataBlocks(store) {
   var blocks = {};
 
@@ -7,9 +5,7 @@ function DataBlocks(store) {
     // return [["Row #", "Row #"]];
     const state = store.getState();
     if (state.projectDataState.columns.length === 0) {
-      return [
-        ["Row #", "Row #"],
-      ];
+      return [["Row #", "Row #"]];
     } else {
       return state.projectDataState.columns.map((x) => [x.text, x.text]);
     }
@@ -28,10 +24,7 @@ function DataBlocks(store) {
         ],
         inputsInline: true,
         output: "String",
-        colour: Blockly.Colours.data.secondary,
-        colourSecondary: Blockly.Colours.data.secondary,
-        colourTertiary: Blockly.Colours.data.tertiary,
-        outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+        style: "data_blocks",
       });
     },
   };
@@ -42,11 +35,7 @@ function DataBlocks(store) {
         message0: "number of rows",
         inputsInline: true,
         output: "Number",
-        category: Blockly.Categories.data,
-        colour: Blockly.Colours.data.primary,
-        colourSecondary: Blockly.Colours.data.secondary,
-        colourTertiary: Blockly.Colours.data.tertiary,
-        outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+        style: "data_blocks",
       });
     },
   };
@@ -63,11 +52,7 @@ function DataBlocks(store) {
         ],
         inputsInline: true,
         output: "String",
-        category: Blockly.Categories.data,
-        colour: Blockly.Colours.data.primary,
-        colourSecondary: Blockly.Colours.data.secondary,
-        colourTertiary: Blockly.Colours.data.tertiary,
-        outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+        style: "data_blocks",
       });
     },
   };
@@ -80,10 +65,7 @@ function DataBlocks(store) {
         inputsInline: true,
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.data,
-        colour: Blockly.Colours.data.primary,
-        colourSecondary: Blockly.Colours.data.secondary,
-        colourTertiary: Blockly.Colours.data.tertiary,
+        style: "data_blocks",
       });
     },
   };
@@ -125,10 +107,7 @@ function DataBlocks(store) {
         inputsInline: true,
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.data,
-        colour: Blockly.Colours.data.primary,
-        colourSecondary: Blockly.Colours.data.secondary,
-        colourTertiary: Blockly.Colours.data.tertiary,
+        style: "data_blocks",
       });
     },
   };

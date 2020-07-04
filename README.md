@@ -5,7 +5,6 @@
 ## About
 
 This is the standalone GUI app for the DataLand project. The block-based editor is powered by
-the [scratch-blocks](https://github.com/llk/scratch-blocks) project, which is based on
 [Blockly](https://developers.google.com/blockly).
 
 ## Getting Started

@@ -1,5 +1,3 @@
-import Blockly from "scratch-blocks";
-
 function VisualizationBlocks(store) {
   var blocks = {};
 
@@ -25,10 +23,7 @@ function VisualizationBlocks(store) {
         ],
         inputsInline: true,
         output: "String",
-        colour: Blockly.Colours.pen.secondary,
-        colourSecondary: Blockly.Colours.pen.secondary,
-        colourTertiary: Blockly.Colours.pen.tertiary,
-        outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+        style: "visualization_blocks",
       });
     },
   };
@@ -46,10 +41,7 @@ function VisualizationBlocks(store) {
         inputsInline: true,
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.pen,
-        colour: Blockly.Colours.pen.primary,
-        colourSecondary: Blockly.Colours.pen.secondary,
-        colourTertiary: Blockly.Colours.pen.tertiary,
+        style: "visualization_blocks",
       });
     },
   };
@@ -67,10 +59,7 @@ function VisualizationBlocks(store) {
         inputsInline: true,
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.pen,
-        colour: Blockly.Colours.pen.primary,
-        colourSecondary: Blockly.Colours.pen.secondary,
-        colourTertiary: Blockly.Colours.pen.tertiary,
+        style: "visualization_blocks",
       });
     },
   };
@@ -92,10 +81,7 @@ function VisualizationBlocks(store) {
         inputsInline: true,
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.pen,
-        colour: Blockly.Colours.pen.primary,
-        colourSecondary: Blockly.Colours.pen.secondary,
-        colourTertiary: Blockly.Colours.pen.tertiary,
+        style: "visualization_blocks",
       });
     },
   };
@@ -106,10 +92,7 @@ function VisualizationBlocks(store) {
         message0: "clear visualization",
         previousStatement: null,
         nextStatement: null,
-        category: Blockly.Categories.pen,
-        colour: Blockly.Colours.pen.primary,
-        colourSecondary: Blockly.Colours.pen.secondary,
-        colourTertiary: Blockly.Colours.pen.tertiary,
+        style: "visualization_blocks",
       });
     },
   };

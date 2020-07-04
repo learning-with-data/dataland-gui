@@ -44,17 +44,20 @@ function loadProjectBlob(store, blob) {
   }
 
   // TODO use import { batch } from 'react-redux' ?
-  store.dispatch({
-    type: PROJECT_CODE_IMPORTED,
-    payload: parsed.code,
-  });
 
+  // The data needs to be loaded first, otherwise the
+  // dynamic menus for the column selectors get reset
   if (!isEmpty(parsed.data)) {
     store.dispatch({
       type: PROJECT_DATA_IMPORTED,
       payload: parsed.data,
     });
   }
+  
+  store.dispatch({
+    type: PROJECT_CODE_IMPORTED,
+    payload: parsed.code,
+  });
 }
 
 export { createProjectBlob, loadProjectBlob };
