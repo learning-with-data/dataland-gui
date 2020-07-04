@@ -6,6 +6,7 @@ import Papa from "papaparse";
 import PropTypes from "prop-types";
 import { parseString } from "xml2js";
 import { Interpreter } from "dataland-interpreter";
+import { VegaLite } from "react-vega";
 
 import { PROJECT_DATA_IMPORTED } from "./redux/actionsTypes";
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
@@ -51,7 +52,9 @@ class Gui extends Component {
 
     // Make sure a save is attempted when user leaves page (refreshes browser, or closes window)
     if (this.props.backend === true) {
-      window.addEventListener("beforeunload", () => this.saveCodeToBackend(false));
+      window.addEventListener("beforeunload", () =>
+        this.saveCodeToBackend(false)
+      );
     }
   }
 
@@ -86,7 +89,11 @@ class Gui extends Component {
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <canvas id="dataland-canvas" className="h-100 w-100" />
+              <VegaLite
+                spec={this.props.visualizationSpec}
+                actions={false}
+                className="h-100 w-100"
+              />
             </div>
             <div className="data-container">
               <TableViewerComponent />
@@ -222,6 +229,7 @@ Gui.propTypes = {
   codeImportTimestamp: PropTypes.number,
   codeUpdateTimestamp: PropTypes.number,
   originalDataTimestamp: PropTypes.number,
+  visualizationSpec: PropTypes.object,
 
   project_data_imported: PropTypes.func,
 };
@@ -232,6 +240,7 @@ const mapStateToProps = function (store) {
     codeImportTimestamp: store.projectCodeState.codeImportTimestamp,
     codeUpdateTimestamp: store.projectCodeState.codeUpdateTimestamp,
     originalDataTimestamp: store.projectDataState.originalDataTimestamp,
+    visualizationSpec: store.visualizationState.visualizationSpec,
   };
 };
 

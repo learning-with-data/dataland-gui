@@ -3,6 +3,8 @@ import Blockly from "scratch-blocks";
 import ControlBlocks from "./control";
 import OperatorBlocks from "./operator";
 import DataBlocks from "./data";
+import VisualizationBlocks from "./visualization";
+
 import DebugBlocks from "./debug";
 
 function getCustomBlockly(store) {
@@ -11,6 +13,7 @@ function getCustomBlockly(store) {
     ControlBlocks,
     OperatorBlocks,
     DataBlocks(store),
+    VisualizationBlocks(store),
     DebugBlocks
   );
   return Blockly;
