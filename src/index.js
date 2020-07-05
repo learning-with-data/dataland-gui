@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
-import { applyMiddleware, compose, createStore } from "redux";
+import { createStore } from "redux";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
 
 import _Gui from "./Gui";
 import reducers from "./redux/reducers";
@@ -15,13 +14,10 @@ class Gui extends Component {
 
     this.store = createStore(
       reducers,
-      compose(
-        applyMiddleware(thunk),
-        // https://stackoverflow.com/a/55881955 to make this work with Cypress
-        window.__REDUX_DEVTOOLS_EXTENSION__
-          ? window.__REDUX_DEVTOOLS_EXTENSION__()
-          : (f) => f
-      )
+      // https://stackoverflow.com/a/55881955 to make this work with Cypress
+      window.__REDUX_DEVTOOLS_EXTENSION__
+        ? window.__REDUX_DEVTOOLS_EXTENSION__()
+        : (f) => f
     );
   }
 
