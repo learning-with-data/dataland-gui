@@ -28,6 +28,42 @@ function VisualizationBlocks(store) {
     },
   };
 
+  blocks["visualization_set_title"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set visualization title to %1",
+        args0: [
+          {
+            type: "input_value",
+            name: "STRING",
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
+
+  blocks["visualization_set_legend_title"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set legend title to %1",
+        args0: [
+          {
+            type: "input_value",
+            name: "STRING",
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
+
   blocks["visualization_set_color"] = {
     init: function () {
       this.jsonInit({
@@ -46,10 +82,10 @@ function VisualizationBlocks(store) {
     },
   };
 
-  blocks["visualization_set_title"] = {
+  blocks["visualization_create_legend"] = {
     init: function () {
       this.jsonInit({
-        message0: "set visualization title to %1",
+        message0: "create legend with label %1",
         args0: [
           {
             type: "input_value",

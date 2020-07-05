@@ -1,10 +1,6 @@
 const toolbox = `
     <category name="📊 Visualization" categorystyle="visualization_category" id="visualization_category">
-    <block type="visualization_set_color" id="visualization_set_color">
-        <value name="COLOR">
-        <shadow type="colour_picker"/>
-        </value>
-    </block>
+    <block type="visualization_clear" id="visualization_clear"/>
     <block type="visualization_set_title" id="visualization_set_title">
         <value name="STRING">
         <shadow type="text">
@@ -12,6 +8,27 @@ const toolbox = `
         </shadow>
         </value>
     </block>
+    <block type="visualization_set_legend_title" id="visualization_set_legend_title">
+        <value name="STRING">
+        <shadow type="text">
+            <field name="TEXT">Legend</field>
+        </shadow>
+        </value>
+    </block>
+    <sep gap="32"></sep>
+    <block type="visualization_set_color" id="visualization_set_color">
+        <value name="COLOR">
+        <shadow type="colour_picker"/>
+        </value>
+    </block>
+    <block type="visualization_create_legend" id="visualization_create_legend">
+        <value name="STRING">
+        <shadow type="text">
+            <field name="TEXT">Label 1</field>
+        </shadow>
+        </value>
+    </block>
+    <sep gap="32"></sep>
     <block type="visualization_scatterplot" id="visualization_scatterplot">
         <value name="COLUMN1">
         <shadow type="visualization_get_menu"/>
@@ -20,7 +37,6 @@ const toolbox = `
         <shadow type="visualization_get_menu"/>
         </value>
     </block>
-    <block type="visualization_clear" id="visualization_clear"/>
     </category>
 `;
 

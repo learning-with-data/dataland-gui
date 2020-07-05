@@ -1,7 +1,6 @@
 import {
-  VISUALIZATION_DRAW_SCATTERPLOT,
-  VISUALIZATION_SET_TITLE,
-  VISUALIZATION_CLEAR,
+  VISUALIZATION_CLEAR_SPEC,
+  VISUALIZATION_UPDATE_SPEC
 } from "../actionsTypes";
 
 const initialState = {
@@ -9,16 +8,31 @@ const initialState = {
     $schema: "https://vega.github.io/schema/vega-lite/v4.json",
     width: "container",
     height: "container",
-    layer: [],
+    layer: [
+      {
+        name: "legend",
+        mark: "point",
+        encoding: {
+          color: {
+            field: "choice",
+            type: "ordinal",
+            scale: {
+              domain: [],
+              range: [],
+            },
+            legend: null,
+          },
+        },
+      },
+    ],
   },
 };
 
 function visualizationReducer(state = initialState, action) {
   switch (action.type) {
-    case VISUALIZATION_CLEAR:
-      return { ...state, visualizationSpec: action.payload };
-    case VISUALIZATION_DRAW_SCATTERPLOT:
-    case VISUALIZATION_SET_TITLE:
+    case VISUALIZATION_CLEAR_SPEC:
+      return initialState;
+    case VISUALIZATION_UPDATE_SPEC:
       return { ...state, visualizationSpec: action.payload };
     default:
       return state;

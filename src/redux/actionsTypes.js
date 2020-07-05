@@ -9,6 +9,5 @@ export const PROJECT_CODE_IMPORTED = "project_code_imported";
 export const PROJECT_CODE_UPDATED = "project_code_updated";
 
 // Visualizations
-export const VISUALIZATION_CLEAR = "visualization_clear";
-export const VISUALIZATION_DRAW_SCATTERPLOT = "visualization_draw_scatterplot";
-export const VISUALIZATION_SET_TITLE = "visualization_set_title";
+export const VISUALIZATION_CLEAR_SPEC = "visualization_clear_spec";
+export const VISUALIZATION_UPDATE_SPEC = "visualization_update_spec";
