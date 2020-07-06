@@ -1,3 +1,8 @@
 .blocklyTreeLabel {
     filter: grayscale(100%) !important;
 }
+
+.blocklyFlyoutButton {
+    fill: #566071;
+}
+

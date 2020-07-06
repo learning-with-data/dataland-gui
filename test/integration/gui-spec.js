@@ -38,7 +38,6 @@ describe("The GUI", () => {
     // Visualization category
     cy.get("#blockly-4").click();
     cy.get("[data-id='visualization_clear']");
-
   });
 
   it("moves the block to coding areas", function () {
@@ -48,5 +47,21 @@ describe("The GUI", () => {
       .should("not.exist");
     moveBlockfromToolbox("event_onprojectstart", 700, 300);
     cy.get(".blocklySvg .blocklyWorkspace").contains("⯈ on project start");
+  });
+
+  it("can create a variable", function () {
+    cy.visit("/example/example.html", {
+      onBeforeLoad(win) {
+        cy.stub(win, "prompt").returns("avariable");
+      },
+    });
+    cy.get("#blockly-5").click();
+    cy.get("[data-id='variables_set']").should("not.exist");
+    cy.get(".blocklyFlyoutButton").click();
+
+    cy.window().its("prompt").should("be.called");
+    cy.get("[data-id='variables_set']");
+    cy.get(".blocklyDraggable .blocklyText").contains("avariable");
+
   });
 });

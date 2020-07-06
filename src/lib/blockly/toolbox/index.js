@@ -11,6 +11,7 @@ const BlocklyToolbox = "" +
     OperatorsToolbox +
     DataToolbox +
     VisualizationToolbox +
+    "<category name=\"⊡ Variables\" categorystyle=\"variable_category\" custom=\"VARIABLE\"></category>" +
     DebugToolbox +
     "</xml>";
 
