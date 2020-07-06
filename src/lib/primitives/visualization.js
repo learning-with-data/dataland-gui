@@ -8,22 +8,17 @@ import {
 class VisualizationPrimTable {
   constructor(store) {
     this.store = store;
-    this.color = "#4682b4";
-    this.legend_title = "";
+    this.mark = {type: "point", color: "#4682b4"};
 
     this.visualization_set_title = (b) => this.primVisualizationSetTitle(b);
-    this.visualization_set_legend_title = (b) =>
-      (this.legend_title = b.thread.getBlockArg(b, 0));
-
-    this.visualization_set_color = (b) =>
-      (this.color = b.thread.getBlockArg(b, 0));
-    this.visualization_create_legend = (b) =>
-      this.primVisualizationCreateLegend(b);
-
-    this.visualization_scatterplot = (b) =>
-      this.primVisualizationScatterPlot(b);
-
     this.visualization_clear = () => this.primVisualizationClear();
+
+    this.visualization_set_x = (b) => this.primVisualizationSetX(b);
+    this.visualization_set_y = (b) => this.primVisualizationSetY(b);
+
+    this.visualization_set_color_as_static = (b) =>
+      (this.mark.color = b.thread.getBlockArg(b, 0));
+    this.visualization_set_color_as_var = (b) => this.primVisualizationSetColor(b);
   }
 
   primVisualizationSetTitle(block) {
@@ -37,29 +32,45 @@ class VisualizationPrimTable {
     this.store.dispatch({ type: VISUALIZATION_UPDATE_SPEC, payload: newSpec });
   }
 
-  primVisualizationCreateLegend(block) {
-    // This is a bit ugly - perhaps a sign to move to targetting vega
-    // H/t to https://stackoverflow.com/a/61180176
+  primVisualizationClear() {
+    this.store.dispatch({ type: VISUALIZATION_CLEAR_SPEC });
+  }
 
-    const label = block.thread.getBlockArg(block, 0);
+  primVisualizationSetX(block) {
+    const col = block.thread.getBlockArg(block, 0);
 
     const state = this.store.getState();
+    const data = state.projectDataState.data;
     const spec = state.visualizationState.visualizationSpec;
 
-    var legendSpec = cloneDeep(spec.layer.find((unit) => unit.name === "legend"));
+    var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
+    var newLayer = false;
 
-    if (legendSpec.encoding.color.legend === null) {
-      // legend was turned off, turn it back on
-      legendSpec.encoding.color.legend = { title: this.legend_title };
+    if (unitSpec === undefined || unitSpec.encoding.x !== undefined) {
+      unitSpec = {
+        data: { values: data },
+        mark: this.mark,
+        encoding: {},
+        name: Math.random().toString(),
+      };
+      newLayer = true;
     }
 
-    legendSpec.encoding.color.scale.domain.push(label);
-    legendSpec.encoding.color.scale.range.push(this.color);
+    unitSpec.encoding.x = {
+      field: col,
+      type: "quantitative",
+      scale: { zero: false },
+    };
 
-    const newLayerSpec = spec.layer.map((unit) => {
-      if (unit.name === "legend") return legendSpec;
-      return unit;
-    });
+    var newLayerSpec;
+    if (newLayer) {
+      newLayerSpec = spec.layer.concat(unitSpec);
+    } else {
+      newLayerSpec = spec.layer.map((unit) => {
+        if (unit.name == unitSpec.name) return unitSpec;
+        return unit;
+      });
+    }
 
     const newSpec = { ...spec, layer: newLayerSpec };
 
@@ -69,36 +80,43 @@ class VisualizationPrimTable {
     });
   }
 
-  primVisualizationScatterPlot(block) {
-    const xcol = block.thread.getBlockArg(block, 0);
-    const ycol = block.thread.getBlockArg(block, 1);
+  primVisualizationSetY(block) {
+    const col = block.thread.getBlockArg(block, 0);
 
     const state = this.store.getState();
     const data = state.projectDataState.data;
     const spec = state.visualizationState.visualizationSpec;
 
-    const generatedSpec = {
-      data: { values: data },
-      mark: {
-        type: "point",
-        color: this.color,
-        tooltip: { content: "data" },
-      },
-      encoding: {
-        x: {
-          field: xcol,
-          type: "quantitative",
-          scale: { zero: false },
-        },
-        y: {
-          field: ycol,
-          type: "quantitative",
-          scale: { zero: false },
-        },
-      },
+    var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
+    var newLayer = false;
+
+    if (unitSpec === undefined || unitSpec.encoding.y !== undefined) {
+      unitSpec = {
+        data: { values: data },
+        mark: this.mark,
+        encoding: {},
+        name: Math.random().toString(),
+      };
+      newLayer = true;
+    }
+
+    unitSpec.encoding.y = {
+      field: col,
+      type: "quantitative",
+      scale: { zero: false },
     };
 
-    const newSpec = { ...spec, layer: spec.layer.concat(generatedSpec) };
+    var newLayerSpec;
+    if (newLayer) {
+      newLayerSpec = spec.layer.concat(unitSpec);
+    } else {
+      newLayerSpec = spec.layer.map((unit) => {
+        if (unit.name == unitSpec.name) return unitSpec;
+        return unit;
+      });
+    }
+
+    const newSpec = { ...spec, layer: newLayerSpec };
 
     this.store.dispatch({
       type: VISUALIZATION_UPDATE_SPEC,
@@ -106,9 +124,49 @@ class VisualizationPrimTable {
     });
   }
 
-  primVisualizationClear() {
-    this.store.dispatch({ type: VISUALIZATION_CLEAR_SPEC });
+  primVisualizationSetColor(block) {
+    const variable = block.thread.getBlockArg(block, 0);
+
+    const state = this.store.getState();
+    const data = state.projectDataState.data;
+    const spec = state.visualizationState.visualizationSpec;
+
+    var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
+    var newLayer = false;
+
+    if (unitSpec === undefined || unitSpec.encoding.color !== undefined) {
+      unitSpec = {
+        data: { values: data },
+        mark: this.mark,
+        encoding: {},
+        name: Math.random().toString(),
+      };
+      newLayer = true;
+    }
+
+    unitSpec.encoding.color = {
+      field: variable,
+      type: "nominal", // ordinal?
+    };
+
+    var newLayerSpec;
+    if (newLayer) {
+      newLayerSpec = spec.layer.concat(unitSpec);
+    } else {
+      newLayerSpec = spec.layer.map((unit) => {
+        if (unit.name == unitSpec.name) return unitSpec;
+        return unit;
+      });
+    }
+
+    const newSpec = { ...spec, layer: newLayerSpec };
+
+    this.store.dispatch({
+      type: VISUALIZATION_UPDATE_SPEC,
+      payload: newSpec,
+    });
   }
+
 }
 
 export default VisualizationPrimTable;

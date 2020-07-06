@@ -46,17 +46,10 @@ function VisualizationBlocks(store) {
     },
   };
 
-  blocks["visualization_set_legend_title"] = {
+  blocks["visualization_clear"] = {
     init: function () {
       this.jsonInit({
-        message0: "set legend title to %1",
-        args0: [
-          {
-            type: "input_value",
-            name: "STRING",
-          },
-        ],
-        inputsInline: true,
+        message0: "clear visualization",
         previousStatement: null,
         nextStatement: null,
         style: "visualization_blocks",
@@ -64,10 +57,46 @@ function VisualizationBlocks(store) {
     },
   };
 
-  blocks["visualization_set_color"] = {
+  blocks["visualization_set_x"] = {
+    init: function() {
+      this.jsonInit({
+        message0: "set ‘x’ of plot to %1",
+        args0: [
+          {
+            type: "input_value",
+            name: "COLUMN"
+          }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    }
+  };
+
+  blocks["visualization_set_y"] = {
+    init: function() {
+      this.jsonInit({
+        message0: "set ‘y’ of plot to %1",
+        args0: [
+          {
+            type: "input_value",
+            name: "COLUMN"
+          }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    }
+  };
+
+  blocks["visualization_set_color_as_static"] = {
     init: function () {
       this.jsonInit({
-        message0: "set drawing color to %1",
+        message0: "set plotting color to %1",
         args0: [
           {
             type: "input_value",
@@ -82,50 +111,18 @@ function VisualizationBlocks(store) {
     },
   };
 
-  blocks["visualization_create_legend"] = {
+
+  blocks["visualization_set_color_as_var"] = {
     init: function () {
       this.jsonInit({
-        message0: "create legend with label %1",
+        message0: "set plotting color to %1",
         args0: [
           {
             type: "input_value",
-            name: "STRING",
+            name: "COLUMN",
           },
         ],
         inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        style: "visualization_blocks",
-      });
-    },
-  };
-
-  blocks["visualization_scatterplot"] = {
-    init: function () {
-      this.jsonInit({
-        message0: "draw scatter-plot of %1 and %2",
-        args0: [
-          {
-            type: "input_value",
-            name: "COLUMN1",
-          },
-          {
-            type: "input_value",
-            name: "COLUMN2",
-          },
-        ],
-        inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        style: "visualization_blocks",
-      });
-    },
-  };
-
-  blocks["visualization_clear"] = {
-    init: function () {
-      this.jsonInit({
-        message0: "clear visualization",
         previousStatement: null,
         nextStatement: null,
         style: "visualization_blocks",

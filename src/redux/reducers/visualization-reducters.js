@@ -8,23 +8,7 @@ const initialState = {
     $schema: "https://vega.github.io/schema/vega-lite/v4.json",
     width: "container",
     height: "container",
-    layer: [
-      {
-        name: "legend",
-        mark: "point",
-        encoding: {
-          color: {
-            field: "choice",
-            type: "ordinal",
-            scale: {
-              domain: [],
-              range: [],
-            },
-            legend: null,
-          },
-        },
-      },
-    ],
+    layer: [],
   },
 };
 
