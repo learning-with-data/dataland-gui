@@ -31,7 +31,7 @@ class EditorComponent extends Component {
       media: "/blocks-media/",
       readOnly: false,
       rtl: false,
-      scrollbars: false,
+      scrollbars: true,
       toolbox: Toolbox,
       toolboxPosition: "start",
       horizontalLayout: false,
