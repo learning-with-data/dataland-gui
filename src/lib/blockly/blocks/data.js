@@ -76,11 +76,12 @@ function DataBlocks(store) {
             type: "field_dropdown",
             name: BLOCKARG_DATA_COMPARISON_OPERATOR,
             options: [
-              ["=", "="],
-              [">", ">"],
-              ["<", "<"],
-              [">=", ">="],
-              ["<=", "<="],
+              ["=", "eq"],
+              ["≠", "neq"],
+              [">", "gt"],
+              ["<", "lt"],
+              ["≥", "gte"],
+              ["≤", "lte"],
             ],
           },
           {

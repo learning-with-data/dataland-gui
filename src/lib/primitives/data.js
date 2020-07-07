@@ -1,6 +1,7 @@
 import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
+  BLOCKARG_DATA_MATCH,
 } from "../blockly/constants";
 
 import {
@@ -53,22 +54,29 @@ class DataPrimTable {
       block,
       BLOCKARG_DATA_COMPARISON_OPERATOR
     );
-    const match = block.thread.getBlockArg(block, 1);
+    const match = block.thread.getBlockArg(block, BLOCKARG_DATA_MATCH);
 
     const state = this.store.getState();
-
+    console.log(operator, match);
     const newData = state.projectDataState.data.filter((row) => {
-      // TODO: Deal with numbers, etc.
-      if (operator == "=") {
-        return row[columnName] == match;
-      } else if (operator == ">") {
-        return row[columnName] > match;
-      } else if (operator == "<") {
-        return row[columnName] < match;
-      } else if (operator == ">=") {
-        return row[columnName] >= match;
-      } else if (operator <= "=") {
-        return row[columnName] <= match;
+      switch (operator) {
+        case "eq":
+          // TODO: This and "ne" will need to be more clever as 'match' will be a string
+          return row[columnName] == match;
+        case "neq":
+          return row[columnName] !== match;
+        case "gt":
+          return row[columnName] > Number(match);
+        case "lt":
+          return row[columnName] < Number(match);
+        case "gte":
+          return row[columnName] >= Number(match);
+        case "lte":
+          return row[columnName] <= Number(match);
+        default:
+          console.warn(
+            `Error: got unknown operator ${operator} for ${block.type}`
+          );
       }
     });
     this.dataStack.push(state.projectDataState.data);
