@@ -1,78 +1,10 @@
+import {
+  BLOCKARG_OPERATOR_A,
+  BLOCKARG_OPERATOR_B,
+  BLOCKARG_OPERATOR_OP,
+} from "../constants";
+
 var blocks = {};
-
-// blocks["operator_arithmetic"] = {
-//   init: function () {
-//     this.jsonInit();
-//   },
-// };
-blocks["operator_arithmeticops_menu"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "COLUMN",
-          options: [
-            ["+", "add"],
-            ["-", "subtract"],
-            ["*", "multiply"],
-            ["÷", "divide"],
-          ],
-        },
-      ],
-      inputsInline: true,
-      output: "String",
-      style: "operator_blocks",
-    });
-  },
-};
-
-blocks["operator_compare_menu"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "COLUMN",
-          options: [
-            ["=", "eq"],
-            ["≠", "neq"],
-            [">", "gt"],
-            ["<", "lt"],
-            ["≥", "gte"],
-            ["≤", "lte"],
-          ],
-        },
-      ],
-      inputsInline: true,
-      output: "String",
-      style: "operator_blocks",
-    });
-  },
-};
-
-blocks["operator_boolean_menu"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "COLUMN",
-          options: [
-            ["and", "and"],
-            ["or", "or"]
-          ],
-        },
-      ],
-      inputsInline: true,
-      output: "String",
-      style: "operator_blocks",
-    });
-  },
-};
 
 blocks["operator_arithmetic"] = {
   init: function () {
@@ -82,16 +14,22 @@ blocks["operator_arithmetic"] = {
       args0: [
         {
           type: "input_value",
-          name: "A",
+          name: BLOCKARG_OPERATOR_A,
           check: "Number",
         },
         {
-          type: "input_value",
-          name: "OP",
+          type: "field_dropdown",
+          name: BLOCKARG_OPERATOR_OP,
+          options: [
+            ["+", "add"],
+            ["-", "subtract"],
+            ["*", "multiply"],
+            ["÷", "divide"],
+          ],
         },
         {
           type: "input_value",
-          name: "B",
+          name: BLOCKARG_OPERATOR_B,
           check: "Number",
         },
       ],
@@ -110,12 +48,12 @@ blocks["operator_random"] = {
       args0: [
         {
           type: "input_value",
-          name: "A",
+          name: BLOCKARG_OPERATOR_A,
           check: "Number",
         },
         {
           type: "input_value",
-          name: "B",
+          name: BLOCKARG_OPERATOR_B,
           check: "Number",
         },
       ],
@@ -134,16 +72,24 @@ blocks["operator_compare"] = {
       args0: [
         {
           type: "input_value",
-          name: "A",
+          name: BLOCKARG_OPERATOR_A,
           check: "Number",
         },
         {
-          type: "input_value",
-          name: "OP",
+          type: "field_dropdown",
+          name: BLOCKARG_OPERATOR_OP,
+          options: [
+            ["=", "eq"],
+            ["≠", "neq"],
+            [">", "gt"],
+            ["<", "lt"],
+            ["≥", "gte"],
+            ["≤", "lte"],
+          ],
         },
         {
           type: "input_value",
-          name: "B",
+          name: BLOCKARG_OPERATOR_B,
           check: "Number",
         },
       ],
@@ -162,16 +108,20 @@ blocks["operator_boolean"] = {
       args0: [
         {
           type: "input_value",
-          name: "A",
+          name: BLOCKARG_OPERATOR_A,
           check: "Boolean",
         },
         {
-          type: "input_value",
-          name: "OP",
+          type: "field_dropdown",
+          name: BLOCKARG_OPERATOR_OP,
+          options: [
+            ["and", "and"],
+            ["or", "or"],
+          ],
         },
         {
           type: "input_value",
-          name: "B",
+          name: BLOCKARG_OPERATOR_B,
           check: "Boolean",
         },
       ],

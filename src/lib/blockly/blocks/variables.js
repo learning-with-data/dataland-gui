@@ -1,3 +1,5 @@
+import { BLOCKARG_VARIABLE_NAME, BLOCKARG_VARIABLE_VALUE } from "../constants";
+
 var blocks = {};
 
 blocks["variables_get"] = {
@@ -8,7 +10,7 @@ blocks["variables_get"] = {
       args0: [
         {
           type: "field_variable",
-          name: "VAR",
+          name: BLOCKARG_VARIABLE_NAME,
           variable: "%{BKY_VARIABLES_DEFAULT_NAME}",
         },
       ],
@@ -26,12 +28,12 @@ blocks["variables_set"] = {
       args0: [
         {
           type: "field_variable",
-          name: "VAR",
+          name: BLOCKARG_VARIABLE_NAME,
           variable: "%{BKY_VARIABLES_DEFAULT_NAME}",
         },
         {
           type: "input_value",
-          name: "VALUE",
+          name: BLOCKARG_VARIABLE_VALUE,
           check: ["Number", "String"],
         },
       ],

@@ -1,3 +1,9 @@
+import {
+  BLOCKARG_CONTROL_IF_CONDITION,
+  BLOCKARG_CONTROL_REPEAT_TIMES,
+  BLOCKARG_CONTROL_WAIT_DURATION,
+} from "../constants";
+
 var blocks = {};
 
 blocks["event_onprojectstart"] = {
@@ -21,7 +27,7 @@ blocks["control_repeat"] = {
       args0: [
         {
           type: "input_value",
-          name: "TIMES",
+          name: BLOCKARG_CONTROL_REPEAT_TIMES,
         },
       ],
       args1: [
@@ -47,7 +53,7 @@ blocks["control_if"] = {
       args0: [
         {
           type: "input_value",
-          name: "CONDITION",
+          name: BLOCKARG_CONTROL_IF_CONDITION,
           check: "Boolean",
         },
       ],
@@ -76,7 +82,7 @@ blocks["control_if_else"] = {
       args0: [
         {
           type: "input_value",
-          name: "CONDITION",
+          name: BLOCKARG_CONTROL_IF_CONDITION,
           check: "Boolean",
         },
       ],
@@ -108,7 +114,7 @@ blocks["control_wait"] = {
       args0: [
         {
           type: "input_value",
-          name: "DURATION",
+          name: BLOCKARG_CONTROL_WAIT_DURATION,
         },
       ],
       inputsInline: true,

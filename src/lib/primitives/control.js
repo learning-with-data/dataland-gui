@@ -1,3 +1,5 @@
+import { BLOCKARG_CONTROL_WAIT_DURATION } from "../blockly/constants";
+
 class ControlPrimTable {
   constructor() {
     this.event_onprojectstart = (b) => this.primEventOnProjectStart(b);
@@ -9,7 +11,10 @@ class ControlPrimTable {
   }
 
   primControlWait(block) {
-    var waitTime = block.thread.getBlockArg(block, 0);
+    var waitTime = block.thread.getBlockArg(
+      block,
+      BLOCKARG_CONTROL_WAIT_DURATION
+    );
     block.thread.setStateWaiting();
     setTimeout(() => {
       block.thread.setStateReady();

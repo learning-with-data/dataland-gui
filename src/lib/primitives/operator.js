@@ -1,3 +1,9 @@
+import {
+  BLOCKARG_OPERATOR_A,
+  BLOCKARG_OPERATOR_B,
+  BLOCKARG_OPERATOR_OP,
+} from "../blockly/constants";
+
 class OperatorPrimTable {
   constructor() {
     this.operator_arithmetic = (b) => this.primOperatorArithmetic(b);
@@ -8,9 +14,9 @@ class OperatorPrimTable {
   }
 
   primOperatorArithmetic(block) {
-    const a = block.thread.getBlockArg(block, 0);
-    const op = block.thread.getBlockArg(block, 1);
-    const b = block.thread.getBlockArg(block, 2);
+    const a = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A);
+    const op = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_OP);
+    const b = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B);
 
     switch (op) {
       case "add":
@@ -28,15 +34,15 @@ class OperatorPrimTable {
   }
 
   primOperatorRandom(block) {
-    var min = Math.ceil(block.thread.getBlockArg(block, 0));
-    var max = Math.floor(block.thread.getBlockArg(block, 1));
+    var min = Math.ceil(block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A));
+    var max = Math.floor(block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B));
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   primOperatorCompare(block) {
-    const a = block.thread.getBlockArg(block, 0);
-    const op = block.thread.getBlockArg(block, 1);
-    const b = block.thread.getBlockArg(block, 2);
+    const a = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A);
+    const op = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_OP);
+    const b = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B);
 
     switch (op) {
       case "eq":
@@ -58,9 +64,9 @@ class OperatorPrimTable {
   }
 
   primOperatorBoolean(block) {
-    const a = block.thread.getBlockArg(block, 0);
-    const op = block.thread.getBlockArg(block, 1);
-    const b = block.thread.getBlockArg(block, 2);
+    const a = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A);
+    const op = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_OP);
+    const b = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B);
 
     switch (op) {
       case "and":

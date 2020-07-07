@@ -1,5 +1,5 @@
 import * as Blockly from "blockly/core";
-import * as En from "blockly/msg/en";
+import En from "blockly/msg/en";
 Blockly.setLocale(En);
 
 import ControlBlocks from "./control";
@@ -52,7 +52,7 @@ const standardBlocks = {
           {
             type: "field_colour",
             name: "COLOUR",
-            colour: "#ff0000",
+            colour: "#4B9CD3",
           },
         ],
         output: "Colour",

@@ -1,3 +1,5 @@
+import { BLOCKARG_DEBUG_MESSAGE } from "../constants";
+
 var blocks = {};
 
 blocks["debug_log"] = {
@@ -7,7 +9,7 @@ blocks["debug_log"] = {
       args0: [
         {
           type: "input_value",
-          name: "STRING",
+          name: BLOCKARG_DEBUG_MESSAGE,
         },
       ],
       inputsInline: true,

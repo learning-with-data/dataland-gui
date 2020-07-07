@@ -1,3 +1,9 @@
+import {
+  BLOCKARG_VISUALIZATION_COLOR,
+  BLOCKARG_VISUALIZATION_COLUMN,
+  BLOCKARG_VISUALIZATION_TITLE,
+} from "../constants";
+
 function VisualizationBlocks(store) {
   var blocks = {};
 
@@ -10,24 +16,6 @@ function VisualizationBlocks(store) {
     }
   }
 
-  blocks["visualization_get_menu"] = {
-    init: function () {
-      this.jsonInit({
-        message0: "%1",
-        args0: [
-          {
-            type: "field_dropdown",
-            name: "COLUMN",
-            options: generate_columns,
-          },
-        ],
-        inputsInline: true,
-        output: "String",
-        style: "visualization_blocks",
-      });
-    },
-  };
-
   blocks["visualization_set_title"] = {
     init: function () {
       this.jsonInit({
@@ -35,7 +23,7 @@ function VisualizationBlocks(store) {
         args0: [
           {
             type: "input_value",
-            name: "STRING",
+            name: BLOCKARG_VISUALIZATION_TITLE,
           },
         ],
         inputsInline: true,
@@ -58,49 +46,14 @@ function VisualizationBlocks(store) {
   };
 
   blocks["visualization_set_x"] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
         message0: "set ‘x’ of plot to %1",
         args0: [
           {
-            type: "input_value",
-            name: "COLUMN"
-          }
-        ],
-        inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        style: "visualization_blocks",
-      });
-    }
-  };
-
-  blocks["visualization_set_y"] = {
-    init: function() {
-      this.jsonInit({
-        message0: "set ‘y’ of plot to %1",
-        args0: [
-          {
-            type: "input_value",
-            name: "COLUMN"
-          }
-        ],
-        inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        style: "visualization_blocks",
-      });
-    }
-  };
-
-  blocks["visualization_set_color_as_static"] = {
-    init: function () {
-      this.jsonInit({
-        message0: "set plotting color to %1",
-        args0: [
-          {
-            type: "input_value",
-            name: "COLOR",
+            type: "field_dropdown",
+            name: BLOCKARG_VISUALIZATION_COLUMN,
+            options: generate_columns,
           },
         ],
         inputsInline: true,
@@ -111,6 +64,42 @@ function VisualizationBlocks(store) {
     },
   };
 
+  blocks["visualization_set_y"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set ‘y’ of plot to %1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_VISUALIZATION_COLUMN,
+            options: generate_columns,
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
+
+  blocks["visualization_set_color_as_static"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set plotting color to %1",
+        args0: [
+          {
+            type: "input_value",
+            name: BLOCKARG_VISUALIZATION_COLOR,
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
 
   blocks["visualization_set_color_as_var"] = {
     init: function () {
@@ -118,8 +107,9 @@ function VisualizationBlocks(store) {
         message0: "set plotting color to %1",
         args0: [
           {
-            type: "input_value",
-            name: "COLUMN",
+            type: "field_dropdown",
+            name: BLOCKARG_VISUALIZATION_COLUMN,
+            options: generate_columns,
           },
         ],
         inputsInline: true,

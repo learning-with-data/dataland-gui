@@ -1,3 +1,9 @@
+import {
+  BLOCKARG_DATA_COLUMN,
+  BLOCKARG_DATA_COMPARISON_OPERATOR,
+  BLOCKARG_DATA_MATCH,
+} from "../constants";
+
 function DataBlocks(store) {
   var blocks = {};
 
@@ -10,24 +16,6 @@ function DataBlocks(store) {
       return state.projectDataState.columns.map((x) => [x.text, x.text]);
     }
   }
-
-  blocks["data_get_menu"] = {
-    init: function () {
-      this.jsonInit({
-        message0: "%1",
-        args0: [
-          {
-            type: "field_dropdown",
-            name: "COLUMN",
-            options: generate_columns,
-          },
-        ],
-        inputsInline: true,
-        output: "String",
-        style: "data_blocks",
-      });
-    },
-  };
 
   blocks["data_row_count"] = {
     init: function () {
@@ -46,8 +34,9 @@ function DataBlocks(store) {
         message0: "%1 of selected row",
         args0: [
           {
-            type: "input_value",
-            name: "COLUMN",
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_COLUMN,
+            options: generate_columns,
           },
         ],
         inputsInline: true,
@@ -79,12 +68,13 @@ function DataBlocks(store) {
         lastDummyAlign2: "RIGHT",
         args0: [
           {
-            type: "input_value",
-            name: "COLUMN",
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_COLUMN,
+            options: generate_columns,
           },
           {
             type: "field_dropdown",
-            name: "COMPARISON_OPERATOR",
+            name: BLOCKARG_DATA_COMPARISON_OPERATOR,
             options: [
               ["=", "="],
               [">", ">"],
@@ -95,7 +85,7 @@ function DataBlocks(store) {
           },
           {
             type: "input_value",
-            name: "STRING",
+            name: BLOCKARG_DATA_MATCH,
           },
         ],
         args1: [

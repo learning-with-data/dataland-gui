@@ -1,6 +1,12 @@
 import cloneDeep from "lodash/cloneDeep";
 
 import {
+  BLOCKARG_VISUALIZATION_COLOR,
+  BLOCKARG_VISUALIZATION_COLUMN,
+  BLOCKARG_VISUALIZATION_TITLE,
+} from "../blockly/constants";
+
+import {
   VISUALIZATION_CLEAR_SPEC,
   VISUALIZATION_UPDATE_SPEC,
 } from "../../redux/actionsTypes";
@@ -8,7 +14,7 @@ import {
 class VisualizationPrimTable {
   constructor(store) {
     this.store = store;
-    this.mark = {type: "point", color: "#4682b4"};
+    this.mark = { type: "point", color: "#4682b4" };
 
     this.visualization_set_title = (b) => this.primVisualizationSetTitle(b);
     this.visualization_clear = () => this.primVisualizationClear();
@@ -17,12 +23,13 @@ class VisualizationPrimTable {
     this.visualization_set_y = (b) => this.primVisualizationSetY(b);
 
     this.visualization_set_color_as_static = (b) =>
-      (this.mark.color = b.thread.getBlockArg(b, 0));
-    this.visualization_set_color_as_var = (b) => this.primVisualizationSetColor(b);
+      (this.mark.color = b.thread.getBlockArg(b, BLOCKARG_VISUALIZATION_COLOR));
+    this.visualization_set_color_as_var = (b) =>
+      this.primVisualizationSetColor(b);
   }
 
   primVisualizationSetTitle(block) {
-    const title = block.thread.getBlockArg(block, 0);
+    const title = block.thread.getBlockArg(block, BLOCKARG_VISUALIZATION_TITLE);
 
     const state = this.store.getState();
     const spec = state.visualizationState.visualizationSpec;
@@ -37,7 +44,10 @@ class VisualizationPrimTable {
   }
 
   primVisualizationSetX(block) {
-    const col = block.thread.getBlockArg(block, 0);
+    const column = block.thread.getBlockArg(
+      block,
+      BLOCKARG_VISUALIZATION_COLUMN
+    );
 
     const state = this.store.getState();
     const data = state.projectDataState.data;
@@ -57,7 +67,7 @@ class VisualizationPrimTable {
     }
 
     unitSpec.encoding.x = {
-      field: col,
+      field: column,
       type: "quantitative",
       scale: { zero: false },
     };
@@ -81,7 +91,10 @@ class VisualizationPrimTable {
   }
 
   primVisualizationSetY(block) {
-    const col = block.thread.getBlockArg(block, 0);
+    const column = block.thread.getBlockArg(
+      block,
+      BLOCKARG_VISUALIZATION_COLUMN
+    );
 
     const state = this.store.getState();
     const data = state.projectDataState.data;
@@ -101,7 +114,7 @@ class VisualizationPrimTable {
     }
 
     unitSpec.encoding.y = {
-      field: col,
+      field: column,
       type: "quantitative",
       scale: { zero: false },
     };
@@ -125,7 +138,10 @@ class VisualizationPrimTable {
   }
 
   primVisualizationSetColor(block) {
-    const variable = block.thread.getBlockArg(block, 0);
+    const column = block.thread.getBlockArg(
+      block,
+      BLOCKARG_VISUALIZATION_COLUMN
+    );
 
     const state = this.store.getState();
     const data = state.projectDataState.data;
@@ -145,7 +161,7 @@ class VisualizationPrimTable {
     }
 
     unitSpec.encoding.color = {
-      field: variable,
+      field: column,
       type: "nominal", // ordinal?
     };
 
@@ -166,7 +182,6 @@ class VisualizationPrimTable {
       payload: newSpec,
     });
   }
-
 }
 
 export default VisualizationPrimTable;
