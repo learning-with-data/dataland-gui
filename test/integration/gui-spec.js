@@ -60,8 +60,9 @@ describe("The GUI", () => {
     cy.get(".blocklyFlyoutButton").click();
 
     cy.window().its("prompt").should("be.called");
-    cy.get("[data-id='variables_set']");
+    cy.get(".blocklyDraggable .blocklyText").contains("set");
     cy.get(".blocklyDraggable .blocklyText").contains("avariable");
+    cy.get(".blocklyDraggable .blocklyText").contains("to");
 
   });
 });

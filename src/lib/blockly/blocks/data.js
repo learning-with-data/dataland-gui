@@ -85,8 +85,9 @@ function DataBlocks(store) {
             ],
           },
           {
-            type: "input_value",
+            type: "field_input",
             name: BLOCKARG_DATA_MATCH,
+            text: "10",
           },
         ],
         args1: [

@@ -22,8 +22,9 @@ function VisualizationBlocks(store) {
         message0: "set visualization title to %1",
         args0: [
           {
-            type: "input_value",
+            type: "field_input",
             name: BLOCKARG_VISUALIZATION_TITLE,
+            text: "My plot"
           },
         ],
         inputsInline: true,
