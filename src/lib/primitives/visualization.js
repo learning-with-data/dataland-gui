@@ -14,7 +14,7 @@ import {
 class VisualizationPrimTable {
   constructor(store) {
     this.store = store;
-    this.mark = { type: "point", color: "#4682b4" };
+    this.mark = { type: "point", color: "#4682b4", "tooltip": {"content": "data"} };
 
     this.visualization_set_title = (b) => this.primVisualizationSetTitle(b);
     this.visualization_clear = () => this.primVisualizationClear();
