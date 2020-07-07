@@ -39,7 +39,10 @@ function projectDataReducer(state = initialState, action) {
           classes: "data-table-column",
           title: true,
           formatter: (cell) => {
-            if (typeof cell === "object") {
+            if (cell === null) {
+              return "";
+            }
+            else if (typeof cell === "object") {
               return cell.toString();
             } else {
               return cell;
