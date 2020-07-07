@@ -2,6 +2,7 @@ import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
+  BLOCKDROPDOWN_COMPARISON
 } from "../constants";
 
 function DataBlocks(store) {
@@ -69,24 +70,17 @@ function DataBlocks(store) {
         args0: [
           {
             type: "field_dropdown",
-            name: BLOCKARG_DATA_COLUMN,
+            name: BLOCKARG_DATA_COLUMN + 0,
             options: generate_columns,
           },
           {
             type: "field_dropdown",
-            name: BLOCKARG_DATA_COMPARISON_OPERATOR,
-            options: [
-              ["=", "eq"],
-              ["≠", "neq"],
-              [">", "gt"],
-              ["<", "lt"],
-              ["≥", "gte"],
-              ["≤", "lte"],
-            ],
+            name: BLOCKARG_DATA_COMPARISON_OPERATOR + 0,
+            options: BLOCKDROPDOWN_COMPARISON,
           },
           {
             type: "field_input",
-            name: BLOCKARG_DATA_MATCH,
+            name: BLOCKARG_DATA_MATCH + 0,
             text: "10",
           },
         ],

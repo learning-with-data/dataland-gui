@@ -15,7 +15,6 @@ export const BLOCKARG_OPERATOR_A = "A";
 export const BLOCKARG_OPERATOR_B = "B";
 export const BLOCKARG_OPERATOR_OP = "OP";
 
-
 // variable blocks
 export const BLOCKARG_VARIABLE_NAME = "VAR";
 export const BLOCKARG_VARIABLE_VALUE = "VALUE";
@@ -27,3 +26,25 @@ export const BLOCKARG_VISUALIZATION_COLOR = "COLOR";
 
 // debug blocks
 export const BLOCKARG_DEBUG_MESSAGE = "MESSAGE";
+
+// Dropdown constants
+export const BLOCKDROPDOWN_ARITHMETIC_OP = [
+  ["+", "add"],
+  ["-", "subtract"],
+  ["*", "multiply"],
+  ["÷", "divide"],
+];
+
+export const BLOCKDROPDOWN_BOOLEAN = [
+  ["and", "and"],
+  ["or", "or"],
+];
+
+export const BLOCKDROPDOWN_COMPARISON = [
+  ["=", "eq"],
+  ["≠", "neq"],
+  [">", "gt"],
+  ["<", "lt"],
+  ["≥", "gte"],
+  ["≤", "lte"],
+];

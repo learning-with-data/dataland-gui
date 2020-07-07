@@ -2,6 +2,9 @@ import {
   BLOCKARG_OPERATOR_A,
   BLOCKARG_OPERATOR_B,
   BLOCKARG_OPERATOR_OP,
+  BLOCKDROPDOWN_ARITHMETIC_OP,
+  BLOCKDROPDOWN_BOOLEAN,
+  BLOCKDROPDOWN_COMPARISON,
 } from "../constants";
 
 var blocks = {};
@@ -20,12 +23,7 @@ blocks["operator_arithmetic"] = {
         {
           type: "field_dropdown",
           name: BLOCKARG_OPERATOR_OP,
-          options: [
-            ["+", "add"],
-            ["-", "subtract"],
-            ["*", "multiply"],
-            ["÷", "divide"],
-          ],
+          options: BLOCKDROPDOWN_ARITHMETIC_OP,
         },
         {
           type: "input_value",
@@ -78,14 +76,7 @@ blocks["operator_compare"] = {
         {
           type: "field_dropdown",
           name: BLOCKARG_OPERATOR_OP,
-          options: [
-            ["=", "eq"],
-            ["≠", "neq"],
-            [">", "gt"],
-            ["<", "lt"],
-            ["≥", "gte"],
-            ["≤", "lte"],
-          ],
+          options: BLOCKDROPDOWN_COMPARISON,
         },
         {
           type: "input_value",
@@ -114,10 +105,7 @@ blocks["operator_boolean"] = {
         {
           type: "field_dropdown",
           name: BLOCKARG_OPERATOR_OP,
-          options: [
-            ["and", "and"],
-            ["or", "or"],
-          ],
+          options: BLOCKDROPDOWN_BOOLEAN,
         },
         {
           type: "input_value",
