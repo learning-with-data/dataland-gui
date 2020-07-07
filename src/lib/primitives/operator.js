@@ -14,9 +14,12 @@ class OperatorPrimTable {
   }
 
   primOperatorArithmetic(block) {
-    const a = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A);
+    // TODO: This will return a NaN if one of the arguments is a number
+    // (e.g., if someone puts in a reporter with a string output in one
+    // of the slots). Figure out the best way to deal with such a situation
+    const a = Number(block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A));
     const op = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_OP);
-    const b = block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B);
+    const b = Number(block.thread.getBlockArg(block, BLOCKARG_OPERATOR_B));
 
     switch (op) {
       case "add":
