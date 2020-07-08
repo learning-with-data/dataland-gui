@@ -2,13 +2,11 @@ import React, { Component } from "react";
 
 import { connect, ReactReduxContext } from "react-redux";
 
-import Papa from "papaparse";
 import PropTypes from "prop-types";
 import { parseString } from "xml2js";
 import { Interpreter } from "dataland-interpreter";
 import { VegaLite } from "react-vega";
 
-import { PROJECT_DATA_IMPORTED } from "./redux/actionsTypes";
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
@@ -78,7 +76,6 @@ class Gui extends Component {
           <ControlComponent
             handleProjectSavePress={() => this.handleCodeSave()}
             handleProjectLoadPress={(e) => this.handleProjectFileImport(e)}
-            handleDataImportPress={(e) => this.handleDataImport(e)}
             handleStartPress={() => this.startInterpreter()}
             handleStopPress={() => this.stopInterpreter()}
           />
@@ -139,18 +136,6 @@ class Gui extends Component {
   stopInterpreter() {
     this.interpreter.stop();
     this.setState({ interpreterState: "STOPPED" });
-  }
-
-  handleDataImport(evt) {
-    const file = evt.target.files[0];
-    Papa.parse(file, {
-      dynamicTyping: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        this.props.project_data_imported(results);
-      },
-    });
   }
 
   handleCodeImport(data) {
@@ -244,9 +229,4 @@ const mapStateToProps = function (store) {
   };
 };
 
-const project_data_imported = (payload) => ({
-  type: PROJECT_DATA_IMPORTED,
-  payload: payload,
-});
-
-export default connect(mapStateToProps, { project_data_imported })(Gui);
+export default connect(mapStateToProps)(Gui);

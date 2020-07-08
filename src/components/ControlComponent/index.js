@@ -27,20 +27,6 @@ function ControlComponent(props) {
         </Button>
       </div>
       <div className="d-flex">
-        <Button
-          id="btn-import"
-          className="mr-2"
-          onClick={() => document.getElementById("importLink").click()}
-        >
-          Import data
-        </Button>
-        <input
-          type="file"
-          id="importLink"
-          style={{ display: "none" }}
-          accept=".csv"
-          onChange={props.handleDataImportPress}
-        />{" "}
         <DropdownButton
           alignRight
           variant="outline-secondary"
@@ -116,7 +102,6 @@ function ControlComponent(props) {
 ControlComponent.propTypes = {
   handleProjectSavePress: PropTypes.func,
   handleProjectLoadPress: PropTypes.func,
-  handleDataImportPress: PropTypes.func,
   handleStartPress: PropTypes.func,
   handleStopPress: PropTypes.func,
 };

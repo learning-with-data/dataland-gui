@@ -1,4 +1,5 @@
 /* eslint-disable jest/expect-expect */
+import "cypress-file-upload";
 
 describe("The GUI", () => {
   function moveBlockfromToolbox(primitive_name, x, y) {
@@ -63,6 +64,13 @@ describe("The GUI", () => {
     cy.get(".blocklyDraggable .blocklyText").contains("set");
     cy.get(".blocklyDraggable .blocklyText").contains("avariable");
     cy.get(".blocklyDraggable .blocklyText").contains("to");
+  });
+
+  it("can import a CSV file", function () {
+    const csvFixturePath = "../fixtures/sample1.csv";
+
+    cy.get("#dataImportLink").attachFile(csvFixturePath);
+    cy.get(".table-container").contains("New York City");
 
   });
 });

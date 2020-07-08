@@ -35,7 +35,7 @@ function TableViewerComponent(props) {
             <div className="p-4 data-placeholder w-100 h-100 justify-content-between align-items-center">
               <span className="muted">
                 No data loaded. You can import data by using the &ldquo;Import
-                data&rdquo; button on the top.
+                data&rdquo; button above.
               </span>
             </div>
           )}
