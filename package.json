@@ -30,6 +30,7 @@
     "babel-loader": "^8.1.0",
     "blockly": "^3.20200625.1",
     "bootstrap": "^4.5.0",
+    "bootstrap-icons": "^1.0.0-alpha5",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.2",
     "css-loader": "^3.6.0",
