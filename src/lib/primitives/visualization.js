@@ -3,6 +3,7 @@ import cloneDeep from "lodash/cloneDeep";
 import {
   BLOCKARG_VISUALIZATION_COLOR,
   BLOCKARG_VISUALIZATION_COLUMN,
+  BLOCKARG_VISUALIZATION_MARK,
   BLOCKARG_VISUALIZATION_TITLE,
 } from "../blockly/constants";
 
@@ -14,7 +15,11 @@ import {
 class VisualizationPrimTable {
   constructor(store) {
     this.store = store;
-    this.mark = { type: "point", color: "#4682b4", "tooltip": {"content": "data"} };
+    this.mark = {
+      type: "point",
+      color: "#4682b4",
+      tooltip: { content: "data" },
+    };
 
     this.visualization_set_title = (b) => this.primVisualizationSetTitle(b);
     this.visualization_clear = () => this.primVisualizationClear();
@@ -26,6 +31,9 @@ class VisualizationPrimTable {
       (this.mark.color = b.thread.getBlockArg(b, BLOCKARG_VISUALIZATION_COLOR));
     this.visualization_set_color_as_var = (b) =>
       this.primVisualizationSetColor(b);
+
+    this.visualization_set_mark = (b) =>
+      (this.mark.type = b.thread.getBlockArg(b, BLOCKARG_VISUALIZATION_MARK));
   }
 
   primVisualizationSetTitle(block) {

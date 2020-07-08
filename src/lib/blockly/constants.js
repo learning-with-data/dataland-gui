@@ -22,8 +22,9 @@ export const BLOCKARG_VARIABLE_VALUE = "VALUE";
 
 // visualization blocks
 export const BLOCKARG_VISUALIZATION_COLUMN = "COLUMN";
-export const BLOCKARG_VISUALIZATION_TITLE = "TITLE";
 export const BLOCKARG_VISUALIZATION_COLOR = "COLOR";
+export const BLOCKARG_VISUALIZATION_MARK = "MARK";
+export const BLOCKARG_VISUALIZATION_TITLE = "TITLE";
 
 // debug blocks
 export const BLOCKARG_DEBUG_MESSAGE = "MESSAGE";
@@ -48,4 +49,10 @@ export const BLOCKDROPDOWN_COMPARISON = [
   ["<", "lt"],
   ["≥", "gte"],
   ["≤", "lte"],
+];
+
+export const BLOCKDROPDOWN_MARK = [
+  ["○ point", "point"],
+  ["〰 line", "line"],
+  ["▮ bar", "bar"],
 ];

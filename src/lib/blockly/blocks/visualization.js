@@ -1,7 +1,9 @@
 import {
   BLOCKARG_VISUALIZATION_COLOR,
   BLOCKARG_VISUALIZATION_COLUMN,
+  BLOCKARG_VISUALIZATION_MARK,
   BLOCKARG_VISUALIZATION_TITLE,
+  BLOCKDROPDOWN_MARK,
 } from "../constants";
 
 function VisualizationBlocks(store) {
@@ -24,7 +26,7 @@ function VisualizationBlocks(store) {
           {
             type: "field_input",
             name: BLOCKARG_VISUALIZATION_TITLE,
-            text: "My plot"
+            text: "My plot",
           },
         ],
         inputsInline: true,
@@ -111,6 +113,25 @@ function VisualizationBlocks(store) {
             type: "field_dropdown",
             name: BLOCKARG_VISUALIZATION_COLUMN,
             options: generate_columns,
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
+
+  blocks["visualization_set_mark"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set plotting mark to %1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_VISUALIZATION_MARK,
+            options: BLOCKDROPDOWN_MARK,
           },
         ],
         inputsInline: true,

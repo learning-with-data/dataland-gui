@@ -7,6 +7,8 @@ const toolbox = `
         <block type="visualization_clear" id="visualization_clear"/>
         <block type="visualization_set_title" id="visualization_set_title"/>
         <sep gap="32"></sep>
+        <block type="visualization_set_mark" id="visualization_set_mark"/>
+        <sep gap="32"></sep>
         <block type="visualization_set_x" id="visualization_set_x"/>
         <block type="visualization_set_y" id="visualization_set_y"/>
         <sep gap="32"></sep>
