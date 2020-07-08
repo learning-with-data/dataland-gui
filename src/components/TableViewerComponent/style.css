@@ -1,33 +1,42 @@
+div.fullscreen {
+  height: 100% !important;
+}
+
 .table-container {
-    overflow-y: auto;
-    padding: 0 !important;
+  overflow-y: auto;
+  padding: 0 !important;
+}
+
+.fullscreen-enabled .table-container {
+  background: white;
+  overflow-y: auto;
 }
 
 table.data-table {
-    font-size: small;
+  font-size: small;
 }
 
 table.data-table .data-table-column {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 10ch;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 10ch;
 }
 
 tr th {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 tr .data-table-column:first-of-type {
-    width: 9ch !important;
+  width: 9ch !important;
 }
 
 tr th:first-of-type {
-    width: 9ch !important;
+  width: 9ch !important;
 }
 
 .data-placeholder {
-    background: lightgray;
+  background: lightgray;
 }

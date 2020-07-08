@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -14,6 +14,8 @@ import {
 } from "../../redux/actionsTypes";
 
 function TableViewerHeaderComponent(props) {
+  const cardHeaderRef = useRef(null);
+
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [columName, setColumnName] = useState("");
 
@@ -26,7 +28,7 @@ function TableViewerHeaderComponent(props) {
 
   return (
     <>
-      <Card.Header className="d-inline-flex justify-content-between align-items-center">
+      <Card.Header ref={cardHeaderRef} className="d-inline-flex justify-content-between align-items-center">
         <span>
           <Button
             disabled={!props.dataLoaded}
@@ -37,33 +39,37 @@ function TableViewerHeaderComponent(props) {
             Add column
           </Button>
         </span>
-      </Card.Header>
 
-      <Modal show={showAddColumn} onHide={handleAddColumnClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Add a new column to the data table</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Control
-            type="text"
-            placeholder="Column name"
-            className=" mr-sm-2"
-            onChange={(e) => setColumnName(e.target.value)}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleAddColumnSubmit}>
-            Add column
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        {props.children}
+
+        <Modal size="sm" show={showAddColumn} onHide={handleAddColumnClose} centered container={cardHeaderRef.current}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add a new column</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control
+              type="text"
+              placeholder="Column name"
+              className=" mr-sm-2"
+              onChange={(e) => setColumnName(e.target.value)}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleAddColumnSubmit}>
+              Add column
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Card.Header>
     </>
   );
 }
 
 TableViewerHeaderComponent.propTypes = {
+  children: PropTypes.object,
   dataLoaded: PropTypes.bool,
   project_data_code_added: PropTypes.func,
+  fullScreenButtonClickHandler: PropTypes.func,
 };
 
 const mapStateToProps = function (store) {
