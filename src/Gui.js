@@ -5,13 +5,14 @@ import { connect, ReactReduxContext } from "react-redux";
 import PropTypes from "prop-types";
 import { parseString } from "xml2js";
 import { Interpreter } from "dataland-interpreter";
-import { VegaLite } from "react-vega";
 
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
-import TableViewerComponent from "./components/TableViewerComponent";
 import HeaderComponent from "./components/HeaderComponent";
+import TableViewerComponent from "./components/TableViewerComponent";
+import VisualizationComponent from "./components/VisualizationComponent";
+
 import PrimTable from "./lib/primitives";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -86,11 +87,7 @@ class Gui extends Component {
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <VegaLite
-                spec={this.props.visualizationSpec}
-                actions={false}
-                className="h-100 w-100"
-              />
+              <VisualizationComponent/>
             </div>
             <div className="data-container">
               <TableViewerComponent />
@@ -214,7 +211,6 @@ Gui.propTypes = {
   codeImportTimestamp: PropTypes.number,
   codeUpdateTimestamp: PropTypes.number,
   originalDataTimestamp: PropTypes.number,
-  visualizationSpec: PropTypes.object,
 
   project_data_imported: PropTypes.func,
 };
@@ -225,7 +221,6 @@ const mapStateToProps = function (store) {
     codeImportTimestamp: store.projectCodeState.codeImportTimestamp,
     codeUpdateTimestamp: store.projectCodeState.codeUpdateTimestamp,
     originalDataTimestamp: store.projectDataState.originalDataTimestamp,
-    visualizationSpec: store.visualizationState.visualizationSpec,
   };
 };
 
