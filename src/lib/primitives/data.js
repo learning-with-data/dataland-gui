@@ -3,12 +3,14 @@ import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
+  BLOCKARG_DATA_SETVALUE,
 } from "../blockly/constants";
 
 import {
   PROJECT_DATA_UPDATED,
   PROJECT_DATA_NEXT_ROW_SELECTED,
   PROJECT_DATA_ROW_SELECTION_RESET,
+  PROJECT_DATA_ROW_UPDATED,
 } from "../../redux/actionsTypes";
 
 class DataPrimTable {
@@ -22,6 +24,7 @@ class DataPrimTable {
       this.store.dispatch({ type: PROJECT_DATA_NEXT_ROW_SELECTED });
 
     this.data_get = (b) => this.primDataGet(b);
+    this.data_set = (b) => this.primDataSet(b);
 
     this.data_filter = (b) => this.primDataFilter(b);
 
@@ -49,6 +52,29 @@ class DataPrimTable {
     return selectedRow[columnName];
   }
 
+  primDataSet(block) {
+    const state = this.store.getState();
+
+    const idx = state.projectDataState.selectRow.selected[0] - 1;
+    if (idx >= state.projectDataState.data.length) {
+      // Does nothing if selectedRow goes beyond the last one
+      // TODO: Revisit the decision (do we allow "wrapping"?)
+      return;
+    }
+    const selectedRow = state.projectDataState.data[idx];
+
+    const columnName = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN);
+    const setValue = block.thread.getBlockArg(block, BLOCKARG_DATA_SETVALUE);
+
+    const updatedRow = { ...selectedRow, [columnName]: setValue };
+
+    this.store.dispatch({
+      type: PROJECT_DATA_ROW_UPDATED,
+      payload: { idx, updatedRow },
+    });
+    // selectedRow[columnName];
+  }
+
   primDataFilter(block) {
     const totalConditions =
       block.mutation.hasAdditionalCondition == "true" ? 2 : 1;
@@ -71,7 +97,7 @@ class DataPrimTable {
 
     const newData = state.projectDataState.data.filter((row) => {
       let finalCondition;
-      
+
       for (let i = 0; i < totalConditions; i++) {
         let columnName = columnNames[i];
         let operator = operators[i];
@@ -108,14 +134,16 @@ class DataPrimTable {
         } else if (finalCondition === undefined) {
           finalCondition = condition;
         } else {
-          const boolean_op =  block.thread.getBlockArg(block, BLOCKARG_DATA_BOOLEAN + (i - 1));
+          const boolean_op = block.thread.getBlockArg(
+            block,
+            BLOCKARG_DATA_BOOLEAN + (i - 1)
+          );
           if (boolean_op === "and") {
             finalCondition = finalCondition && condition;
           } else {
             finalCondition = finalCondition || condition;
           }
         }
-
       }
 
       return finalCondition;

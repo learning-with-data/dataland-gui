@@ -1,11 +1,12 @@
 import cloneDeep from "lodash/cloneDeep";
 
 import {
+  PROJECT_DATA_COLUMN_ADDED,
   PROJECT_DATA_IMPORTED,
-  PROJECT_DATA_UPDATED,
   PROJECT_DATA_NEXT_ROW_SELECTED,
   PROJECT_DATA_ROW_SELECTION_RESET,
-  PROJECT_DATA_COLUMN_ADDED,
+  PROJECT_DATA_ROW_UPDATED,
+  PROJECT_DATA_UPDATED,
 } from "../actionsTypes";
 
 const initialState = {
@@ -87,6 +88,18 @@ function projectDataReducer(state = initialState, action) {
       return {
         ...state,
         data: updateData,
+      };
+    case PROJECT_DATA_ROW_UPDATED:
+      var dataWithNewRow = state.data.map((x, i) => {
+        if (i === action.payload.idx) {
+          return action.payload.updatedRow;
+        } else {
+          return x;
+        }
+      });
+      return {
+        ...state,
+        data: dataWithNewRow
       };
     case PROJECT_DATA_NEXT_ROW_SELECTED:
       return {

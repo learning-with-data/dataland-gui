@@ -10,6 +10,7 @@ export const BLOCKARG_DATA_BOOLEAN = "BOOLEAN";
 export const BLOCKARG_DATA_COLUMN = "COLUMN";
 export const BLOCKARG_DATA_COMPARISON_OPERATOR = "COMPARISON_OPERATOR";
 export const BLOCKARG_DATA_MATCH = "MATCH";
+export const BLOCKARG_DATA_SETVALUE = "SETVALUE";
 
 // operator blocks
 export const BLOCKARG_OPERATOR_A = "A";

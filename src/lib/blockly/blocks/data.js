@@ -5,6 +5,7 @@ import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
+  BLOCKARG_DATA_SETVALUE,
   BLOCKDROPDOWN_BOOLEAN,
   BLOCKDROPDOWN_COMPARISON,
 } from "../constants";
@@ -72,6 +73,30 @@ function DataBlocks(store) {
       });
     },
   };
+
+  blocks["data_set"] = {
+    init: function() {
+      this.jsonInit({
+        message0: "set %1 of selected row to %2",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_COLUMN,
+            options: generate_columns,
+          },
+          {
+            name: BLOCKARG_DATA_SETVALUE,
+            type: "field_input",
+            text: "Value"
+          }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "data_blocks",
+      });
+    },
+  },
 
   blocks["data_select_next"] = {
     init: function () {
