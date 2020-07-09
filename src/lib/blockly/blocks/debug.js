@@ -8,9 +8,8 @@ blocks["debug_log"] = {
       message0: "log %1 to console",
       args0: [
         {
-          type: "field_input",
+          type: "input_value",
           name: BLOCKARG_DEBUG_MESSAGE,
-          text: "Hello DataLand!"
         },
       ],
       inputsInline: true,

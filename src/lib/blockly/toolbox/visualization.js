@@ -1,11 +1,18 @@
 import {
   BLOCKARG_VISUALIZATION_COLOR,
+  BLOCKARG_VISUALIZATION_TITLE,
 } from "../constants";
 
 const toolbox = `
     <category name="📊 Visualization" categorystyle="visualization_category" id="visualization_category">
         <block type="visualization_clear" id="visualization_clear"/>
-        <block type="visualization_set_title" id="visualization_set_title"/>
+        <block type="visualization_set_title" id="visualization_set_title">
+            <value name="${BLOCKARG_VISUALIZATION_TITLE}">
+            <shadow type="text">
+                <field name="TEXT">My visualization</field>
+            </shadow>
+            </value>
+        </block>
         <sep gap="32"></sep>
         <block type="visualization_set_mark" id="visualization_set_mark"/>
         <sep gap="32"></sep>

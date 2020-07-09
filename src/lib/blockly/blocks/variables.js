@@ -32,9 +32,9 @@ blocks["variables_set"] = {
           variable: "%{BKY_VARIABLES_DEFAULT_NAME}",
         },
         {
-          type: "field_input",
+          type: "input_value",
           name: BLOCKARG_VARIABLE_VALUE,
-          text: "42"
+          check: ["Number", "String"],
         },
       ],
       inputsInline: true,

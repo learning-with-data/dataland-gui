@@ -10,7 +10,6 @@ import {
   BLOCKDROPDOWN_COMPARISON,
 } from "../constants";
 
-
 const ADD_ICON =
   "data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMWVtIiBoZWlnaHQ9IjF" +
   "lbSIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjRjVGNUY1IiB4bWxucz0iaHR0cDovL3d3dy" +
@@ -68,14 +67,14 @@ function DataBlocks(store) {
           },
         ],
         inputsInline: true,
-        output: "String",
+        output: null,
         style: "data_blocks",
       });
     },
   };
 
   blocks["data_set"] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
         message0: "set %1 of selected row to %2",
         args0: [
@@ -85,10 +84,9 @@ function DataBlocks(store) {
             options: generate_columns,
           },
           {
+            type: "input_value",
             name: BLOCKARG_DATA_SETVALUE,
-            type: "field_input",
-            text: "Value"
-          }
+          },
         ],
         inputsInline: true,
         previousStatement: null,
@@ -96,7 +94,7 @@ function DataBlocks(store) {
         style: "data_blocks",
       });
     },
-  },
+  };
 
   blocks["data_select_next"] = {
     init: function () {
@@ -115,7 +113,7 @@ function DataBlocks(store) {
     init: function () {
       this.jsonInit({
         id: "data_filter",
-        message0: "with filter %1 %2 %3",
+        message0: "with filter %1 %2 %3 %4",
         message1: "%1", // Statement
         lastDummyAlign2: "RIGHT",
         args0: [
@@ -130,9 +128,14 @@ function DataBlocks(store) {
             options: BLOCKDROPDOWN_COMPARISON,
           },
           {
-            type: "field_input",
+            type: "input_value",
             name: BLOCKARG_DATA_MATCH + 0,
-            text: "condition 1",
+          },
+          {
+            // This is needed for the mutator
+            // to attach fields later on
+            type: "input_dummy",
+            name: "DUMMY" + 0,
           },
         ],
         args1: [
@@ -180,8 +183,9 @@ function DataBlocks(store) {
     },
 
     addCondition: function () {
-      const inputRow1 = this.inputList[0];
-      inputRow1
+      // First, add a bunch of fields
+      const dummyInput0 = this.getInput("DUMMY" + 0);
+      dummyInput0
         .appendField(
           new Blockly.FieldDropdown(BLOCKDROPDOWN_BOOLEAN),
           BLOCKARG_DATA_BOOLEAN + 0
@@ -193,35 +197,75 @@ function DataBlocks(store) {
         .appendField(
           new Blockly.FieldDropdown(BLOCKDROPDOWN_COMPARISON),
           BLOCKARG_DATA_COMPARISON_OPERATOR + 1
-        )
-        .appendField(
-          new Blockly.FieldTextInput("condition 2"),
-          BLOCKARG_DATA_MATCH + 1
-        )
-        .appendField(
-          new Blockly.FieldImage(
-            REMOVE_ICON,
-            ICON_SIZE,
-            ICON_SIZE,
-            "-",
-            onMinusClicked
-          ),
-          "REMOVE"
-        )
-        .removeField("ADD");
+        );
+
+      // Add the value input for the match string, and move it
+      const valueInput = this.appendValueInput(BLOCKARG_DATA_MATCH + 1);
+      valueInput.setCheck(null);
+      valueInput.connection.setShadowDom(null);
+      this.moveInputBefore(BLOCKARG_DATA_MATCH + 1, "SUBSTACK");
+
+      // Add another dummy input for attaching the minus icon,
+      // and move it
+      const dummyInput1 = this.appendDummyInput("DUMMY" + 1);
+      this.moveInputBefore("DUMMY" + 1, "SUBSTACK");
+
+      dummyInput1.appendField(
+        new Blockly.FieldImage(
+          REMOVE_ICON,
+          ICON_SIZE,
+          ICON_SIZE,
+          "-",
+          onMinusClicked
+        ),
+        "REMOVE"
+      );
+
+      // Get rid of the plus icon
+      dummyInput0.removeField("ADD");
+
+      // Add a shadow block in the match string input
+      //
+      // FIXME: A standalone shadow block seems to be created
+      // in the workspace when dragging this block, which, if saved,
+      // seems to cause issues while re-loading. The if statement
+      // below is a work-around, but there might be a more sensible
+      // solution to address this issue.
+      if (!this.workspace.isDragging()) {
+        const shadowBlock = this.workspace.newBlock("text");
+        shadowBlock.setShadow(true);
+        // https://groups.google.com/forum/#!topic/blockly/krWiGqYNf_s
+        shadowBlock.initSvg();
+        shadowBlock.render();
+        shadowBlock.getField("TEXT").setValue("condition 2");
+        valueInput.connection.connect(shadowBlock.outputConnection);
+      }
+
       this.hasAdditionalCondition = true;
+
+      // The new fields seem to be un-styled otherwise
+      this.setStyle("data_blocks");
     },
 
     removeCondition: function () {
-      const inputRow1 = this.inputList[0];
+      // First, remove the minus icon, and its dummy input
+      this.removeInput("DUMMY" + 1);
 
-      inputRow1.removeField("REMOVE");
-      inputRow1.removeField(BLOCKARG_DATA_MATCH + 1);
-      inputRow1.removeField(BLOCKARG_DATA_COMPARISON_OPERATOR + 1);
-      inputRow1.removeField(BLOCKARG_DATA_COLUMN + 1);
-      inputRow1.removeField(BLOCKARG_DATA_BOOLEAN + 0);
+      // Remove the second match string value input
+      // const matchInput1 = this.getInput(BLOCKARG_DATA_MATCH + 1);
+      // if (matchInput1.connection.isConnected() === true) {
+      //   matchInput1.connection.disconnect();
+      // }
+      this.removeInput(BLOCKARG_DATA_MATCH + 1);
 
-      inputRow1.appendField(
+      // Remove all the other added fields
+      const dummyInput0 = this.getInput("DUMMY" + 0);
+      dummyInput0.removeField(BLOCKARG_DATA_COMPARISON_OPERATOR + 1);
+      dummyInput0.removeField(BLOCKARG_DATA_COLUMN + 1);
+      dummyInput0.removeField(BLOCKARG_DATA_BOOLEAN + 0);
+
+      // Add back the plus icon
+      dummyInput0.appendField(
         new Blockly.FieldImage(
           ADD_ICON,
           ICON_SIZE,
@@ -237,8 +281,8 @@ function DataBlocks(store) {
   };
 
   const dataFilterHelper = function () {
-    const inputRow1 = this.inputList[0];
-    inputRow1.appendField(
+    const dummyInput0 = this.getInput("DUMMY" + 0);
+    dummyInput0.appendField(
       new Blockly.FieldImage(
         ADD_ICON,
         ICON_SIZE,
