@@ -14,7 +14,7 @@ class OperatorPrimTable {
   }
 
   primOperatorArithmetic(block) {
-    // TODO: This will return a NaN if one of the arguments is a number
+    // TODO: This will return a NaN if one of the arguments is not a number
     // (e.g., if someone puts in a reporter with a string output in one
     // of the slots). Figure out the best way to deal with such a situation
     const a = Number(block.thread.getBlockArg(block, BLOCKARG_OPERATOR_A));
@@ -53,13 +53,13 @@ class OperatorPrimTable {
       case "neq":
         return a !== b;
       case "gt":
-        return a > b;
+        return Number(a) > Number(b);
       case "lt":
-        return a < b;
+        return Number(a) < Number(b);
       case "gte":
-        return a >= b;
+        return Number(a) >= Number(b);
       case "lte":
-        return a <= b;
+        return Number(a) <= Number(b);
       default:
         console.warn("Got unknown comparison op:", op);
         return false;

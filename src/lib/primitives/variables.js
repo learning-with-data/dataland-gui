@@ -15,7 +15,7 @@ class VariablesPrimTable {
     const variableName = block.thread.getBlockArg(block, BLOCKARG_VARIABLE_NAME);
     var variableValue = block.thread.getBlockArg(block, BLOCKARG_VARIABLE_VALUE);
 
-    if (!Number.isNaN(variableValue)) variableValue = Number(variableValue);
+    if (!isNaN(variableValue)) variableValue = Number(variableValue);
 
     this.varTable[variableName] = variableValue;
   }
