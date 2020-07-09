@@ -24,6 +24,7 @@ const initialState = {
     bgColor: "#FF8C1A",
     hideSelectColumn: true,
     selected: [1],
+    classes: "selection-row",
   },
 };
 
@@ -100,7 +101,7 @@ function projectDataReducer(state = initialState, action) {
       });
       return {
         ...state,
-        data: dataWithNewRow
+        data: dataWithNewRow,
       };
     case PROJECT_DATA_NEXT_ROW_SELECTED:
       return {
