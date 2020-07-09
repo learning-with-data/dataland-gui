@@ -4,6 +4,7 @@ import {
   PROJECT_DATA_COLUMN_ADDED,
   PROJECT_DATA_IMPORTED,
   PROJECT_DATA_NEXT_ROW_SELECTED,
+  PROJECT_DATA_NEW_ROW_SELECTED,
   PROJECT_DATA_ROW_SELECTION_RESET,
   PROJECT_DATA_ROW_UPDATED,
   PROJECT_DATA_UPDATED,
@@ -107,6 +108,14 @@ function projectDataReducer(state = initialState, action) {
         selectRow: {
           ...state.selectRow,
           selected: [state.selectRow.selected[0] + 1],
+        },
+      };
+    case PROJECT_DATA_NEW_ROW_SELECTED:
+      return {
+        ...state,
+        selectRow: {
+          ...state.selectRow,
+          selected: [action.payload],
         },
       };
     case PROJECT_DATA_ROW_SELECTION_RESET:

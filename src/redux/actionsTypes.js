@@ -2,6 +2,7 @@
 export const PROJECT_DATA_COLUMN_ADDED= "project_data_column_added";
 export const PROJECT_DATA_IMPORTED = "project_data_imported";
 export const PROJECT_DATA_NEXT_ROW_SELECTED = "project_data_next_row_selected";
+export const PROJECT_DATA_NEW_ROW_SELECTED = "project_data_new_row_selected";
 export const PROJECT_DATA_ROW_SELECTION_RESET = "project_data_row_selection_reset";
 export const PROJECT_DATA_ROW_UPDATED = "project_data_row_updated";
 export const PROJECT_DATA_UPDATED = "project_data_updated";

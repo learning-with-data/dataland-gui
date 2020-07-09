@@ -5,6 +5,7 @@ import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
+  BLOCKARG_DATA_ROWNUM,
   BLOCKARG_DATA_SETVALUE,
   BLOCKDROPDOWN_BOOLEAN,
   BLOCKDROPDOWN_COMPARISON,
@@ -107,6 +108,25 @@ function DataBlocks(store) {
         style: "data_blocks",
       });
     },
+  };
+
+  blocks["data_select"] = {
+    init: function() {
+      this.jsonInit({
+        message0: "select row # %1",
+        args0: [
+          {
+            type: "input_value",
+            name: BLOCKARG_DATA_ROWNUM,
+            check: "Number",
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "data_blocks",
+      });
+    }
   };
 
   blocks["data_filter"] = {

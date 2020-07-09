@@ -3,12 +3,14 @@ import {
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
+  BLOCKARG_DATA_ROWNUM,
   BLOCKARG_DATA_SETVALUE,
 } from "../blockly/constants";
 
 import {
   PROJECT_DATA_UPDATED,
   PROJECT_DATA_NEXT_ROW_SELECTED,
+  PROJECT_DATA_NEW_ROW_SELECTED,
   PROJECT_DATA_ROW_SELECTION_RESET,
   PROJECT_DATA_ROW_UPDATED,
 } from "../../redux/actionsTypes";
@@ -22,6 +24,11 @@ class DataPrimTable {
 
     this.data_select_next = () =>
       this.store.dispatch({ type: PROJECT_DATA_NEXT_ROW_SELECTED });
+    this.data_select = (b) =>
+      this.store.dispatch({
+        type: PROJECT_DATA_NEW_ROW_SELECTED,
+        payload: Number(b.thread.getBlockArg(b, BLOCKARG_DATA_ROWNUM)),
+      });
 
     this.data_get = (b) => this.primDataGet(b);
     this.data_set = (b) => this.primDataSet(b);
