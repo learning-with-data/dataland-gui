@@ -30,6 +30,11 @@ class Gui extends Component {
       backendSaveRequestTime: 0,
     };
 
+    this.editorWorkspace = null;
+    this.setEditorWorkspaceRef = (editor) => {
+      if (editor) this.editorWorkspace = editor.workspace;
+    };
+
     this.interpreter = null;
     this.saveIntervalId = null;
 
@@ -83,11 +88,14 @@ class Gui extends Component {
         </HeaderComponent>
         <div className={`gui-container ${this.state.busy ? "busy" : ""}`}>
           <div className="editor-column">
-            <EditorComponent key={this.props.codeImportTimestamp} />
+            <EditorComponent
+              key={this.props.codeImportTimestamp}
+              ref={this.setEditorWorkspaceRef}
+            />
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <VisualizationComponent/>
+              <VisualizationComponent />
             </div>
             <div className="data-container">
               <TableViewerComponent />
@@ -117,14 +125,17 @@ class Gui extends Component {
     this.interpreter = new Interpreter(
       parsedCode.xml,
       PrimTable(this.context.store),
-      () => this.setState({ interpreterState: "STOPPED", busy: false })
+      () => {
+        this.setState({ interpreterState: "STOPPED", busy: false });
+        this.editorWorkspace.highlightBlock(null);
+      }
     );
-    // this.interpreter.on("block-activated", (blockId) => {
-    //   this.setState({ activeBlock: blockId });
-    // });
-    // this.interpreter.on("block-deactivated", (blockId) => {
-    //   this.setState({ inactiveBlock: blockId });
-    // });
+    this.interpreter.on("block-activated", (blockId) => {
+      this.editorWorkspace.highlightBlock(blockId, true);
+    });
+    this.interpreter.on("block-deactivated", (blockId) => {
+      this.editorWorkspace.highlightBlock(blockId, false);
+    });
 
     this.interpreter.start("project-started");
     this.setState({ interpreterState: "RUNNING" });

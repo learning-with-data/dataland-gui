@@ -94,6 +94,6 @@ const project_code_updated = (payload) => ({
   payload: payload,
 });
 
-export default connect(mapStateToProps, { project_code_updated })(
-  EditorComponent
-);
+export default connect(mapStateToProps, { project_code_updated }, null, {
+  forwardRef: true,
+})(EditorComponent);
