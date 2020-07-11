@@ -1,7 +1,6 @@
 import React from "react";
 
 import Form from "react-bootstrap/Form";
-
 import PropTypes from "prop-types";
 
 import SaveStatusComponent from "../SaveStatusComponent";
@@ -13,20 +12,12 @@ function HeaderComponent(props) {
     <header className="gui-header d-flex justify-content-between align-items-center">
       <div className="title ml-2 d-flex justify-content-between align-items-center">
         <Form.Control
-          defaultValue={props.projectTitle}
+          id="title-input"
+          defaultValue={props.initialProjectTitle}
           className="mr-2"
-          onBlur={(e) =>
-            props.backend
-              ? props.backendMetaDataSaveHandler({ title: e.target.value })
-              : {}
-          }
+          onBlur={(e) => props.onProjectTitleChange(e.target.value)}
         />{" "}
-        {props.backend && (
-          <SaveStatusComponent
-            lastSaveTimestamp={props.lastSaveTimestamp}
-            lastSaveRequestTimeStamp={props.lastSaveRequestTimeStamp}
-          />
-        )}
+        <SaveStatusComponent />
       </div>
       {props.children}
     </header>
@@ -34,12 +25,9 @@ function HeaderComponent(props) {
 }
 
 HeaderComponent.propTypes = {
-  backend: PropTypes.bool.isRequired,
-  backendMetaDataSaveHandler: PropTypes.func,
+  onProjectTitleChange: PropTypes.func,
   children: PropTypes.element,
-  projectTitle: PropTypes.string.isRequired,
-  lastSaveTimestamp: PropTypes.number,
-  lastSaveRequestTimeStamp: PropTypes.number,
+  initialProjectTitle: PropTypes.string.isRequired,
 };
 
 export default HeaderComponent;

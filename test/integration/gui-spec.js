@@ -71,6 +71,44 @@ describe("The GUI", () => {
 
     cy.get("#dataImportLink").attachFile(csvFixturePath);
     cy.get(".table-container").contains("New York City");
+  });
+
+  // Commented out till this is resolved: https://github.com/cypress-io/cypress/issues/949
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // it("enables downloading projects with the correct file name", function() {
+  //   var projectTitle = "Test project";
+  //   cy.get("#title-input").clear().type(projectTitle).blur();
+
+  //   cy.get("#file-dropdown").click();
+  //   cy.get("#download-menuitem").click();
+  //   cy.get("a#download-link").should("have.attr", "download", projectTitle + ".dbp");
+  // });
+
+  it("can load and run a project file", function () {
+    const projectFixturePath = "../fixtures/sample1.dbp";
+
+    cy.visit("/example/example.html", {
+      onBeforeLoad: (win) => {
+        cy.spy(win.console, "log").as("consoleLog");
+      },
+    });
+
+    cy.get("#file-dropdown").click();
+    cy.get("#loadLink").attachFile({
+      filePath: projectFixturePath,
+      encoding: "binary",
+    });
+
+    cy.get(".table-container").contains("New York City");
+    cy.get("[data-id='ebp=R2VnG{6;ts}ql6jj']");
+
+    cy.spy(window.console, "log").as("consoleLog");
+    cy.get("#btn-start").click();
+    cy.log("@consoleLog");
+    cy.get("@consoleLog").should("be.calledThrice");
+    cy.get("@consoleLog").should("be.calledWith", "Los Angeles");
+    cy.get("@consoleLog").should("be.calledWith", "New York City");
+    cy.get("@consoleLog").should("be.calledWith", "Paris");
 
   });
 });

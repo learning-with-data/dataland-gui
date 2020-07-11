@@ -34,7 +34,10 @@ function ControlComponent(props) {
           className="mr-2"
           title="File"
         >
-          <Dropdown.Item onClick={props.handleProjectSavePress}>
+          <Dropdown.Item
+            onClick={props.handleProjectSavePress}
+            id="download-menuitem"
+          >
             <svg
               title="download icon"
               width="1em"
@@ -61,6 +64,7 @@ function ControlComponent(props) {
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => document.getElementById("loadLink").click()}
+            id="upload-menuitem"
           >
             <svg
               title="upload icon"

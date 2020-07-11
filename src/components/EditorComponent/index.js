@@ -4,51 +4,47 @@ import { connect, ReactReduxContext } from "react-redux";
 import PropTypes from "prop-types";
 
 import DataLandTheme from "../../lib/blockly/theme";
-import { PROJECT_CODE_UPDATED } from "../../redux/actionsTypes";
+import { GUI_ERROR_OCCURRED } from "../../redux/actionsTypes";
 import getCustomBlockly from "../../lib/blockly/blocks";
 import Toolbox from "../../lib/blockly/toolbox";
 
 import "./style.css";
+
+const blocklyOptions = {
+  comments: true,
+  disable: false,
+  collapse: false,
+  media: "/blocks-media/",
+  readOnly: false,
+  rtl: false,
+  scrollbars: true,
+  toolbox: Toolbox,
+  toolboxPosition: "start",
+  horizontalLayout: false,
+  trashcan: true,
+  sounds: false,
+  zoom: {
+    controls: true,
+    wheel: true,
+    startScale: 0.85,
+    maxScale: 4,
+    minScale: 0.25,
+    scaleSpeed: 1.1,
+  },
+  theme: DataLandTheme,
+  renderer: "zelos",
+};
 
 class EditorComponent extends Component {
   static contextType = ReactReduxContext;
 
   constructor(props, context) {
     super(props, context);
-
-    this._editorDiv = (
-      <div id="editorContainer" style={{ width: "100%", height: "100%" }}></div>
-    );
-
     this.Blockly = getCustomBlockly(this.context.store);
   }
 
   componentDidMount() {
-    this.workspace = this.Blockly.inject("editorContainer", {
-      comments: true,
-      disable: false,
-      collapse: false,
-      media: "/blocks-media/",
-      readOnly: false,
-      rtl: false,
-      scrollbars: true,
-      toolbox: Toolbox,
-      toolboxPosition: "start",
-      horizontalLayout: false,
-      trashcan: true,
-      sounds: false,
-      zoom: {
-        controls: true,
-        wheel: true,
-        startScale: 0.85,
-        maxScale: 4,
-        minScale: 0.25,
-        scaleSpeed: 1.1,
-      },
-      theme: DataLandTheme,
-      renderer: "zelos",
-    });
-
+    this.workspace = this.Blockly.inject("editorContainer", blocklyOptions);
     if (this.props.initialCode) {
       try {
         this.Blockly.Xml.clearWorkspaceAndLoadFromXml(
@@ -56,7 +52,10 @@ class EditorComponent extends Component {
           this.workspace
         );
       } catch (err) {
-        console.log(err);
+        this.props.error_occurred(
+          err,
+          "Failed to load project into the editor."
+        );
       }
     }
 
@@ -64,36 +63,29 @@ class EditorComponent extends Component {
       var xmlCode = this.Blockly.Xml.domToText(
         this.Blockly.Xml.workspaceToDom(this.workspace)
       );
-      this.props.project_code_updated(xmlCode);
+      this.props.onCodeUpdated(xmlCode);
     });
   }
 
   render() {
-    return this._editorDiv;
-  }
-
-  shouldComponentUpdate() {
-    // See discussion in https://stackoverflow.com/a/49803151
-    return false;
+    return (
+      <div id="editorContainer" style={{ width: "100%", height: "100%" }}></div>
+    );
   }
 }
 
 EditorComponent.propTypes = {
   initialCode: PropTypes.string,
-  project_code_updated: PropTypes.func,
+  onCodeUpdated: PropTypes.func,
+
+  error_occurred: PropTypes.func,
 };
 
-const mapStateToProps = function (store) {
-  return {
-    initialCode: store.projectCodeState.code,
-  };
-};
-
-const project_code_updated = (payload) => ({
-  type: PROJECT_CODE_UPDATED,
-  payload: payload,
+const error_occurred = (error, message) => ({
+  type: GUI_ERROR_OCCURRED,
+  payload: { error, message },
 });
 
-export default connect(mapStateToProps, { project_code_updated }, null, {
+export default connect(null, { error_occurred }, null, {
   forwardRef: true,
 })(EditorComponent);

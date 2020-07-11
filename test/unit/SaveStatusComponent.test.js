@@ -5,7 +5,10 @@ import createUsualStore from "../utils/StoreUtil";
 import shallowWrapper from "../utils/shallowWrapper";
 import { mount } from "enzyme";
 
-import { PROJECT_CODE_UPDATED } from "../../src/redux/actionsTypes";
+import {
+  GUI_PROJECT_MODIFIED,
+  GUI_PROJECT_SAVED,
+} from "../../src/redux/actionsTypes";
 
 import SaveStatusComponent from "../../src/components/SaveStatusComponent";
 
@@ -37,23 +40,19 @@ describe("SaveStatusComponent", () => {
     // See discussion at https://github.com/enzymejs/enzyme/issues/2153#issuecomment-499219572
 
     const store = createUsualStore();
-    const wrap = mount(
-      <SaveStatusComponent
-        store={store}
-        lastSaveTimestamp={0}
-        lastSaveRequestTimeStamp={0}
-      />
-    );
+    const wrap = mount(<SaveStatusComponent store={store} />);
 
     expect(wrap.find("svg[fill='darkseagreen']").length).toBe(1);
 
     await act(async () => {
-      store.dispatch({ type: PROJECT_CODE_UPDATED });
+      store.dispatch({ type: GUI_PROJECT_MODIFIED });
     });
     wrap.update();
     expect(wrap.find("svg[fill='darkorange']").length).toBe(1);
 
-    wrap.setProps({ lastSaveTimestamp: Date.now() });
+    await act(async () => {
+      store.dispatch({ type: GUI_PROJECT_SAVED });
+    });
     wrap.update();
     expect(wrap.find("svg[fill='darkseagreen']").length).toBe(1);
   });
@@ -63,8 +62,6 @@ describe("SaveStatusComponent", () => {
     const wrap = mount(
       <SaveStatusComponent
         store={store}
-        lastSaveTimestamp={0}
-        lastSaveRequestTimeStamp={0}
       />
     );
 
@@ -83,8 +80,6 @@ describe("SaveStatusComponent", () => {
     const wrap = mount(
       <SaveStatusComponent
         store={store}
-        lastSaveTimestamp={0}
-        lastSaveRequestTimeStamp={0}
       />
     );
 
@@ -92,14 +87,22 @@ describe("SaveStatusComponent", () => {
       wrap.find("svg").simulate("mouseover");
     });
     wrap.update();
-    expect(wrap.find(".popover-body").text()).toMatch(/^All changes have been saved/);
+    expect(wrap.find(".popover-body").text()).toMatch(
+      /^All changes have been saved/
+    );
     await act(async () => {
-      store.dispatch({ type: PROJECT_CODE_UPDATED });
+      store.dispatch({ type: GUI_PROJECT_MODIFIED });
     });
     wrap.update();
-    expect(wrap.find(".popover-body").text()).toMatch(/^There are unsaved changes/);
-    wrap.setProps({ lastSaveTimestamp: Date.now() });
+    expect(wrap.find(".popover-body").text()).toMatch(
+      /^There are unsaved changes/
+    );
+    await act(async () => {
+      store.dispatch({ type: GUI_PROJECT_SAVED });
+    });
     wrap.update();
-    expect(wrap.find(".popover-body").text()).toMatch(/^All changes have been saved/);
+    expect(wrap.find(".popover-body").text()).toMatch(
+      /^All changes have been saved/
+    );
   });
 });
