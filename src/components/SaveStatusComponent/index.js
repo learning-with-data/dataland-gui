@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 
-import Moment from "react-moment";
+import dayjs from "dayjs";
+import LocalizedFormat from "dayjs/plugin/localizedFormat";
 
 import "./style.css";
 
@@ -14,6 +15,8 @@ function SaveStatusComponent(props) {
   if (props.savedTimeStamp === null && props.needsSave === false) {
     return <div className="savestatus-container text-center"> </div>;
   }
+
+  dayjs.extend(LocalizedFormat);
 
   const popover = (
     <Popover id="popover-basic">
@@ -25,11 +28,8 @@ function SaveStatusComponent(props) {
         <br />
         <span className="small text-muted">
           Last saved: {props.savedTimeStamp === null && "Never"}
-          {props.savedTimeStamp !== null && (
-            <Moment format="LTS" interval={0}>
-              {props.savedTimeStamp}
-            </Moment>
-          )}
+          {props.savedTimeStamp !== null &&
+            dayjs(props.savedTimeStamp).format("LTS")}
         </span>
       </Popover.Content>
     </Popover>
