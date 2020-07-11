@@ -13,16 +13,7 @@ import {
 import SaveStatusComponent from "../../src/components/SaveStatusComponent";
 
 describe("SaveStatusComponent", () => {
-  it("should render without throwing an error", () => {
-    const store = createUsualStore();
-    expect(
-      shallowWrapper(<SaveStatusComponent store={store} />).exists(
-        ".savestatus-container"
-      )
-    ).toBe(true);
-  });
-
-  it("should show green circle (i.e., saved) when initialized", () => {
+  it("should show nothing when initialized", () => {
     const store = createUsualStore();
 
     expect(
@@ -32,8 +23,8 @@ describe("SaveStatusComponent", () => {
           lastSaveTimestamp={0}
           lastSaveRequestTimeStamp={0}
         />
-      ).find("svg[fill='darkseagreen']").length
-    ).toBe(1);
+      ).find("svg").length
+    ).toBe(0);
   });
 
   it("should change to orange when code has been updated, and then back to green on save", async () => {
@@ -42,7 +33,7 @@ describe("SaveStatusComponent", () => {
     const store = createUsualStore();
     const wrap = mount(<SaveStatusComponent store={store} />);
 
-    expect(wrap.find("svg[fill='darkseagreen']").length).toBe(1);
+    expect(wrap.find("svg").length).toBe(0);
 
     await act(async () => {
       store.dispatch({ type: GUI_PROJECT_MODIFIED });
@@ -65,6 +56,11 @@ describe("SaveStatusComponent", () => {
       />
     );
 
+    await act(async () => {
+      store.dispatch({ type: GUI_PROJECT_MODIFIED });
+    });
+    wrap.update();
+
     expect(wrap.find(".popover-body").length).toBe(0);
 
     await act(async () => {
@@ -84,23 +80,24 @@ describe("SaveStatusComponent", () => {
     );
 
     await act(async () => {
-      wrap.find("svg").simulate("mouseover");
-    });
-    wrap.update();
-    expect(wrap.find(".popover-body").text()).toMatch(
-      /^All changes have been saved/
-    );
-    await act(async () => {
       store.dispatch({ type: GUI_PROJECT_MODIFIED });
     });
     wrap.update();
+
+    await act(async () => {
+      wrap.find("svg").simulate("mouseover");
+    });
+    wrap.update();
+
     expect(wrap.find(".popover-body").text()).toMatch(
       /^There are unsaved changes/
     );
+
     await act(async () => {
       store.dispatch({ type: GUI_PROJECT_SAVED });
     });
     wrap.update();
+
     expect(wrap.find(".popover-body").text()).toMatch(
       /^All changes have been saved/
     );

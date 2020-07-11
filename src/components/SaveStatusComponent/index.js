@@ -11,6 +11,8 @@ import Moment from "react-moment";
 import "./style.css";
 
 function SaveStatusComponent(props) {
+  if (props.savedTimeStamp === null && props.needsSave === false) return null;
+
   const popover = (
     <Popover id="popover-basic">
       <Popover.Title as="h3">Project save status</Popover.Title>
@@ -21,9 +23,12 @@ function SaveStatusComponent(props) {
         <br />
         <span className="small text-muted">
           Last saved:{" "}
+          {props.savedTimeStamp === null && "Never"}
+          { props.savedTimeStamp !== null &&
           <Moment format="LTS" interval={0}>
             {props.savedTimeStamp}
           </Moment>
+          }
         </span>
       </Popover.Content>
     </Popover>

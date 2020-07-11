@@ -109,6 +109,5 @@ describe("The GUI", () => {
     cy.get("@consoleLog").should("be.calledWith", "Los Angeles");
     cy.get("@consoleLog").should("be.calledWith", "New York City");
     cy.get("@consoleLog").should("be.calledWith", "Paris");
-
   });
 });
