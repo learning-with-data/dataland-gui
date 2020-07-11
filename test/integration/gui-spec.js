@@ -111,4 +111,18 @@ describe("The GUI", () => {
     cy.get("@consoleLog").should("be.calledWith", "New York City");
     cy.get("@consoleLog").should("be.calledWith", "Paris");
   });
+
+  it("shows an error when a non-valid project is loaded", function() {
+    const invalidProjectFixturePath = "../fixtures/sample1.csv";
+    cy.get("#file-dropdown").click();
+    cy.get("#loadLink").attachFile(invalidProjectFixturePath);
+
+    cy.get(".error-notification").contains("Whoops!");
+    cy.get(".error-notification").contains("Failed to load project.");
+
+    // Dismiss the error
+    cy.get(".error-notification .close").click();
+    cy.get(".error-notification").should("not.exist");
+  });
+
 });

@@ -10,6 +10,7 @@ import { Interpreter } from "dataland-interpreter";
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
+import ErrorNotifierComponent from "./components/ErrorNotifierComponent";
 import HeaderComponent from "./components/HeaderComponent";
 import TableViewerComponent from "./components/TableViewerComponent";
 import VisualizationComponent from "./components/VisualizationComponent";
@@ -85,6 +86,7 @@ class Gui extends Component {
   render() {
     return (
       <>
+        <ErrorNotifierComponent />
         <HeaderComponent
           initialProjectTitle={this.props.initialProjectTitle}
           onProjectTitleChange={(t) => {
@@ -137,7 +139,7 @@ class Gui extends Component {
     try {
       [code, data] = loadProjectBlob(blob);
     } catch (err) {
-      this.props.error_occurred(err, "Failed to load project");
+      this.props.error_occurred(err, "Failed to load project.");
     }
 
     if (!isEmpty(data)) this.props.data_imported(data);
