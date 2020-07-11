@@ -11,7 +11,9 @@ import Moment from "react-moment";
 import "./style.css";
 
 function SaveStatusComponent(props) {
-  if (props.savedTimeStamp === null && props.needsSave === false) return null;
+  if (props.savedTimeStamp === null && props.needsSave === false) {
+    return <div className="savestatus-container text-center"> </div>;
+  }
 
   const popover = (
     <Popover id="popover-basic">
@@ -22,20 +24,19 @@ function SaveStatusComponent(props) {
           : "All changes have been saved."}
         <br />
         <span className="small text-muted">
-          Last saved:{" "}
-          {props.savedTimeStamp === null && "Never"}
-          { props.savedTimeStamp !== null &&
-          <Moment format="LTS" interval={0}>
-            {props.savedTimeStamp}
-          </Moment>
-          }
+          Last saved: {props.savedTimeStamp === null && "Never"}
+          {props.savedTimeStamp !== null && (
+            <Moment format="LTS" interval={0}>
+              {props.savedTimeStamp}
+            </Moment>
+          )}
         </span>
       </Popover.Content>
     </Popover>
   );
 
   return (
-    <div style={{ width: "3em" }} className="savestatus-container text-center">
+    <div className="savestatus-container text-center">
       <OverlayTrigger
         trigger={["hover", "focus"]}
         placement="bottom"
@@ -61,7 +62,9 @@ SaveStatusComponent.propTypes = {
 
 const mapStateToProps = function (store) {
   return {
-    needsSave: store.guiState.projectModifiedTimeStamp > store.guiState.projectSavedTimeStamp,
+    needsSave:
+      store.guiState.projectModifiedTimeStamp >
+      store.guiState.projectSavedTimeStamp,
     savedTimeStamp: store.guiState.projectSavedTimeStamp,
   };
 };

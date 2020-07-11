@@ -2,3 +2,7 @@
   width: 1em;
   height: 1em;
 }
+
+.savestatus-container {
+  min-width: 3em;
+}
