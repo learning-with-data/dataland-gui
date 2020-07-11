@@ -65,9 +65,13 @@ class Gui extends Component {
     }
 
     // Make sure a save is attempted when user leaves page (refreshes browser, or closes window)
-    if (this.props.backend === true) {
-      window.addEventListener("beforeunload", () => this.saveCodeToBackend());
-    }
+    window.addEventListener("beforeunload", (event) => {
+      if (this.props.needsSave) {
+        event.preventDefault();
+        event.returnValue = "";
+        if (this.props.backend) this.saveCodeToBackend();
+      }
+    });
   }
 
   componentWillUnmount() {
