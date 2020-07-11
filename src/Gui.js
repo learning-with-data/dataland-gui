@@ -19,6 +19,8 @@ import {
   GUI_PROJECT_MODIFIED,
   GUI_PROJECT_SAVED,
   PROJECT_DATA_IMPORTED,
+  GUI_INTERPRETER_STARTED,
+  GUI_INTERPRETER_STOPPED,
 } from "./redux/actionsTypes";
 
 import PrimTable from "./lib/primitives";
@@ -36,7 +38,6 @@ class Gui extends Component {
       initialProjectCode: "",
       projectCode: "",
       projectTitle: this.props.initialProjectTitle,
-      interpreterState: "STOPPED",
       projectImportTimeStamp: Date.now(),
     };
 
@@ -226,7 +227,7 @@ class Gui extends Component {
       parsedCode.xml,
       PrimTable(this.context.store),
       () => {
-        this.setState({ interpreterState: "STOPPED", busy: false });
+        this.props.interpreter_stopped();
         this.editorWorkspace.highlightBlock(null);
       }
     );
@@ -238,12 +239,12 @@ class Gui extends Component {
     });
 
     this.interpreter.start("project-started");
-    this.setState({ interpreterState: "RUNNING" });
+    this.props.interpreter_started();
   }
 
   stopInterpreter() {
     this.interpreter.stop();
-    this.setState({ interpreterState: "STOPPED" });
+    this.props.interpreter_stopped();
   }
 }
 
@@ -262,6 +263,8 @@ Gui.propTypes = {
 
   data_imported: PropTypes.func,
   error_occurred: PropTypes.func,
+  interpreter_started: PropTypes.func,
+  interpreter_stopped: PropTypes.func,
   project_modified: PropTypes.func,
   project_saved: PropTypes.func,
 };
@@ -285,6 +288,10 @@ const error_occurred = (error, message) => ({
   payload: { error, message },
 });
 
+const interpreter_started = () => ({ type: GUI_INTERPRETER_STARTED });
+
+const interpreter_stopped = () => ({ type: GUI_INTERPRETER_STOPPED });
+
 const project_modified = () => ({
   type: GUI_PROJECT_MODIFIED,
 });
@@ -296,6 +303,8 @@ const project_saved = () => ({
 export default connect(mapStateToProps, {
   data_imported,
   error_occurred,
+  interpreter_started,
+  interpreter_stopped,
   project_modified,
   project_saved,
 })(Gui);

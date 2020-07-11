@@ -104,6 +104,7 @@ describe("The GUI", () => {
 
     cy.spy(window.console, "log").as("consoleLog");
     cy.get("#btn-start").click();
+    cy.get("#btn-start").contains("Running");
     cy.log("@consoleLog");
     cy.get("@consoleLog").should("be.calledThrice");
     cy.get("@consoleLog").should("be.calledWith", "Los Angeles");

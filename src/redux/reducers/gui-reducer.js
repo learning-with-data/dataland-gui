@@ -1,12 +1,15 @@
 import {
   GUI_ERROR_CLEARED,
   GUI_ERROR_OCCURRED,
+  GUI_INTERPRETER_STARTED,
+  GUI_INTERPRETER_STOPPED,
   GUI_PROJECT_MODIFIED,
   GUI_PROJECT_SAVED,
 } from "../actionsTypes";
 
 const initialState = {
   errors: [],
+  interpreterStatus: "STOPPED",
   projectModifiedTimeStamp: null,
   projectSavedTimeStamp: null,
 };
@@ -30,6 +33,10 @@ function guiReducer(state = initialState, action) {
         message: action.payload.message,
       };
       return { ...state, errors: state.errors.concat(errorObj) };
+    case GUI_INTERPRETER_STARTED:
+      return {...state, interpreterStatus: "RUNNING"};
+    case GUI_INTERPRETER_STOPPED:
+      return {...state, interpreterStatus: "STOPPED"};
     default:
       return state;
   }

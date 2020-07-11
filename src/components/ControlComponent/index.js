@@ -1,10 +1,12 @@
 import React from "react";
 
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import Spinner from "react-bootstrap/Spinner";
 
 function ControlComponent(props) {
   return (
@@ -13,15 +15,30 @@ function ControlComponent(props) {
         <Button
           variant="success"
           id="btn-start"
+          style={{minWidth: "10em"}}
           onClick={props.handleStartPress}
+          disabled={props.isInterpreterRunning}
         >
-          ⯈ Start
+          {props.isInterpreterRunning && (
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              className="mr-2"
+              role="status"
+              aria-hidden="true"
+            />
+          )}
+          {props.isInterpreterRunning && "Running"}
+          {!props.isInterpreterRunning && "⯈ Start"}
         </Button>{" "}
         <Button
           variant="danger"
           name="button"
           id="btn-stop"
+          style={{minWidth: "10em"}}
           onClick={props.handleStopPress}
+          disabled={!props.isInterpreterRunning}
         >
           ⯀ Stop
         </Button>
@@ -108,6 +125,14 @@ ControlComponent.propTypes = {
   handleProjectLoadPress: PropTypes.func,
   handleStartPress: PropTypes.func,
   handleStopPress: PropTypes.func,
+
+  isInterpreterRunning: PropTypes.bool,
 };
 
-export default ControlComponent;
+const mapStateToProps = function (store) {
+  return {
+    isInterpreterRunning: store.guiState.interpreterStatus === "RUNNING",
+  };
+};
+
+export default connect(mapStateToProps)(ControlComponent);
