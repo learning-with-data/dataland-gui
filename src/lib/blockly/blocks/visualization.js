@@ -6,17 +6,8 @@ import {
   BLOCKDROPDOWN_MARK,
 } from "../constants";
 
-function VisualizationBlocks(store) {
+function VisualizationBlocks(generate_data_columns) {
   var blocks = {};
-
-  function generate_columns() {
-    const state = store.getState();
-    if (state.projectDataState.columns.length === 0) {
-      return [["Row #", "Row #"]];
-    } else {
-      return state.projectDataState.columns.map((x) => [x.text, x.text]);
-    }
-  }
 
   blocks["visualization_set_title"] = {
     init: function () {
@@ -55,7 +46,7 @@ function VisualizationBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_VISUALIZATION_COLUMN,
-            options: generate_columns,
+            options: generate_data_columns,
           },
         ],
         inputsInline: true,
@@ -74,7 +65,7 @@ function VisualizationBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_VISUALIZATION_COLUMN,
-            options: generate_columns,
+            options: generate_data_columns,
           },
         ],
         inputsInline: true,
@@ -111,7 +102,7 @@ function VisualizationBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_VISUALIZATION_COLUMN,
-            options: generate_columns,
+            options: generate_data_columns,
           },
         ],
         inputsInline: true,

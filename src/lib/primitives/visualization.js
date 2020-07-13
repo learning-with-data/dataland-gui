@@ -7,14 +7,11 @@ import {
   BLOCKARG_VISUALIZATION_TITLE,
 } from "../blockly/constants";
 
-import {
-  VISUALIZATION_CLEAR_SPEC,
-  VISUALIZATION_UPDATE_SPEC,
-} from "../../redux/actionsTypes";
 
 class VisualizationPrimTable {
-  constructor(store) {
-    this.store = store;
+  constructor(runtime) {
+    this.runtime = runtime;
+
     this.mark = {
       type: "point",
       color: "#4682b4",
@@ -38,17 +35,15 @@ class VisualizationPrimTable {
 
   primVisualizationSetTitle(block) {
     const title = block.thread.getBlockArg(block, BLOCKARG_VISUALIZATION_TITLE);
-
-    const state = this.store.getState();
-    const spec = state.visualizationState.visualizationSpec;
+    const spec = this.runtime.getVisualizationSpec();
 
     const newSpec = { ...spec, title };
 
-    this.store.dispatch({ type: VISUALIZATION_UPDATE_SPEC, payload: newSpec });
+    this.runtime.setVisualizationSpec(newSpec);
   }
 
   primVisualizationClear() {
-    this.store.dispatch({ type: VISUALIZATION_CLEAR_SPEC });
+    this.runtime.dispatchVisualizationUpdate(true);
   }
 
   primVisualizationSetX(block) {
@@ -57,9 +52,8 @@ class VisualizationPrimTable {
       BLOCKARG_VISUALIZATION_COLUMN
     );
 
-    const state = this.store.getState();
-    const data = state.projectDataState.data;
-    const spec = state.visualizationState.visualizationSpec;
+    const data = this.runtime.getCurrentData();
+    const spec = this.runtime.getVisualizationSpec();
 
     var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
     var newLayer = false;
@@ -92,10 +86,7 @@ class VisualizationPrimTable {
 
     const newSpec = { ...spec, layer: newLayerSpec };
 
-    this.store.dispatch({
-      type: VISUALIZATION_UPDATE_SPEC,
-      payload: newSpec,
-    });
+    this.runtime.setVisualizationSpec(newSpec);
   }
 
   primVisualizationSetY(block) {
@@ -104,9 +95,8 @@ class VisualizationPrimTable {
       BLOCKARG_VISUALIZATION_COLUMN
     );
 
-    const state = this.store.getState();
-    const data = state.projectDataState.data;
-    const spec = state.visualizationState.visualizationSpec;
+    const data = this.runtime.getCurrentData();
+    const spec = this.runtime.getVisualizationSpec();
 
     var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
     var newLayer = false;
@@ -139,10 +129,7 @@ class VisualizationPrimTable {
 
     const newSpec = { ...spec, layer: newLayerSpec };
 
-    this.store.dispatch({
-      type: VISUALIZATION_UPDATE_SPEC,
-      payload: newSpec,
-    });
+    this.runtime.setVisualizationSpec(newSpec);
   }
 
   primVisualizationSetColor(block) {
@@ -151,9 +138,8 @@ class VisualizationPrimTable {
       BLOCKARG_VISUALIZATION_COLUMN
     );
 
-    const state = this.store.getState();
-    const data = state.projectDataState.data;
-    const spec = state.visualizationState.visualizationSpec;
+    const data = this.runtime.getCurrentData();
+    const spec = this.runtime.getVisualizationSpec();
 
     var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
     var newLayer = false;
@@ -185,10 +171,7 @@ class VisualizationPrimTable {
 
     const newSpec = { ...spec, layer: newLayerSpec };
 
-    this.store.dispatch({
-      type: VISUALIZATION_UPDATE_SPEC,
-      payload: newSpec,
-    });
+    this.runtime.setVisualizationSpec(newSpec);
   }
 }
 

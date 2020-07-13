@@ -1,0 +1,2 @@
+ * The `sample1.csv` file is from the [Wikipedia page on CSV](https://en.wikipedia.org/w/index.php?title=Comma-separated_values&oldid=959879356)
+ * The `chapel-hill-weather-ncei.csv` file is from the [Climate Data Online Service](https://www.ncdc.noaa.gov/cdo-web/) of the US National Oceanic and Atmospheric Administration/National Centers for Environmental Information 

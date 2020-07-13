@@ -1,5 +1,4 @@
 import React from "react";
-import { Provider } from "react-redux";
 import { act } from "react-dom/test-utils";
 
 import { mount } from "enzyme";
@@ -7,28 +6,22 @@ import { mount } from "enzyme";
 import fs from "fs";
 import Papa from "papaparse";
 
-import createUsualStore from "../utils/StoreUtil";
-import shallowWrapper from "../utils/shallowWrapper";
-
-import {
-  PROJECT_DATA_IMPORTED,
-  PROJECT_DATA_COLUMN_ADDED,
-} from "../../src/redux/actionsTypes";
+import Runtime from "../../src/lib/Runtime";
+import { RuntimeContext } from "../../src/components/connectToRuntime";
 
 import TableViewerComponent from "../../src/components/TableViewerComponent";
 
 describe("TableViewerComponent", () => {
   it("should render with a placeholder if there is no data", () => {
-    const store = createUsualStore();
-    expect(
-      shallowWrapper(<TableViewerComponent store={store} />).find(
-        ".data-placeholder"
-      ).length
-    ).toBe(1);
+    const wrapper = mount(<TableViewerComponent />, {
+      wrappingComponent: RuntimeContext.Provider,
+      wrappingComponentProps: { value: new Runtime() },
+    });
+
+    expect(wrapper.find(".data-placeholder").length).toBe(1);
   });
 
   it("should render a table with a row # column when data is imported", async () => {
-    const store = createUsualStore();
     const csvdata = fs.readFileSync("test/fixtures/sample1.csv", {
       encoding: "utf8",
     });
@@ -38,26 +31,25 @@ describe("TableViewerComponent", () => {
       skipEmptyLines: true,
     });
 
-    const wrap = mount(
-      <Provider store={store}>
-        <TableViewerComponent />
-      </Provider>
-    );
-    expect(wrap.find(".data-placeholder").length).toBe(1);
+    const runtime = new Runtime();
+
+    const wrapper = mount(<TableViewerComponent />, {
+      wrappingComponent: RuntimeContext.Provider,
+      wrappingComponentProps: { value: runtime },
+    });
+    expect(wrapper.find(".data-placeholder").length).toBe(1);
 
     await act(async () => {
-      store.dispatch({ type: PROJECT_DATA_IMPORTED, payload: csvParseResults });
+      runtime.setDataTable(csvParseResults.data);
     });
-    wrap.update();
-    expect(wrap.find(".data-placeholder").length).toBe(0);
-    expect(wrap.find("BootstrapTableContainer").length).toBe(1);
-    expect(
-      wrap.find("BootstrapTableContainer").prop("columns")[0].dataField
-    ).toBe("Row #");
+    wrapper.update();
+    expect(wrapper.find(".data-placeholder").length).toBe(0);
+    expect(wrapper.find("table.data-table").length).toBe(1);
+    expect(wrapper.find("th").first().text()).toBe("Row #");
+    expect(wrapper.find("td").first().text()).toBe("1");
   });
 
   it("should allow adding a new column and show the column name", async () => {
-    const store = createUsualStore();
     const csvdata = fs.readFileSync("test/fixtures/sample1.csv", {
       encoding: "utf8",
     });
@@ -67,20 +59,23 @@ describe("TableViewerComponent", () => {
       skipEmptyLines: true,
     });
 
-    const wrap = mount(
-      <Provider store={store}>
-        <TableViewerComponent />
-      </Provider>
-    );
-    await act(async () => {
-      store.dispatch({ type: PROJECT_DATA_IMPORTED, payload: csvParseResults });
+    const runtime = new Runtime();
+
+    const wrapper = mount(<TableViewerComponent />, {
+      wrappingComponent: RuntimeContext.Provider,
+      wrappingComponentProps: { value: runtime },
     });
+    expect(wrapper.find(".data-placeholder").length).toBe(1);
+
     await act(async () => {
-      store.dispatch({ type: PROJECT_DATA_COLUMN_ADDED, payload: "testcol" });
+      runtime.setDataTable(csvParseResults.data);
     });
-    wrap.update();
-    expect(
-      wrap.find("BootstrapTableContainer").prop("columns")[4].dataField
-    ).toBe("testcol");
+    wrapper.update();
+
+    await act(async () => {
+      runtime.addColumn("testcol");
+    });
+    wrapper.update();
+    expect(wrapper.find("th[data-column='testcol']").text()).toBe("testcol");
   });
 });

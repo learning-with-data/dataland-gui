@@ -66,7 +66,7 @@ ErrorNotifierComponent.propTypes = {
 
 const mapStateToProps = function (store) {
   return {
-    errors: store.guiState.errors,
+    errors: store.errors,
   };
 };
 

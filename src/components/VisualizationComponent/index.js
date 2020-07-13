@@ -1,42 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { VegaLite } from "react-vega";
 import Card from "react-bootstrap/Card";
 
+import { connectToRuntime } from "../connectToRuntime";
+
 import "./style.css";
 
-
-function VisualizationComponent(props) {
-  // eslint-disable-next-line no-unused-vars
-  const [view, setView] = useState(null);
-
+const VisualizationComponent = React.memo((props) => {
   return (
     <Card className="w-100 h-100">
       {/* <Card.Header className="text-right">
       </Card.Header> */}
       <Card.Body className="visualization">
         <VegaLite
-          spec={props.visualizationSpec}
+          spec={props.projectVisualizationSpec}
           actions={false}
           className="h-100 w-100"
-          onNewView={(v) => setView(v)}
+          onParseError={(e) => console.log(e)}
         />
       </Card.Body>
     </Card>
   );
-}
+});
 
 VisualizationComponent.propTypes = {
-  visualizationSpec: PropTypes.object,
+  projectVisualizationSpec: PropTypes.object,
 };
 
-const mapStateToProps = function (store) {
-  return {
-    visualizationSpec: store.visualizationState.visualizationSpec,
-  };
-};
+VisualizationComponent.displayName = "VisualizationComponent";
 
-export default connect(mapStateToProps)(VisualizationComponent);
+export default connectToRuntime(VisualizationComponent, {
+  data: false,
+  visualization: true,
+});

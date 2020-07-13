@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Papa from "papaparse";
@@ -10,11 +9,10 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
-import {
-  PROJECT_DATA_IMPORTED,
-  PROJECT_DATA_COLUMN_ADDED,
-} from "../../redux/actionsTypes";
+import { connectToRuntime } from "../connectToRuntime";
 
+
+// TODO: Error handling, and loading indicator for large CSVs
 function TableViewerHeaderComponent(props) {
   const cardHeaderRef = useRef(null);
 
@@ -24,7 +22,7 @@ function TableViewerHeaderComponent(props) {
   const handleAddColumnClose = () => setShowAddColumn(false);
   const handleAddColumnShow = () => setShowAddColumn(true);
   const handleAddColumnSubmit = () => {
-    props.project_data_column_added(columName);
+    props.addProjectDataColumn(columName);
     setShowAddColumn(false);
   };
 
@@ -35,7 +33,7 @@ function TableViewerHeaderComponent(props) {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        props.project_data_imported(results);
+        props.setProjectData(results.data);
       },
     });
   };
@@ -62,7 +60,7 @@ function TableViewerHeaderComponent(props) {
             onChange={(e) => handleDataImport(e)}
           />{" "}
           <Button
-            disabled={!props.dataLoaded}
+            disabled={props.projectData.length === 0}
             onClick={handleAddColumnShow}
             size="sm"
             variant="outline-dark"
@@ -104,29 +102,15 @@ function TableViewerHeaderComponent(props) {
 
 TableViewerHeaderComponent.propTypes = {
   children: PropTypes.object,
-  dataLoaded: PropTypes.bool,
   project_data_column_added: PropTypes.func,
-  project_data_imported: PropTypes.func,
   fullScreenButtonClickHandler: PropTypes.func,
+
+  setProjectData: PropTypes.func,
+  addProjectDataColumn: PropTypes.func,
+  projectData: PropTypes.array,
 };
 
-const mapStateToProps = function (store) {
-  return {
-    dataLoaded: store.projectDataState.originalDataTimestamp > 0,
-  };
-};
-
-const project_data_column_added = (payload) => ({
-  type: PROJECT_DATA_COLUMN_ADDED,
-  payload: payload,
+export default connectToRuntime(TableViewerHeaderComponent, {
+  data: true,
+  visualization: false,
 });
-
-const project_data_imported = (payload) => ({
-  type: PROJECT_DATA_IMPORTED,
-  payload: payload,
-});
-
-export default connect(mapStateToProps, {
-  project_data_column_added,
-  project_data_imported,
-})(TableViewerHeaderComponent);

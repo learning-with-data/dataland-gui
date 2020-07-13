@@ -131,7 +131,7 @@ ControlComponent.propTypes = {
 
 const mapStateToProps = function (store) {
   return {
-    isInterpreterRunning: store.guiState.interpreterStatus === "RUNNING",
+    isInterpreterRunning: store.interpreterStatus === "RUNNING",
   };
 };
 

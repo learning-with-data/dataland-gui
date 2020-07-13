@@ -63,14 +63,25 @@ const standardBlocks = {
   },
 };
 
-function getCustomBlockly(store) {
+function getCustomBlockly(getColumnsFunc) {
+  const generate_data_columns = function () {
+    const columns = getColumnsFunc();
+    if (columns && columns.length === 0) {
+      return [["Row #", "__visible_id"]];
+    } else {
+      var menuitems = columns.map((x) => [x, x]);
+      menuitems.unshift(["Row #", "__visible_id"]);
+      return menuitems;
+    }
+  };
+
   Object.assign(
     Blockly.Blocks,
     standardBlocks,
     ControlBlocks,
     OperatorBlocks,
-    DataBlocks(store),
-    VisualizationBlocks(store),
+    DataBlocks(generate_data_columns),
+    VisualizationBlocks(generate_data_columns),
     VariableBlocks,
     DebugBlocks
   );

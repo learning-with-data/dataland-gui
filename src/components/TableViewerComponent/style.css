@@ -14,6 +14,7 @@ div.fullscreen {
 
 table.data-table {
   font-size: small;
+  max-width: initial;
 }
 
 table.data-table .data-table-column {
@@ -29,12 +30,17 @@ tr th {
   overflow: hidden;
 }
 
-tr .data-table-column:first-of-type {
+tr .data-table-column:nth-of-type(1) {
   width: 9ch !important;
 }
 
-tr th:first-of-type {
+tr th:nth-of-type(1) {
   width: 9ch !important;
+}
+
+tr.selected-row {
+  background: #4b4a60 !important;
+  color: white !important;
 }
 
 .data-placeholder {

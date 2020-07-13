@@ -7,7 +7,7 @@ import SaveStatusComponent from "../SaveStatusComponent";
 
 import "./style.css";
 
-function HeaderComponent(props) {
+const HeaderComponent = React.memo((props) => {
   return (
     <header className="gui-header d-flex justify-content-between align-items-center">
       <div className="title ml-2 d-flex justify-content-between align-items-center">
@@ -22,12 +22,14 @@ function HeaderComponent(props) {
       {props.children}
     </header>
   );
-}
+});
 
 HeaderComponent.propTypes = {
   onProjectTitleChange: PropTypes.func,
   children: PropTypes.element,
   initialProjectTitle: PropTypes.string.isRequired,
 };
+
+HeaderComponent.displayName = "HeaderComponent";
 
 export default HeaderComponent;

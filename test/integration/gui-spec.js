@@ -99,8 +99,10 @@ describe("The GUI", () => {
       encoding: "binary",
     });
 
-    cy.get(".table-container").contains("New York City");
-    cy.get("[data-id='ebp=R2VnG{6;ts}ql6jj']");
+    cy.get(".data-table").contains("New York City");
+    cy.get("[data-id='yN#Fr5u_-RIrzSRT~d-$");
+    cy.get("[data-id='yN#Fr5u_-RIrzSRT~d-$").contains("City");
+
 
     cy.spy(window.console, "log").as("consoleLog");
     cy.get("#btn-start").click();

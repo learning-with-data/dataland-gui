@@ -6,12 +6,12 @@ import VariablesPrimTable from "./variables";
 
 import DebugPrimTable from "./debug";
 
-export default function (store) {
+export default function (runtime) {
   return Object.assign(
     new ControlPrimTable(),
     new OperatorPrimTable(),
-    new DataPrimTable(store),
-    new VisualizationPrimTable(store),
+    new DataPrimTable(runtime),
+    new VisualizationPrimTable(runtime),
     new VariablesPrimTable(),
     new DebugPrimTable()
   );

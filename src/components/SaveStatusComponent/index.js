@@ -63,9 +63,9 @@ SaveStatusComponent.propTypes = {
 const mapStateToProps = function (store) {
   return {
     needsSave:
-      store.guiState.projectModifiedTimeStamp >
-      store.guiState.projectSavedTimeStamp,
-    savedTimeStamp: store.guiState.projectSavedTimeStamp,
+      store.projectModifiedTimeStamp >
+      store.projectSavedTimeStamp,
+    savedTimeStamp: store.projectSavedTimeStamp,
   };
 };
 

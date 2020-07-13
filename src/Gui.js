@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 
-import { connect, ReactReduxContext } from "react-redux";
+import { connect } from "react-redux";
 
 import isEmpty from "lodash/isEmpty";
 import PropTypes from "prop-types";
-import { parseString } from "xml2js";
-import { Interpreter } from "dataland-interpreter";
 
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
@@ -15,39 +13,29 @@ import HeaderComponent from "./components/HeaderComponent";
 import TableViewerComponent from "./components/TableViewerComponent";
 import VisualizationComponent from "./components/VisualizationComponent";
 
+import { connectToRuntime } from "./components/connectToRuntime";
+
 import {
   GUI_ERROR_OCCURRED,
   GUI_PROJECT_MODIFIED,
   GUI_PROJECT_SAVED,
-  PROJECT_DATA_IMPORTED,
   GUI_INTERPRETER_STARTED,
   GUI_INTERPRETER_STOPPED,
 } from "./redux/actionsTypes";
-
-import PrimTable from "./lib/primitives";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 
 class Gui extends Component {
-  static contextType = ReactReduxContext;
-
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
-      initialProjectCode: "",
-      projectCode: "",
       projectTitle: this.props.initialProjectTitle,
-      projectImportTimeStamp: Date.now(),
     };
 
-    this.editorWorkspace = null;
-    this.setEditorWorkspaceRef = (editor) => {
-      if (editor) this.editorWorkspace = editor.workspace;
-    };
+    this.editor = React.createRef();
 
-    this.interpreter = null;
     this.saveIntervalId = null;
 
     this.handleProjectImport = this.handleProjectImport.bind(this);
@@ -107,11 +95,8 @@ class Gui extends Component {
         <div className={`gui-container ${this.state.busy ? "busy" : ""}`}>
           <div className="editor-column">
             <EditorComponent
-              initialCode={this.state.initialProjectCode}
-              key={this.state.projectImportTimeStamp}
-              ref={this.setEditorWorkspaceRef}
-              onCodeUpdated={(c) => {
-                this.setState({ code: c });
+              ref={this.editor}
+              onCodeUpdated={() => {
                 this.props.project_modified();
               }}
             />
@@ -139,20 +124,19 @@ class Gui extends Component {
     try {
       [code, data] = loadProjectBlob(blob);
     } catch (err) {
+      console.log(err);
       this.props.error_occurred(err, "Failed to load project.");
+      return;
     }
 
-    if (!isEmpty(data)) this.props.data_imported(data);
-    this.setState({
-      initialProjectCode: code,
-      projectImportTimeStamp: Date.now(),
-    });
+    if (!isEmpty(data)) this.props.setProjectData(data);
+    this.editor.current.setCode(code);
   }
 
   saveProjectToBackend() {
     if (this.props.needsSave) {
       this.props.backendCodeSaveHandler(
-        createProjectBlob(this.state.code, this.props.projectData)
+        createProjectBlob(this.editor.current.getCode(), this.props.projectData)
       );
       this.props.project_saved();
     }
@@ -178,7 +162,12 @@ class Gui extends Component {
 
   handleProjectFileSave() {
     var projectBlob = new Blob(
-      [createProjectBlob(this.state.code, this.props.projectData)],
+      [
+        createProjectBlob(
+          this.editor.current.getCode(),
+          this.props.projectData
+        ),
+      ],
       {
         type: "application/zlib",
       }
@@ -210,42 +199,35 @@ class Gui extends Component {
   //
   // Methods that control the interpreter
   //
-  async parseCode() {
-    return new Promise((resolve, reject) => {
-      parseString(
-        this.state.code,
-        { explicitArray: false, mergeAttrs: true },
-        (err, result) => {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-    });
-  }
-
   async startInterpreter() {
-    const parsedCode = await this.parseCode();
-    this.interpreter = new Interpreter(
-      parsedCode.xml,
-      PrimTable(this.context.store),
+    let interpreter;
+    interpreter = await this.props.startInterpreter(
+      this.editor.current.getCode(),
+      "project-started",
       () => {
         this.props.interpreter_stopped();
-        this.editorWorkspace.highlightBlock(null);
+        interpreter.removeListener(
+          "block-activated",
+          this.editor.current.activateBlock
+        );
+        interpreter.removeListener(
+          "block-deactivated",
+          this.editor.current.deactivateBlock
+        );
+        this.editor.current.activateBlock(null);
       }
     );
-    this.interpreter.on("block-activated", (blockId) => {
-      this.editorWorkspace.highlightBlock(blockId, true);
-    });
-    this.interpreter.on("block-deactivated", (blockId) => {
-      this.editorWorkspace.highlightBlock(blockId, false);
-    });
-
-    this.interpreter.start("project-started");
     this.props.interpreter_started();
+
+    // Set up highlighting
+    // Doing it through states/props seems to cause an occasional lag
+    // in what blocks are highlighted when
+    interpreter.on("block-activated", this.editor.current.activateBlock);
+    interpreter.on("block-deactivated", this.editor.current.deactivateBlock);
   }
 
   stopInterpreter() {
-    this.interpreter.stop();
+    this.props.stopInterpreter();
     this.props.interpreter_stopped();
   }
 }
@@ -261,29 +243,24 @@ Gui.propTypes = {
   backendMetaDataSaveHandler: PropTypes.func,
 
   needsSave: PropTypes.bool,
-  projectData: PropTypes.object,
 
-  data_imported: PropTypes.func,
   error_occurred: PropTypes.func,
   interpreter_started: PropTypes.func,
   interpreter_stopped: PropTypes.func,
   project_modified: PropTypes.func,
   project_saved: PropTypes.func,
+
+  projectData: PropTypes.array,
+  setProjectData: PropTypes.func,
+  startInterpreter: PropTypes.func,
+  stopInterpreter: PropTypes.func,
 };
 
 const mapStateToProps = function (store) {
   return {
-    needsSave:
-      store.guiState.projectModifiedTimeStamp >
-      store.guiState.projectSavedTimeStamp,
-    projectData: store.projectDataState.originalData,
+    needsSave: store.projectModifiedTimeStamp > store.projectSavedTimeStamp,
   };
 };
-
-const data_imported = (data) => ({
-  type: PROJECT_DATA_IMPORTED,
-  payload: data,
-});
 
 const error_occurred = (error, message) => ({
   type: GUI_ERROR_OCCURRED,
@@ -303,10 +280,9 @@ const project_saved = () => ({
 });
 
 export default connect(mapStateToProps, {
-  data_imported,
   error_occurred,
   interpreter_started,
   interpreter_stopped,
   project_modified,
   project_saved,
-})(Gui);
+})(connectToRuntime(Gui, { data: true, visualization: false }));

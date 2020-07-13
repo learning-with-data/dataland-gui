@@ -32,18 +32,8 @@ const REMOVE_ICON =
 
 const ICON_SIZE = 25;
 
-function DataBlocks(store) {
+function DataBlocks(generate_data_columns) {
   var blocks = {};
-
-  function generate_columns() {
-    // return [["Row #", "Row #"]];
-    const state = store.getState();
-    if (state.projectDataState.columns.length === 0) {
-      return [["Row #", "Row #"]];
-    } else {
-      return state.projectDataState.columns.map((x) => [x.text, x.text]);
-    }
-  }
 
   blocks["data_row_count"] = {
     init: function () {
@@ -64,7 +54,7 @@ function DataBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_DATA_COLUMN,
-            options: generate_columns,
+            options: generate_data_columns,
           },
         ],
         inputsInline: true,
@@ -82,7 +72,7 @@ function DataBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_DATA_COLUMN,
-            options: generate_columns,
+            options: generate_data_columns,
           },
           {
             type: "input_value",
@@ -111,7 +101,7 @@ function DataBlocks(store) {
   };
 
   blocks["data_select"] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
         message0: "select row # %1",
         args0: [
@@ -126,7 +116,7 @@ function DataBlocks(store) {
         nextStatement: null,
         style: "data_blocks",
       });
-    }
+    },
   };
 
   blocks["data_filter"] = {
@@ -140,7 +130,7 @@ function DataBlocks(store) {
           {
             type: "field_dropdown",
             name: BLOCKARG_DATA_COLUMN + 0,
-            options: generate_columns,
+            options: generate_data_columns,
           },
           {
             type: "field_dropdown",
@@ -211,7 +201,7 @@ function DataBlocks(store) {
           BLOCKARG_DATA_BOOLEAN + 0
         )
         .appendField(
-          new Blockly.FieldDropdown(generate_columns),
+          new Blockly.FieldDropdown(generate_data_columns),
           BLOCKARG_DATA_COLUMN + 1
         )
         .appendField(
