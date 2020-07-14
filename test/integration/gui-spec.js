@@ -136,4 +136,16 @@ describe("The GUI", () => {
     cy.get(".error-notification .close").click();
     cy.get(".error-notification").should("not.exist");
   });
+
+  it("shows an error when a non-valid CSV is loaded", function () {
+    const invalidCsvFixturePath = "../fixtures/sample1.dbp";
+    cy.get("#dataImportLink").attachFile(invalidCsvFixturePath);
+
+    cy.get(".error-notification").contains("Whoops!");
+    cy.get(".error-notification").contains("Parse error while importing CSV file.");
+
+    // Dismiss the error
+    cy.get(".error-notification .close").click();
+    cy.get(".error-notification").should("not.exist");
+  });
 });

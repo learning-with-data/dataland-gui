@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Papa from "papaparse";
@@ -11,8 +12,8 @@ import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
 import { connectToRuntime } from "../connectToRuntime";
+import { GUI_ERROR_OCCURRED } from "../../redux/actionsTypes";
 
-// TODO: Error handling, and loading indicator for large CSVs
 function TableViewerHeaderComponent(props) {
   const cardHeaderRef = useRef(null);
 
@@ -36,6 +37,16 @@ function TableViewerHeaderComponent(props) {
       skipEmptyLines: true,
       worker: true,
       complete: (results) => {
+        if (results.errors.length > 0) {
+          console.log("Parse error while importing CSV file.");
+          console.log(results.errors);
+          props.error_occurred(
+            results.errors,
+            "Parse error while importing CSV file."
+          );
+          setIsCsvLoading(false);
+          return;
+        }
         props.setProjectData(results.data);
         setIsCsvLoading(false);
       },
@@ -123,9 +134,18 @@ TableViewerHeaderComponent.propTypes = {
   setProjectData: PropTypes.func,
   addProjectDataColumn: PropTypes.func,
   projectData: PropTypes.array,
+
+  error_occurred: PropTypes.func,
 };
 
-export default connectToRuntime(TableViewerHeaderComponent, {
-  data: true,
-  visualization: false,
+const error_occurred = (error, message) => ({
+  type: GUI_ERROR_OCCURRED,
+  payload: { error, message },
 });
+
+export default connect(null, { error_occurred })(
+  connectToRuntime(TableViewerHeaderComponent, {
+    data: true,
+    visualization: false,
+  })
+);
