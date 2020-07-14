@@ -73,6 +73,17 @@ describe("The GUI", () => {
     cy.get(".table-container").contains("New York City");
   });
 
+  it("shows spinner when importing a large CSV file", function () {
+    const csvFixturePath = "../fixtures/chapel-hill-weather-ncei.csv";
+
+    cy.get("#dataImportLink").attachFile(csvFixturePath);
+    cy.get("#btn-import-data").contains("Loading");
+    cy.get(".table-container").contains("CHAPEL HILL 4.3 WSW, NC US", {
+      timeout: 10000,
+    });
+    cy.get("#btn-import-data").contains("Import data");
+  });
+
   // Commented out till this is resolved: https://github.com/cypress-io/cypress/issues/949
   // eslint-disable-next-line jest/no-commented-out-tests
   // it("enables downloading projects with the correct file name", function() {
@@ -103,7 +114,6 @@ describe("The GUI", () => {
     cy.get("[data-id='yN#Fr5u_-RIrzSRT~d-$");
     cy.get("[data-id='yN#Fr5u_-RIrzSRT~d-$").contains("City");
 
-
     cy.spy(window.console, "log").as("consoleLog");
     cy.get("#btn-start").click();
     cy.get("#btn-start").contains("Running");
@@ -114,7 +124,7 @@ describe("The GUI", () => {
     cy.get("@consoleLog").should("be.calledWith", "Paris");
   });
 
-  it("shows an error when a non-valid project is loaded", function() {
+  it("shows an error when a non-valid project is loaded", function () {
     const invalidProjectFixturePath = "../fixtures/sample1.csv";
     cy.get("#file-dropdown").click();
     cy.get("#loadLink").attachFile(invalidProjectFixturePath);
@@ -126,5 +136,4 @@ describe("The GUI", () => {
     cy.get(".error-notification .close").click();
     cy.get(".error-notification").should("not.exist");
   });
-
 });

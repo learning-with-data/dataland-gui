@@ -8,9 +8,9 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
 
 import { connectToRuntime } from "../connectToRuntime";
-
 
 // TODO: Error handling, and loading indicator for large CSVs
 function TableViewerHeaderComponent(props) {
@@ -18,6 +18,7 @@ function TableViewerHeaderComponent(props) {
 
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [columName, setColumnName] = useState("");
+  const [isCsvLoading, setIsCsvLoading] = useState(false);
 
   const handleAddColumnClose = () => setShowAddColumn(false);
   const handleAddColumnShow = () => setShowAddColumn(true);
@@ -27,13 +28,16 @@ function TableViewerHeaderComponent(props) {
   };
 
   const handleDataImport = function (evt) {
+    setIsCsvLoading(true);
     const file = evt.target.files[0];
     Papa.parse(file, {
       dynamicTyping: true,
       header: true,
       skipEmptyLines: true,
+      worker: true,
       complete: (results) => {
         props.setProjectData(results.data);
+        setIsCsvLoading(false);
       },
     });
   };
@@ -50,7 +54,18 @@ function TableViewerHeaderComponent(props) {
             id="btn-import-data"
             onClick={() => document.getElementById("dataImportLink").click()}
           >
-            Import data
+            {isCsvLoading && (
+              <>
+                <Spinner
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  className="mr-2"
+                />{" "}
+                Loading
+              </>
+            )}
+            {!isCsvLoading && "Import data"}
           </Button>
           <input
             type="file"

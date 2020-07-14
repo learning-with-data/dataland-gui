@@ -47,3 +47,7 @@ tr.selected-row {
 .data-placeholder {
   background: lightgray;
 }
+
+#btn-import-data {
+  width: 14ch;
+}
