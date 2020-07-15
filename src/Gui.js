@@ -35,6 +35,7 @@ class Gui extends Component {
     };
 
     this.editor = React.createRef();
+    this.visualizer = React.createRef();
 
     this.saveIntervalId = null;
 
@@ -103,7 +104,7 @@ class Gui extends Component {
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <VisualizationComponent />
+              <VisualizationComponent ref={this.visualizer} />
             </div>
             <div className="data-container">
               <TableViewerComponent />
@@ -204,7 +205,7 @@ class Gui extends Component {
     interpreter = await this.props.startInterpreter(
       this.editor.current.getCode(),
       "project-started",
-      () => {
+      async () => {
         this.props.interpreter_stopped();
         interpreter.removeListener(
           "block-activated",
@@ -215,6 +216,13 @@ class Gui extends Component {
           this.editor.current.deactivateBlock
         );
         this.editor.current.activateBlock(null);
+
+        if (this.props.backend) {
+          const thumbnailImageBuffer = await this.visualizer.current.getVisualizationImage();
+          this.props.backendMetaDataSaveHandler({
+            projectThumbnailBlob: thumbnailImageBuffer,
+          });
+        }
       }
     );
     this.props.interpreter_started();
