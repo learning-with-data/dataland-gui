@@ -1,6 +1,6 @@
 {
   "name": "dataland-gui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Editor for the DataLand project",
   "main": "dist/main.js",
   "scripts": {

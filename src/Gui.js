@@ -136,9 +136,12 @@ class Gui extends Component {
 
   saveProjectToBackend() {
     if (this.props.needsSave) {
-      this.props.backendCodeSaveHandler(
-        createProjectBlob(this.editor.current.getCode(), this.props.projectData)
+      const projectBlob = createProjectBlob(
+        this.editor.current.getCode(),
+        this.props.projectData
       );
+
+      this.props.backendCodeSaveHandler(projectBlob.buffer);
       this.props.project_saved();
     }
   }
