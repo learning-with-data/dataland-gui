@@ -50,7 +50,7 @@ class Gui extends Component {
     // Set up the API save timer
     if (this.props.backend === true) {
       this.backendSaveIntervalId = setInterval(() => {
-        this.saveCodeToBackend();
+        this.saveProjectToBackend();
       }, this.props.backendCodeSaveInterval);
     }
 
@@ -59,14 +59,14 @@ class Gui extends Component {
       if (this.props.needsSave) {
         event.preventDefault();
         event.returnValue = "";
-        if (this.props.backend) this.saveCodeToBackend();
+        if (this.props.backend) this.saveProjectToBackend();
       }
     });
   }
 
   componentWillUnmount() {
     if (this.props.backend === true) {
-      this.saveCodeToBackend();
+      this.saveProjectToBackend();
       clearInterval(this.backendSaveIntervalId);
     }
   }
