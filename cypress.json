@@ -1,7 +1,7 @@
 {
     "baseUrl": "http://localhost:3000",
     "integrationFolder": "test/integration",
-    "testFiles": "**/*.js",
+    "testFiles": "**/*-spec.js",
     "fixturesFolder": "test/fixtures",
     "pluginsFile": "test/cypress/plugins",
     "supportFile": "test/cypress/support",

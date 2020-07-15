@@ -3,5 +3,14 @@
   "plugins": [
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-runtime"
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-runtime",
+        ["istanbul", {}, "istanbul-for-integration-tests"]
+      ]
+    }
+  }
 }

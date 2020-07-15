@@ -17,7 +17,6 @@ module.exports = [
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           loader: "babel-loader",
-          options: { presets: ["@babel/env", "@babel/preset-react"] },
         },
         {
           test: /\.css$/,
@@ -82,7 +81,6 @@ module.exports = [
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           loader: "babel-loader",
-          options: { presets: ["@babel/env", "@babel/preset-react"] },
         },
         {
           test: /\.css$/,

@@ -5,6 +5,10 @@
 
 # testing
 /coverage
+/jest-coverage
+/cypress-coverage
+/.nyc_output
+/reports
 /test/integration/screenshots
 /test/integration/videos
 

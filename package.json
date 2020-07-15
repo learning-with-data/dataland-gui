@@ -4,13 +4,20 @@
   "description": "Editor for the DataLand project",
   "main": "dist/main.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --config-name=component",
-    "start": "NODE_ENV=development webpack-dev-server --open --config-name=demo",
+    "build": "webpack --config-name=component --mode=production",
+    "start": "webpack-dev-server --open --config-name=demo --mode=development",
     "lint": "eslint src test",
     "prepare": "npm run build",
-    "pretest": "npm run lint",
+    "pretest": "rm -rf .nyc_output || true && rm -rf reports || true && npm run lint",
     "test": "jest ----config jest.config.js ./test && cypress run --browser chrome --headless",
-    "cypress:open": "cypress open"
+    "posttest": "npm run combine:reports",
+    "cypress:open": "cypress open",
+    "mkdir:reports": "mkdir reports || true",
+    "precopy:reports": "npm run mkdir:reports",
+    "copy:reports": "cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "precombine:reports": "npm run copy:reports && mkdir .nyc_output || true",
+    "combine:reports": "nyc merge reports && mv coverage.json .nyc_output/out.json",
+    "postcombine:reports": "nyc report"
   },
   "author": {
     "name": "Sayamindu Dasgupta",
@@ -24,6 +31,7 @@
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.10.1",
+    "@cypress/code-coverage": "^3.8.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.1.0",
     "babel-loader": "^8.1.0",
@@ -75,5 +83,8 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "nyc": {
+    "report-dir": "cypress-coverage"
+  }
 }
