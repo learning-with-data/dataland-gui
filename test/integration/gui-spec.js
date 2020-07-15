@@ -16,7 +16,7 @@ describe("The GUI", () => {
 
   beforeEach(function () {
     cy.viewport(1920, 1000);
-    cy.visit("/example/example.html");
+    cy.visit("/");
   });
 
   it("successfully loads", () => {
@@ -51,7 +51,7 @@ describe("The GUI", () => {
   });
 
   it("can create a variable", function () {
-    cy.visit("/example/example.html", {
+    cy.visit("/", {
       onBeforeLoad(win) {
         cy.stub(win, "prompt").returns("avariable");
       },
@@ -98,7 +98,7 @@ describe("The GUI", () => {
   it("can load and run a project file", function () {
     const projectFixturePath = "../fixtures/sample1.dbp";
 
-    cy.visit("/example/example.html", {
+    cy.visit("/", {
       onBeforeLoad: (win) => {
         cy.spy(win.console, "log").as("consoleLog");
       },
