@@ -16,12 +16,12 @@ import VisualizationComponent from "./components/VisualizationComponent";
 import { connectToRuntime } from "./components/connectToRuntime";
 
 import {
-  GUI_ERROR_OCCURRED,
-  GUI_PROJECT_MODIFIED,
-  GUI_PROJECT_SAVED,
-  GUI_INTERPRETER_STARTED,
-  GUI_INTERPRETER_STOPPED,
-} from "./redux/actionsTypes";
+  error_occurred,
+  interpreter_started,
+  interpreter_stopped,
+  project_modified,
+  project_saved,
+} from "./redux/actionCreators";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
@@ -279,23 +279,6 @@ const mapStateToProps = function (store) {
     needsSave: store.projectModifiedTimeStamp > store.projectSavedTimeStamp,
   };
 };
-
-const error_occurred = (error, message) => ({
-  type: GUI_ERROR_OCCURRED,
-  payload: { error, message },
-});
-
-const interpreter_started = () => ({ type: GUI_INTERPRETER_STARTED });
-
-const interpreter_stopped = () => ({ type: GUI_INTERPRETER_STOPPED });
-
-const project_modified = () => ({
-  type: GUI_PROJECT_MODIFIED,
-});
-
-const project_saved = () => ({
-  type: GUI_PROJECT_SAVED,
-});
 
 export default connect(mapStateToProps, {
   error_occurred,

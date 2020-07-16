@@ -12,7 +12,7 @@ import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
 import { connectToRuntime } from "../connectToRuntime";
-import { GUI_ERROR_OCCURRED } from "../../redux/actionsTypes";
+import { error_occurred } from "../../redux/actionCreators";
 
 function TableViewerHeaderComponent(props) {
   const cardHeaderRef = useRef(null);
@@ -137,11 +137,6 @@ TableViewerHeaderComponent.propTypes = {
 
   error_occurred: PropTypes.func,
 };
-
-const error_occurred = (error, message) => ({
-  type: GUI_ERROR_OCCURRED,
-  payload: { error, message },
-});
 
 export default connect(null, { error_occurred })(
   connectToRuntime(TableViewerHeaderComponent, {

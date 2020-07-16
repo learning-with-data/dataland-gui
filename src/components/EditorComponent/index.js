@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import DataLandTheme from "../../lib/blockly/theme";
-import { GUI_ERROR_OCCURRED } from "../../redux/actionsTypes";
 import getCustomBlockly from "../../lib/blockly/blocks";
 import Toolbox from "../../lib/blockly/toolbox";
 
 import { connectToRuntime } from "../connectToRuntime";
+import { error_occurred } from "../../redux/actionCreators";
 
 import "./style.css";
 
@@ -100,11 +100,6 @@ EditorComponent.propTypes = {
 
   projectDataColumns: PropTypes.array,
 };
-
-const error_occurred = (error, message) => ({
-  type: GUI_ERROR_OCCURRED,
-  payload: { error, message },
-});
 
 export default connect(null, { error_occurred }, null, {
   forwardRef: true,
