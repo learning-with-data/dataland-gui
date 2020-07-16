@@ -127,7 +127,10 @@ class Gui extends Component {
     }
 
     if (!isEmpty(data)) this.props.setProjectData(data);
-    this.editor.current.setCode(code);
+    // [Hack] Delay the code loading to ensure that the block menus are
+    // populated with the data columns---otherwise, the menus get reset
+    // to the first option
+    setTimeout(() => this.editor.current.setCode(code), 100);
   }
 
   saveProjectToBackend() {

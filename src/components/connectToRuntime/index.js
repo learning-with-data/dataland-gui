@@ -36,6 +36,15 @@ const connectToRuntime = function (
       this._handleVisualizationUpdate = this._handleVisualizationUpdate.bind(
         this
       );
+
+      // The following two are here rather than in componentDidMount() as there
+      // seems to be race-condition(?) during initialization + project load where
+      // the project data is set before these two handlers get registered, and
+      // as a result, the next save sends a blank data field to the server.
+      // This seems to be due to children's componentDidMount() running first:
+      // https://github.com/facebook/react/issues/5737
+      this.runtime.on("data-updated", this._handleDataUpdate);
+      this.runtime.on("visualization-updated", this._handleVisualizationUpdate);
     }
 
     _handleDataUpdate(d) {
@@ -51,11 +60,6 @@ const connectToRuntime = function (
       if (this.config.visualization) {
         this.setState({ visualizationSpec: v });
       }
-    }
-
-    componentDidMount() {
-      this.runtime.on("data-updated", this._handleDataUpdate);
-      this.runtime.on("visualization-updated", this._handleVisualizationUpdate);
     }
 
     componentWillUnmount() {
