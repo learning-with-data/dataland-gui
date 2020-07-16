@@ -89,7 +89,7 @@ class Gui extends Component {
             handleStopPress={() => this.stopInterpreter()}
           />
         </HeaderComponent>
-        <div className={`gui-container ${this.state.busy ? "busy" : ""}`}>
+        <div className="gui-container">
           <div className="editor-column">
             <EditorComponent
               ref={this.editor}
