@@ -40,6 +40,7 @@ class Gui extends Component {
     this.saveIntervalId = null;
 
     this.handleProjectImport = this.handleProjectImport.bind(this);
+    this._handleBeforeUnload = this._handleBeforeUnload.bind(this);
   }
 
   componentDidMount() {
@@ -56,13 +57,7 @@ class Gui extends Component {
     }
 
     // Make sure a save is attempted when user leaves page (refreshes browser, or closes window)
-    window.addEventListener("beforeunload", (event) => {
-      if (this.props.needsSave) {
-        event.preventDefault();
-        event.returnValue = "";
-        if (this.props.backend) this.saveProjectToBackend();
-      }
-    });
+    window.addEventListener("beforeunload", this._handleBeforeUnload);
   }
 
   componentWillUnmount() {
@@ -70,6 +65,7 @@ class Gui extends Component {
       this.saveProjectToBackend();
       clearInterval(this.backendSaveIntervalId);
     }
+    window.removeEventListener("beforeunload", this._handleBeforeUnload);
   }
 
   render() {
@@ -197,6 +193,14 @@ class Gui extends Component {
       // Assumption is that file is downloaded after 1 minute
       window.setTimeout(window.URL.revokeObjectURL, 60000, blobUrl);
       this.props.project_saved();
+    }
+  }
+
+  _handleBeforeUnload(event) {
+    if (this.props.needsSave) {
+      event.preventDefault();
+      event.returnValue = "";
+      if (this.props.backend) this.saveProjectToBackend();
     }
   }
 
