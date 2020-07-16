@@ -1,36 +1,18 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import PropTypes from "prop-types";
 
 import { mount } from "enzyme";
 
 import fs from "fs";
 import Papa from "papaparse";
 
-import { Provider } from "react-redux";
 import createUsualStore from "../utils/StoreUtil";
+import WrappingProvider from "../utils/WrappingProvider";
 
 import Runtime from "../../src/lib/Runtime";
-import { RuntimeContext } from "../../src/components/connectToRuntime";
 
 import TableViewerComponent from "../../src/components/TableViewerComponent";
 
-function WrappingProvider(props) {
-  const { children, store, runtime } = props;
-  return (
-    <Provider store={store}>
-      <RuntimeContext.Provider value={runtime}>
-        {children}
-      </RuntimeContext.Provider>
-    </Provider>
-  );
-}
-
-WrappingProvider.propTypes = {
-  children: PropTypes.node,
-  store: PropTypes.object,
-  runtime: PropTypes.object,
-};
 
 describe("TableViewerComponent", () => {
   it("should render with a placeholder if there is no data", () => {
