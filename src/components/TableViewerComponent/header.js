@@ -12,7 +12,7 @@ import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
 import { connectToRuntime } from "../connectToRuntime";
-import { error_occurred } from "../../redux/actionCreators";
+import { error_occurred, project_modified } from "../../redux/actionCreators";
 
 function TableViewerHeaderComponent(props) {
   const cardHeaderRef = useRef(null);
@@ -48,6 +48,7 @@ function TableViewerHeaderComponent(props) {
           return;
         }
         props.setProjectData(results.data);
+        props.project_modified();
         setIsCsvLoading(false);
       },
     });
@@ -136,9 +137,10 @@ TableViewerHeaderComponent.propTypes = {
   projectData: PropTypes.array,
 
   error_occurred: PropTypes.func,
+  project_modified: PropTypes.func,
 };
 
-export default connect(null, { error_occurred })(
+export default connect(null, { error_occurred, project_modified })(
   connectToRuntime(TableViewerHeaderComponent, {
     data: true,
     visualization: false,
