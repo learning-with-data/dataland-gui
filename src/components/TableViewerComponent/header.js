@@ -35,7 +35,7 @@ function TableViewerHeaderComponent(props) {
       dynamicTyping: true,
       header: true,
       skipEmptyLines: true,
-      worker: true,
+      worker: false,
       complete: (results) => {
         if (results.errors.length > 0) {
           console.log("Parse error while importing CSV file.");
