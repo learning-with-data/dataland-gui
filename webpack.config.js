@@ -34,7 +34,7 @@ module.exports = [
     },
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin()],
+      minimizer: [new TerserPlugin({parallel: 1})],
     },
     output: {
       path: path.resolve(__dirname, "dist"),
