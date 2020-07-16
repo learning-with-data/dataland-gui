@@ -1,13 +1,17 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 
 import PropTypes from "prop-types";
 
-import { VegaLite } from "react-vega";
 import Card from "react-bootstrap/Card";
+import Spinner from "react-bootstrap/Spinner";
 
 import { connectToRuntime } from "../connectToRuntime";
 
 import "./style.css";
+
+const VegaLite = React.lazy(() =>
+  import("react-vega").then((module) => ({ default: module.VegaLite }))
+);
 
 class VisualizationComponent extends Component {
   constructor(props) {
@@ -21,13 +25,23 @@ class VisualizationComponent extends Component {
         {/* <Card.Header className="text-right">
       </Card.Header> */}
         <Card.Body className="visualization">
-          <VegaLite
-            spec={this.props.projectVisualizationSpec}
-            actions={false}
-            className="h-100 w-100"
-            onParseError={(e) => console.log(e)}
-            onNewView={(v) => (this._view = v)}
-          />
+          <Suspense
+            fallback={
+              <div className="h-100 w-100 d-flex justify-content-center align-items-center">
+                <Spinner animation="border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </div>
+            }
+          >
+            <VegaLite
+              spec={this.props.projectVisualizationSpec}
+              actions={false}
+              className="h-100 w-100"
+              onParseError={(e) => console.log(e)}
+              onNewView={(v) => (this._view = v)}
+            />
+          </Suspense>
         </Card.Body>
       </Card>
     );
@@ -35,7 +49,7 @@ class VisualizationComponent extends Component {
 
   async _getImageBlobFromView() {
     const viewCanvas = await this._view.toCanvas(
-      320 / this._view.width ()// We want a 320px wide image
+      320 / this._view.width() // We want a 320px wide image
     );
     return new Promise((resolve) => {
       viewCanvas.toBlob((blob) => {
