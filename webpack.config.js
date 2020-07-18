@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const nodeExternals = require("webpack-node-externals");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = [
@@ -34,7 +35,7 @@ module.exports = [
     },
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin({parallel: 1})],
+      minimizer: [new TerserPlugin({ parallel: 1 })],
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -42,20 +43,7 @@ module.exports = [
       library: "DataLandGui",
       libraryTarget: "umd",
     },
-    externals: {
-      react: {
-        commonjs: "react",
-        commonjs2: "react",
-        amd: "React",
-        root: "React",
-      },
-      "react-dom": {
-        commonjs: "react-dom",
-        commonjs2: "react-dom",
-        amd: "ReactDOM",
-        root: "ReactDOM",
-      },
-    },
+    externals: [nodeExternals()],
     plugins: [
       new CleanWebpackPlugin(),
       new CopyPlugin({

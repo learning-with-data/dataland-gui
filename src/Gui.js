@@ -23,7 +23,6 @@ import {
   project_saved,
 } from "./redux/actionCreators";
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 
 class Gui extends Component {
