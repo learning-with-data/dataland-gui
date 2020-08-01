@@ -132,6 +132,25 @@ function VisualizationBlocks(generate_data_columns) {
     },
   };
 
+  blocks["visualization_set_size"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "set plotting mark size to %1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_VISUALIZATION_COLUMN,
+            options: generate_data_columns,
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "visualization_blocks",
+      });
+    },
+  };
+
   return blocks;
 }
 

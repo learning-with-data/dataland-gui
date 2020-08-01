@@ -19,6 +19,8 @@ const toolbox = `
         <block type="visualization_set_x" id="visualization_set_x"/>
         <block type="visualization_set_y" id="visualization_set_y"/>
         <sep gap="32"></sep>
+        <block type="visualization_set_size" id="visualization_set_size"/>
+        <sep gap="32"></sep>
         <block type="visualization_set_color_as_static" id="visualization_set_color_as_static">
             <value name="${BLOCKARG_VISUALIZATION_COLOR}">
                 <shadow type="colour_picker"></shadow>

@@ -23,6 +23,7 @@ class VisualizationPrimTable {
 
     this.visualization_set_x = (b) => this.primVisualizationSetX(b);
     this.visualization_set_y = (b) => this.primVisualizationSetY(b);
+    this.visualization_set_size = (b) => this.primVisualizationSetSize(b);
 
     this.visualization_set_color_as_static = (b) =>
       (this.mark.color = b.thread.getBlockArg(b, BLOCKARG_VISUALIZATION_COLOR));
@@ -115,6 +116,48 @@ class VisualizationPrimTable {
       field: column,
       type: "quantitative",
       scale: { zero: false },
+    };
+
+    var newLayerSpec;
+    if (newLayer) {
+      newLayerSpec = spec.layer.concat(unitSpec);
+    } else {
+      newLayerSpec = spec.layer.map((unit) => {
+        if (unit.name == unitSpec.name) return unitSpec;
+        return unit;
+      });
+    }
+
+    const newSpec = { ...spec, layer: newLayerSpec };
+
+    this.runtime.setVisualizationSpec(newSpec);
+  }
+
+  primVisualizationSetSize(block) {
+    const column = block.thread.getBlockArg(
+      block,
+      BLOCKARG_VISUALIZATION_COLUMN
+    );
+
+    const data = this.runtime.getCurrentData();
+    const spec = this.runtime.getVisualizationSpec();
+
+    var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
+    var newLayer = false;
+
+    if (unitSpec === undefined || unitSpec.encoding.size !== undefined) {
+      unitSpec = {
+        data: { values: data },
+        mark: this.mark,
+        encoding: {},
+        name: Math.random().toString(),
+      };
+      newLayer = true;
+    }
+
+    unitSpec.encoding.size = {
+      field: column,
+      type: "quantitative",
     };
 
     var newLayerSpec;
