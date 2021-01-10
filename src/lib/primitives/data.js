@@ -90,9 +90,9 @@ class DataPrimTable {
   }
 
   primDataAggregate(block) {
-    const groupingVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 1);
+    const groupingVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 0);
     const operation = block.thread.getBlockArg(block, BLOCKARG_DATA_AGGREGATION_FUNCTION);
-    const targetVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 0);
+    const targetVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 1);
 
     this.runtime.getDataTable().aggregate(groupingVariable, operation, targetVariable);
     this.runtime.dispatchDataUpdate();

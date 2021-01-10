@@ -125,9 +125,9 @@ function DataBlocks(generate_data_columns) {
     init: function() {
       this.jsonInit({
         id: "data_aggregate",
-        message0: "with %1 set to %2 for each group in %3",
+        message0: "group by %1 and set %2 to %3",
         message1: "%1", // Statement
-        lastDummyAlign2: "RIGHT",
+        message2: "ungroup",
         args0: [
           {
             type: "field_dropdown",
@@ -136,13 +136,13 @@ function DataBlocks(generate_data_columns) {
           },
           {
             type: "field_dropdown",
-            name: BLOCKARG_DATA_AGGREGATION_FUNCTION,
-            options: BLOCKDROPDOWN_AGGREGATE,
+            name: BLOCKARG_DATA_COLUMN + 1,
+            options: generate_data_columns,
           },
           {
             type: "field_dropdown",
-            name: BLOCKARG_DATA_COLUMN + 1,
-            options: generate_data_columns,
+            name: BLOCKARG_DATA_AGGREGATION_FUNCTION,
+            options: BLOCKDROPDOWN_AGGREGATE,
           }
         ],
         args1: [
