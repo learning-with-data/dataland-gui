@@ -25,24 +25,24 @@ describe("The GUI", () => {
 
   it("opens every block category successfully", () => {
     // Control category
-    cy.get("#blockly-1").click();
+    cy.get("#blockly-0").click();
     cy.get("[data-id='control_wait']");
 
     // Operators category
-    cy.get("#blockly-2").click();
+    cy.get("#blockly-1").click();
     cy.get("[data-id='operator_boolean']");
 
     // Data category
-    cy.get("#blockly-3").click();
+    cy.get("#blockly-2").click();
     cy.get("[data-id='data_filter']");
 
     // Visualization category
-    cy.get("#blockly-4").click();
+    cy.get("#blockly-3").click();
     cy.get("[data-id='visualization_clear']");
   });
 
   it("moves the block to coding areas", function () {
-    cy.get("#blockly-1").click();
+    cy.get("#blockly-0").click();
     cy.get(".blocklySvg .blocklyWorkspace")
       .contains("⯈ on project start")
       .should("not.exist");
@@ -56,7 +56,7 @@ describe("The GUI", () => {
         cy.stub(win, "prompt").returns("avariable");
       },
     });
-    cy.get("#blockly-5").click();
+    cy.get("#blockly-4").click();
     cy.get("[data-id='variables_set']").should("not.exist");
     cy.get(".blocklyFlyoutButton").click();
 
