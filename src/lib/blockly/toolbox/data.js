@@ -33,6 +33,8 @@ const toolbox = `
                 </shadow>
             </value>
         </block>
+        <block type="data_aggregate" id="data_aggregate">
+        </block>
     </category>
 `;
 

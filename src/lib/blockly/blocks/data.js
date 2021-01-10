@@ -1,12 +1,14 @@
 import Blockly from "blockly/core";
 
 import {
+  BLOCKARG_DATA_AGGREGATION_FUNCTION,
   BLOCKARG_DATA_BOOLEAN,
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
   BLOCKARG_DATA_MATCH,
   BLOCKARG_DATA_ROWNUM,
   BLOCKARG_DATA_SETVALUE,
+  BLOCKDROPDOWN_AGGREGATE,
   BLOCKDROPDOWN_BOOLEAN,
   BLOCKDROPDOWN_COMPARISON,
 } from "../constants";
@@ -117,6 +119,44 @@ function DataBlocks(generate_data_columns) {
         style: "data_blocks",
       });
     },
+  };
+
+  blocks["data_aggregate"] = {
+    init: function() {
+      this.jsonInit({
+        id: "data_aggregate",
+        message0: "with %1 set to %2 for each group in %3",
+        message1: "%1", // Statement
+        lastDummyAlign2: "RIGHT",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_COLUMN + 0,
+            options: generate_data_columns,
+          },
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_AGGREGATION_FUNCTION,
+            options: BLOCKDROPDOWN_AGGREGATE,
+          },
+          {
+            type: "field_dropdown",
+            name: BLOCKARG_DATA_COLUMN + 1,
+            options: generate_data_columns,
+          }
+        ],
+        args1: [
+          {
+            type: "input_statement",
+            name: "SUBSTACK",
+          },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        style: "data_blocks",
+      });
+    }
   };
 
   blocks["data_filter"] = {

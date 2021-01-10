@@ -1,4 +1,5 @@
 import {
+  BLOCKARG_DATA_AGGREGATION_FUNCTION,
   BLOCKARG_DATA_BOOLEAN,
   BLOCKARG_DATA_COLUMN,
   BLOCKARG_DATA_COMPARISON_OPERATOR,
@@ -20,6 +21,8 @@ class DataPrimTable {
     this.data_set = (b) => this.primDataSet(b);
 
     this.data_filter = (b) => this.primDataFilter(b);
+    this.data_aggregate = (b) => this.primDataAggregate(b);
+
     this._data_restore = () => this._primDataRestore();
   }
 
@@ -78,6 +81,21 @@ class DataPrimTable {
 
     block.thread.stack.push(block.thread.currentStack);
     block.thread.currentStack = undefined;
+
+    // Insert a "fake block" that will cause the previous data to be restored when the c-block ends
+    block.thread.stack.push({ block: { type: "_data_restore" } });
+
+    // Insert the content of the c-block
+    block.thread.stack.push(block.statement);
+  }
+
+  primDataAggregate(block) {
+    const groupingVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 1);
+    const operation = block.thread.getBlockArg(block, BLOCKARG_DATA_AGGREGATION_FUNCTION);
+    const targetVariable = block.thread.getBlockArg(block, BLOCKARG_DATA_COLUMN + 0);
+
+    this.runtime.getDataTable().aggregate(groupingVariable, operation, targetVariable);
+    this.runtime.dispatchDataUpdate();
 
     // Insert a "fake block" that will cause the previous data to be restored when the c-block ends
     block.thread.stack.push({ block: { type: "_data_restore" } });

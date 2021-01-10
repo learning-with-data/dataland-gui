@@ -6,6 +6,7 @@ export const BLOCKARG_CONTROL_IF_CONDITION = "CONDITION";
 export const BLOCKARG_CONTROL_WAIT_DURATION = "DURATION";
 
 // data blocks
+export const BLOCKARG_DATA_AGGREGATION_FUNCTION = "AGGREGATION_FUNCTION";
 export const BLOCKARG_DATA_BOOLEAN = "BOOLEAN";
 export const BLOCKARG_DATA_COLUMN = "COLUMN";
 export const BLOCKARG_DATA_COMPARISON_OPERATOR = "COMPARISON_OPERATOR";
@@ -32,6 +33,17 @@ export const BLOCKARG_VISUALIZATION_TITLE = "TITLE";
 export const BLOCKARG_DEBUG_MESSAGE = "MESSAGE";
 
 // Dropdown constants
+export const BLOCKDROPDOWN_AGGREGATE = [
+  ["count", "count"],
+  ["count (unique)", "count (unique)"],
+  ["maximum", "maximum"],
+  ["minimum", "minimum"],
+  ["mean", "mean"],
+  ["median", "median"],
+  ["mode", "mode"],
+  ["sum", "sum"],
+];
+
 export const BLOCKDROPDOWN_ARITHMETIC_OP = [
   ["+", "add"],
   ["-", "subtract"],

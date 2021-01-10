@@ -222,4 +222,22 @@ describe("DataTable", () => {
     expect(modifiedRow).toHaveLength(1);
     expect(modifiedRow[0]["DATE"]).toBe("2018-01-04");
   });
+
+  it("should group correctly", () => {
+    const d = new DataTable(csvParseResults.data);
+    d.aggregate("STATION", "mean", "PRCP");
+    expect(d.getCurrentData().length).toBe(8);
+
+    expect(d.getCurrentData()[0].STATION).toBe("US1NCOR0038");
+    expect(d.getCurrentData()[7].STATION).toBe("USR0000NDUK");
+  });
+
+  it("should do aggregation correctly", () => {
+    const d = new DataTable(csvParseResults.data);
+    d.aggregate("STATION", "mean", "PRCP");
+
+    expect(d.getCurrentData()[0].PRCP).toBeCloseTo(0.16839285714285712);
+    expect(d.getCurrentData()[7].PRCP).toBeNaN();
+  });
+
 });

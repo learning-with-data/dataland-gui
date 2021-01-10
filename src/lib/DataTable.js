@@ -1,5 +1,7 @@
 "use strict";
 
+import { mean, median, mode } from "stats-lite";
+
 import { List } from "immutable";
 
 class DataTable {
@@ -100,6 +102,66 @@ class DataTable {
 
   popFilter() {
     if (this._dataList.size > 1) this._dataList = this._dataList.pop();
+  }
+
+  aggregate(groupingVariable, operation, targetVariable) {
+    const data = this._dataList.last();
+    const groupedData = data.groupBy((row) => row[groupingVariable]);
+
+    const aggregateData = groupedData.map((v, k) => {
+      const values = v.map((x) => x[targetVariable]).toArray();
+      let result;
+
+      switch (operation) {
+        case "count":
+          result = values.length;
+          break;
+        case "count (unique)":
+          result = [...new Set(values)].length;
+          break;
+        case "maximum":
+          result = Math.max(...values);
+          break;
+        case "minimum":
+          result = Math.min(...values);
+          break;
+        case "mean":
+          result = mean(values);
+          break;
+        case "median":
+          result = median(values);
+          break;
+        case "mode":
+          result = mode(values);
+          break;
+        case "sum":
+          result = values.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0
+          );
+          break;
+        default:
+          console.warn(
+            `Error: got unknown aggregation operator ${operation} while aggregating rows`
+          );
+      }
+
+      return {
+        [groupingVariable]: k,
+        [targetVariable]: result,
+      };
+    });
+
+    this._dataList = this._dataList.push(
+      aggregateData.toList().map((row, i) => {
+        return {
+          ...row,
+          __id: Math.random().toString(36).slice(2),
+          __visible_id: i + 1,
+          __selected: i === 0,
+        };
+      })
+    );
   }
 
   pushFilter(filter) {
