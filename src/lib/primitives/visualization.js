@@ -34,6 +34,16 @@ class VisualizationPrimTable {
       (this.mark.type = b.thread.getBlockArg(b, BLOCKARG_VISUALIZATION_MARK));
   }
 
+  _guess_encoding_type(data, column) {
+    const first = data[0][column];
+    if (typeof first === "number") return "quantitative";
+    if (typeof first === "string") return "nominal"; // TODO: Is there a way to figure out if ordinal?
+    if (first instanceof Date) return "temporal";
+
+    console.warn(`Could not detect encoding type for ${column}, falling back to quantitative.`);
+    return "quantitative";
+  }
+
   primVisualizationSetTitle(block) {
     const title = block.thread.getBlockArg(block, BLOCKARG_VISUALIZATION_TITLE);
     const spec = this.runtime.getVisualizationSpec();
@@ -71,8 +81,7 @@ class VisualizationPrimTable {
 
     unitSpec.encoding.x = {
       field: column,
-      type: "quantitative",
-      scale: { zero: false },
+      type: this._guess_encoding_type(data, column),
     };
 
     var newLayerSpec;
@@ -114,8 +123,7 @@ class VisualizationPrimTable {
 
     unitSpec.encoding.y = {
       field: column,
-      type: "quantitative",
-      scale: { zero: false },
+      type: this._guess_encoding_type(data, column),
     };
 
     var newLayerSpec;
@@ -157,7 +165,7 @@ class VisualizationPrimTable {
 
     unitSpec.encoding.size = {
       field: column,
-      type: "quantitative",
+      type: this._guess_encoding_type(data, column),
     };
 
     var newLayerSpec;
@@ -199,7 +207,7 @@ class VisualizationPrimTable {
 
     unitSpec.encoding.color = {
       field: column,
-      type: "nominal", // ordinal?
+      type: this._guess_encoding_type(data, column),
     };
 
     var newLayerSpec;
