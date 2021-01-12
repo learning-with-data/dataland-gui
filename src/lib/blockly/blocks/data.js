@@ -163,9 +163,10 @@ function DataBlocks(generate_data_columns) {
     init: function () {
       this.jsonInit({
         id: "data_filter",
-        message0: "with filter %1 %2 %3 %4",
+        message0: "filter %1 %2 %3 %4",
         message1: "%1", // Statement
-        lastDummyAlign2: "RIGHT",
+        message2: "unfilter",
+        // lastDummyAlign2: "RIGHT",
         args0: [
           {
             type: "field_dropdown",
