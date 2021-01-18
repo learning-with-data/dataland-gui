@@ -3,8 +3,9 @@ import En from "blockly/msg/en";
 Blockly.setLocale(En);
 
 import ControlBlocks from "./control";
-import OperatorBlocks from "./operator";
 import DataBlocks from "./data";
+import MapsBlocks from "./maps";
+import OperatorBlocks from "./operator";
 import VisualizationBlocks from "./visualization";
 import VariableBlocks from "./variables";
 
@@ -63,7 +64,7 @@ const standardBlocks = {
   },
 };
 
-function getCustomBlockly(getColumnsFunc) {
+function getCustomBlockly(microworld, getColumnsFunc) {
   const generate_data_columns = function () {
     const columns = getColumnsFunc();
     if (columns && columns.length === 0) {
@@ -79,8 +80,9 @@ function getCustomBlockly(getColumnsFunc) {
     Blockly.Blocks,
     standardBlocks,
     ControlBlocks,
-    OperatorBlocks,
     DataBlocks(generate_data_columns),
+    MapsBlocks(generate_data_columns),
+    OperatorBlocks,
     VisualizationBlocks(generate_data_columns),
     VariableBlocks,
     DebugBlocks

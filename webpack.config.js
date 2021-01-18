@@ -20,6 +20,15 @@ module.exports = [
           loader: "babel-loader",
         },
         {
+          test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
+          use: {
+            loader: "url-loader",
+            options: {
+              limit: 50000,
+            },
+          },
+        },
+        {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, "css-loader"],
         },
@@ -69,6 +78,15 @@ module.exports = [
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           loader: "babel-loader",
+        },
+        {
+          test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
+          use: {
+            loader: "url-loader",
+            options: {
+              limit: 50000,
+            },
+          },
         },
         {
           test: /\.css$/,

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { createStore } from "redux";
 import { Provider } from "react-redux";
+import PropTypes from "prop-types";
 
 import _Gui from "./Gui";
 
@@ -30,12 +31,16 @@ class Gui extends Component {
   render() {
     return (
       <Provider store={this.store}>
-        <RuntimeContext.Provider value={this.runtime}>
+        <RuntimeContext.Provider microworld={this.props.microworld} value={this.runtime}>
           <_Gui {...this.props} />
         </RuntimeContext.Provider>
       </Provider>
     );
   }
 }
+
+Gui.propTypes = {
+  microworld: PropTypes.string.isRequired,
+};
 
 export default Gui;

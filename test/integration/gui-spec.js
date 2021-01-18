@@ -148,4 +148,14 @@ describe("The GUI", () => {
     cy.get(".error-notification .close").click();
     cy.get(".error-notification").should("not.exist");
   });
+
+  it("loads microworlds correctly", function() {
+    cy.visit("/?microworld=maps");
+    cy.get("#blockly-3").click();
+    cy.get("[data-id='maps_clear']");
+
+    cy.visit("/?microworld=plots");
+    cy.get("#blockly-3").click();
+    cy.get("[data-id='visualization_clear']");
+  });
 });

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import DataLandTheme from "../../lib/blockly/theme";
 import getCustomBlockly from "../../lib/blockly/blocks";
-import Toolbox from "../../lib/blockly/toolbox";
+import getBlocklyToolbox from "../../lib/blockly/toolbox";
 
 import { connectToRuntime } from "../connectToRuntime";
 import { error_occurred } from "../../redux/actionCreators";
@@ -20,7 +20,6 @@ const blocklyOptions = {
   readOnly: false,
   rtl: false,
   scrollbars: true,
-  toolbox: Toolbox,
   toolboxPosition: "start",
   horizontalLayout: false,
   trashcan: true,
@@ -48,9 +47,14 @@ class EditorComponent extends Component {
   }
 
   componentDidMount() {
-    this.blockly = getCustomBlockly(() => this.props.projectDataColumns);
-    this.workspace = this.blockly.inject("editorContainer", blocklyOptions);
-
+    this.blockly = getCustomBlockly(
+      this.props.microworld,
+      () => this.props.projectDataColumns
+    );
+    this.workspace = this.blockly.inject("editorContainer", {
+      toolbox: getBlocklyToolbox(this.props.microworld),
+      ...blocklyOptions,
+    });
     this.workspace.addChangeListener(() => {
       this.props.onCodeUpdated();
     });
@@ -99,6 +103,8 @@ EditorComponent.propTypes = {
   error_occurred: PropTypes.func,
 
   projectDataColumns: PropTypes.array,
+
+  microworld: PropTypes.string.isRequired,
 };
 
 export default connect(null, { error_occurred }, null, {

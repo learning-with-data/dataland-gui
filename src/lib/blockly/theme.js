@@ -24,6 +24,11 @@ const DataLandTheme = Blockly.Theme.defineTheme("dataland", {
       colourSecondary: "#0DA57A",
       colourTertiary: "#0B8E69",
     },
+    maps_blocks: {
+      colourPrimary: "#BF5B17",
+      colourSecondary: "#F3741D",
+      colourTertiary: "#E86D19",
+    },
     variable_blocks: {
       colourPrimary: "#3A79C2",
       colourSecondary: "#1A4D84",
@@ -42,6 +47,9 @@ const DataLandTheme = Blockly.Theme.defineTheme("dataland", {
     },
     visualization_category: {
       colour: "#0FBD8C",
+    },
+    maps_category: {
+      colour: "#BF5B17",
     },
     variable_category: {
       colour: "#3A79C2",

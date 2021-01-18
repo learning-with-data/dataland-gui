@@ -29,6 +29,11 @@ export const BLOCKARG_VISUALIZATION_COLOR = "COLOR";
 export const BLOCKARG_VISUALIZATION_MARK = "MARK";
 export const BLOCKARG_VISUALIZATION_TITLE = "TITLE";
 
+// maps blocks
+export const BLOCKARG_MAPS_COLUMN = "COLUMN";
+export const BLOCKARG_MAPS_COLOR = "COLOR";
+export const BLOCKARG_MAPS_MARK = "MARK";
+
 // debug blocks
 export const BLOCKARG_DEBUG_MESSAGE = "MESSAGE";
 

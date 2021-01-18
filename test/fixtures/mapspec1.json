@@ -1,0 +1,40 @@
+{
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "__id": "dk9tnik5rq",
+            "__visible_id": 1,
+            "__selected": true,
+            "Latitude": 35.9049,
+            "Longitude": -79.0469,
+            "University": "University of North Carolina at Chapel Hill"
+          },
+          {
+            "__id": "c2d57ims0d",
+            "__visible_id": 2,
+            "__selected": false,
+            "Latitude": 36.0014,
+            "Longitude": -78.9382,
+            "University": "Duke University"
+          },
+          {
+            "__id": "3ku9f7i0num",
+            "__visible_id": 3,
+            "__selected": false,
+            "Latitude": 35.7847,
+            "Longitude": -78.6821,
+            "University": "North Carolina State University"
+          }
+        ]
+      },
+      "encoding": {
+        "color": "#3333ff",
+        "latitude": { "field": "Latitude" },
+        "longitude": { "field": "Longitude" }
+      },
+      "name": "0.7962462114157075"
+    }
+  ]
+}

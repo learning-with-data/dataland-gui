@@ -95,11 +95,12 @@ class Gui extends Component {
               onCodeUpdated={() => {
                 this.props.project_modified();
               }}
+              microworld={this.props.microworld}
             />
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <VisualizationComponent ref={this.visualizer} />
+              <VisualizationComponent ref={this.visualizer} microworld={this.props.microworld} />
             </div>
             <div className="data-container">
               <TableViewerComponent />
@@ -252,6 +253,7 @@ class Gui extends Component {
 Gui.propTypes = {
   initialProjectTitle: PropTypes.string,
   initialProject: PropTypes.instanceOf(Uint8Array),
+  microworld: PropTypes.string.isRequired,
 
   backend: PropTypes.bool.isRequired,
   backendCodeSaveHandler: PropTypes.func,
