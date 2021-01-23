@@ -18,14 +18,23 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function generate_scale(data, column) {
-  const domain = data.map((row) => row[column]);
+function generate_scale(data, column, scaleType, range) {
+  const domain = data
+    .map((row) => row[column])
+    .filter((item) => !Number.isNaN(item));
+  const scaleFn = vega.scale(scaleType);
 
-  const sqrt = vega.scale("sqrt"); // TODO
-  const scale = sqrt()
-    .domain([Math.min(...domain), Math.max(...domain)])
-    .range([5, 25]);
-  return scale;
+  if (scaleType === "sequential") {
+    const scale = scaleFn()
+      .domain([Math.min(...domain), Math.max(...domain)])
+      .interpolator(range);
+    return scale;
+  } else {
+    const scale = scaleFn()
+      .domain([Math.min(...domain), Math.max(...domain)])
+      .range(range);
+    return scale;
+  }
 }
 
 function MapPlot(props) {
@@ -43,17 +52,38 @@ function MapPlot(props) {
         : undefined;
     const sizeField =
       layer.encoding.size !== undefined ? layer.encoding.size.field : undefined;
+    const colorField = layer.encoding.color.field;
 
-    let scale;
+    // TODO: scale types
+    let sizeScale;
     if (sizeField !== undefined) {
-      scale = generate_scale(data, sizeField);
+      sizeScale = generate_scale(data, sizeField, "sqrt", [5, 25]);
+    }
+
+    let colorScale;
+    if (colorField !== undefined) {
+      colorScale = generate_scale(
+        data,
+        colorField,
+        "sequential",
+        vega.scheme("blues")
+      );
     }
 
     return data.map((row, index) => {
+      // FIXME: We are going to end up with a lot of markers off the
+      // west coast of Africa due to this.
+      // Skip markers if data is missing.
       const position = [row[latField] ?? 0, row[longField] ?? 0];
+
       let size = 5;
       if (row[sizeField] !== undefined) {
-        size = scale(row[sizeField]);
+        size = sizeScale(row[sizeField]);
+      }
+
+      let color = layer.encoding.color;
+      if (row[colorField] !== undefined) {
+        color = colorScale(row[colorField]);
       }
 
       const marker = (
@@ -61,8 +91,10 @@ function MapPlot(props) {
           key={index}
           center={position}
           pathOptions={{
-            color: layer.encoding.color,
-            fillColor: layer.encoding.color,
+            color: color,
+            fillColor: color,
+            opacity: 0.7,
+            fillOpacity: 0.7
           }}
           radius={size}
         />

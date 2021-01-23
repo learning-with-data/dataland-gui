@@ -9,6 +9,7 @@ const toolbox = `
         <sep gap="32"></sep>
         <block type="maps_set_size" id="maps_set_size"/>
         <sep gap="32"></sep>
+        <block type="maps_set_color" id="maps_set_color"/>
         <block type="maps_set_color_as_static" id="maps_set_color_as_static">
             <value name="${BLOCKARG_MAPS_COLOR}">
                 <shadow type="colour_picker"></shadow>

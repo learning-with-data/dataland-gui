@@ -15,8 +15,10 @@ class MapsPrimTable {
 
     this.maps_set_latitude = (b) => this.primMapsSetLatitude(b);
     this.maps_set_longitude = (b) => this.primMapsSetLongitude(b);
+
     this.maps_set_size = (b) => this.primMapsSetSize(b);
 
+    this.maps_set_color = (b) => this.primMapsSetColor(b);
     this.maps_set_color_as_static = (b) =>
       (this.marker_color = b.thread.getBlockArg(b, BLOCKARG_MAPS_COLOR));
   }
@@ -120,6 +122,44 @@ class MapsPrimTable {
 
     unitSpec.encoding.size = {
       field: column,
+    };
+
+    var newLayerSpec;
+    if (newLayer) {
+      newLayerSpec = spec.layer.concat(unitSpec);
+    } else {
+      newLayerSpec = spec.layer.map((unit) => {
+        if (unit.name == unitSpec.name) return unitSpec;
+        return unit;
+      });
+    }
+
+    const newSpec = { ...spec, layer: newLayerSpec };
+
+    this.runtime.setVisualizationSpec(newSpec);
+  }
+
+  primMapsSetColor(block) {
+    const column = block.thread.getBlockArg(block, BLOCKARG_MAPS_COLUMN);
+
+    const data = this.runtime.getCurrentData();
+    const spec = this.runtime.getVisualizationSpec();
+
+    var unitSpec = cloneDeep(spec.layer.slice(-1)[0]);
+    var newLayer = false;
+
+    if (unitSpec === undefined || unitSpec.encoding.color.field !== undefined) {
+      unitSpec = {
+        data: { values: data },
+        mark: this.mark,
+        encoding: {},
+        name: Math.random().toString(),
+      };
+      newLayer = true;
+    }
+
+    unitSpec.encoding.color = {
+      field: column
     };
 
     var newLayerSpec;
