@@ -1,34 +1,58 @@
 import React from "react";
 
 import PropTypes from "prop-types";
-import Table from "react-bootstrap/Table";
+
+import { Column, Table } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+
+import "react-virtualized/styles.css";
 
 const TableView = React.memo((props) => {
   if (props.data && props.data.length > 0) {
-    return (
-      <Table size="sm" striped className="data-table">
-        <thead>
-          <tr>
-            <th>Row #</th>
+    const table = (
+      <AutoSizer defaultWidth={480} defaultHeight={360}>
+        {({ height, width }) => (
+          <Table
+            className="data-table"
+            headerClassName="data-table-header"
+            headerHeight={30}
+            height={height}
+            rowCount={props.data.length}
+            rowGetter={({ index }) => props.data[index]}
+            rowHeight={40}
+            rowStyle={({ index }) => {
+              return {
+                background: props.data[index]?.__selected ? "gray" : index%2 ? "white" : "#f2f2f2",
+                color: props.data[index]?.__selected ? "white" : "black",
+              };
+            }}
+            scrollToIndex={props.data.findIndex((row) => row.__selected)}
+            width={width}
+          >
+            <Column
+              className="data-table-cell"
+              label={"Row #"}
+              dataKey={"__visible_id"}
+              key={-1}
+              width={50}
+            />
             {props.columns.map((column, i) => {
-              return <th data-column={column} key={i}>{column}</th>;
+              return (
+                <Column
+                  className="data-table-cell"
+                  label={column}
+                  dataKey={column}
+                  key={i}
+                  width={(width - 50)/ (props.columns.length)}
+                />
+              );
             })}
-          </tr>
-        </thead>
-        <tbody>
-          {props.data.map((row, i) => {
-            return (
-              <tr key={i} data-id={row.__id} className={row.__selected ? "selected-row" : null}>
-                <td className="data-table-column" key={-1}>{row.__visible_id}</td>
-                {props.columns.map((column, i) => {
-                  return <td data-column={column} className="data-table-column" key={i}>{row[column]}</td>;
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+          </Table>
+        )}
+      </AutoSizer>
     );
+
+    return table;
   } else {
     return (
       <div className="p-4 data-placeholder w-100 h-100 justify-content-between align-items-center">

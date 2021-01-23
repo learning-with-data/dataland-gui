@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import PropTypes from "prop-types";
 
@@ -15,11 +15,6 @@ import "./style.css";
 
 function TableViewerComponent(props) {
   const [showFullScreenTable, setShowFullScreenTable] = useState(false);
-
-  useEffect(() => {
-    const element = document.querySelector(".selected-row");
-    if (element) element.scrollIntoView(false);
-  });
 
   return (
     <Fullscreen

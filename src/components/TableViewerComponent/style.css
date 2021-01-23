@@ -12,36 +12,12 @@ div.fullscreen {
   overflow-y: auto;
 }
 
-table.data-table {
+.data-table {
   font-size: small;
-  table-layout: fixed;
 }
 
-table.data-table .data-table-column {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 10ch;
-}
-
-tr th {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 10ch;
-}
-
-tr .data-table-column:first-of-type {
-  width: 7ch !important;
-}
-
-tr th:first-of-type {
-  width: 7ch !important;
-}
-
-tr.selected-row {
-  background: #4b4a60 !important;
-  color: white !important;
+.data-table .data-table-header {
+  text-transform: none !important;
 }
 
 .data-placeholder {
