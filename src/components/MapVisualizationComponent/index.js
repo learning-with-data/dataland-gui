@@ -21,10 +21,10 @@ L.Marker.prototype.options.icon = DefaultIcon;
 function generate_scale(data, column) {
   const domain = data.map((row) => row[column]);
 
-  const linear = vega.scale("linear"); // TODO
-  const scale = linear()
+  const sqrt = vega.scale("sqrt"); // TODO
+  const scale = sqrt()
     .domain([Math.min(...domain), Math.max(...domain)])
-    .range([Math.sqrt(5), 5]);
+    .range([5, 25]);
   return scale;
 }
 
@@ -64,7 +64,7 @@ function MapPlot(props) {
             color: layer.encoding.color,
             fillColor: layer.encoding.color,
           }}
-          radius={size**2}
+          radius={size}
         />
       );
 
