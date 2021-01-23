@@ -88,7 +88,7 @@ function MapPlot(props) {
 
       const marker = (
         <CircleMarker
-          key={index}
+          key={layer.name + index}
           center={position}
           pathOptions={{
             color: color,
