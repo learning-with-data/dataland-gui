@@ -16,7 +16,7 @@ const blocklyOptions = {
   comments: true,
   disable: false,
   collapse: false,
-  media: "/blocks-media/",
+  media: "blocks-media/",
   readOnly: false,
   rtl: false,
   scrollbars: true,
