@@ -5,6 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "webpack --config-name=component --mode=production",
+    "build-demo": "webpack --config-name=demo --mode=production",
     "start": "webpack-dev-server --open --config-name=demo --mode=development",
     "lint": "eslint src test",
     "prepare": "npm run build",
