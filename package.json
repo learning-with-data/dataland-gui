@@ -76,14 +76,14 @@
     "bootstrap": "^4.5.3",
     "dayjs": "^1.10.3",
     "prop-types": "^15.7.2",
-    "react-bootstrap": "^1.4.3",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-bootstrap": "^1.4.3",
+    "react-dom": "^16.14.0",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5"
   },
   "dependencies": {
-    "blockly": "^4.20201217.0",
+    "blockly": "^5.20210325.0",
     "dataland-interpreter": "git+https://github.com/learning-with-data/dataland-interpreter.git#5816eb4124948cf1e437b7b2b5ab05ba45a45b89",
     "geolib": "^3.3.1",
     "immutable": "^4.0.0-rc.12",
