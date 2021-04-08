@@ -32,6 +32,7 @@ jobs:
 
   deploy:
     needs: build
+    if: contains(github.ref, "main")
     if: ${{ github.event_name != 'pull_request' }}
     runs-on: ubuntu-20.04
     steps:
