@@ -28,7 +28,7 @@ jobs:
 
   deploy:
     needs: build
-    if: ${{ github.ref == 'main' && github.event_name != 'pull_request' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
