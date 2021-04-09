@@ -15,8 +15,6 @@ export default function (runtime) {
     new OperatorPrimTable(),
     new VisualizationPrimTable(runtime),
     new VariablesPrimTable(),
-    /// #if DEBUG
     new DebugPrimTable()
-    /// #endif
   );
 }

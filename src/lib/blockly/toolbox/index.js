@@ -4,7 +4,9 @@ import MapsToolbox from "./maps";
 import OperatorsToolbox from "./operator";
 import VisualizationToolbox from "./visualization";
 
+/// #if DEBUG
 import DebugToolbox from "./debug";
+/// #endif
 
 function getBlocklyToolbox(microworld) {
   return (
