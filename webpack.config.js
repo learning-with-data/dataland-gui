@@ -7,6 +7,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const nodeExternals = require("webpack-node-externals");
 const TerserPlugin = require("terser-webpack-plugin");
 
+const opts = {
+  DEBUG: process.env.NODE_ENV === "development",
+};
+
 module.exports = [
   {
     mode: process.env.NODE_ENV || "development",
@@ -17,7 +21,10 @@ module.exports = [
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
-          loader: "babel-loader",
+          use: [
+            { loader: "babel-loader" },
+            { loader: "ifdef-loader", options: opts },
+          ],
         },
         {
           test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
@@ -77,7 +84,10 @@ module.exports = [
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
-          loader: "babel-loader",
+          use: [
+            { loader: "babel-loader" },
+            { loader: "ifdef-loader", options: opts },
+          ],
         },
         {
           test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,

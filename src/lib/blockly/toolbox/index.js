@@ -17,7 +17,9 @@ function getBlocklyToolbox(microworld) {
     (microworld === "maps" ? MapsToolbox : VisualizationToolbox) +
     // eslint-disable-next-line quotes
     '<category name="⊡ Variables" categorystyle="variable_category" custom="VARIABLE"></category>' +
+    /// #if DEBUG
     DebugToolbox +
+    /// #endif
     "</xml>"
   );
 }
