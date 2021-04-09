@@ -4,7 +4,9 @@ import MapsToolbox from "./maps";
 import OperatorsToolbox from "./operator";
 import VisualizationToolbox from "./visualization";
 
+/// #if DEBUG
 import DebugToolbox from "./debug";
+/// #endif
 
 function getBlocklyToolbox(microworld) {
   return (
@@ -17,7 +19,9 @@ function getBlocklyToolbox(microworld) {
     (microworld === "maps" ? MapsToolbox : VisualizationToolbox) +
     // eslint-disable-next-line quotes
     '<category name="⊡ Variables" categorystyle="variable_category" custom="VARIABLE"></category>' +
+    /// #if DEBUG
     DebugToolbox +
+    /// #endif
     "</xml>"
   );
 }

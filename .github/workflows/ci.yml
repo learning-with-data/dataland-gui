@@ -40,6 +40,9 @@ jobs:
 
       - run: npm install
       - run: npm run build-demo
+        env:
+          NODE_ENV: production
+
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

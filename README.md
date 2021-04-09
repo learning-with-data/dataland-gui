@@ -1,11 +1,13 @@
 # dataland-gui
 
-> GUI (code editor + more) for the DataLand project
+> GUI (code editor + more) for the Dataland project
 
 ## About
 
-This is the standalone GUI app for the DataLand project. The block-based editor is powered by
+This is the standalone GUI app for the Dataland project. The block-based editor is powered by
 [Blockly](https://developers.google.com/blockly).
+
+For more information about the Dataland project, visit <https://learning-with-data.github.io/>.
 
 ## Getting Started
 
