@@ -5,6 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const nodeExternals = require("webpack-node-externals");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const opts = {
@@ -73,6 +74,7 @@ module.exports = [
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
+      new NodePolyfillPlugin()
     ],
   },
   {
@@ -138,6 +140,7 @@ module.exports = [
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
+      new NodePolyfillPlugin()
     ],
   },
 ];
