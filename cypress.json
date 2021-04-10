@@ -2,6 +2,7 @@
     "baseUrl": "http://localhost:3000",
     "integrationFolder": "test/integration",
     "testFiles": "**/*-spec.js",
+    "downloadsFolder": "test/integration/downloads",
     "fixturesFolder": "test/fixtures",
     "pluginsFile": "test/cypress/plugins",
     "supportFile": "test/cypress/support",

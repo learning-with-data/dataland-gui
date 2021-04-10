@@ -9,6 +9,7 @@
 /cypress-coverage
 /.nyc_output
 /reports
+/test/integration/downloads
 /test/integration/screenshots
 /test/integration/videos
 

@@ -1,6 +1,8 @@
 /* eslint-disable jest/expect-expect */
 import "cypress-file-upload";
 
+const path = require("path");
+
 describe("The GUI", () => {
   function moveBlockfromToolbox(primitive_name, x, y) {
     cy.get(`[data-id="${primitive_name}"]`)
@@ -58,7 +60,8 @@ describe("The GUI", () => {
     });
     cy.get("#blockly-4").click();
     cy.get("[data-id='variables_set']").should("not.exist");
-    cy.get(".blocklyFlyoutButton").click();
+    //FIXME: force: true should not be needed below
+    cy.get(".blocklyFlyoutButton").click({force: true});
 
     cy.window().its("prompt").should("be.called");
     cy.get("[data-id='variables_set']");
@@ -84,16 +87,18 @@ describe("The GUI", () => {
     cy.get("#btn-import-data").contains("Import data");
   });
 
-  // Commented out till this is resolved: https://github.com/cypress-io/cypress/issues/949
-  // eslint-disable-next-line jest/no-commented-out-tests
-  // it("enables downloading projects with the correct file name", function() {
-  //   var projectTitle = "Test project";
-  //   cy.get("#title-input").clear().type(projectTitle).blur();
+  it("enables downloading projects with the correct file name", function () {
+    const projectTitle = "Test project";
 
-  //   cy.get("#file-dropdown").click();
-  //   cy.get("#download-menuitem").click();
-  //   cy.get("a#download-link").should("have.attr", "download", projectTitle + ".dbp");
-  // });
+    const downloadsFolder = Cypress.config("downloadsFolder");
+    const filename = path.join(downloadsFolder, projectTitle + ".dbp");
+
+    cy.get("#title-input").clear().type(projectTitle).blur();
+
+    cy.get("#file-dropdown").click();
+    cy.get("#download-menuitem").click();
+    cy.readFile(filename, { timeout: 1500 }).should("have.length.gt", 20);
+  });
 
   it("can load and run a project file", function () {
     const projectFixturePath = "../fixtures/sample1.dbp";
@@ -142,14 +147,16 @@ describe("The GUI", () => {
     cy.get("#dataImportLink").attachFile(invalidCsvFixturePath);
 
     cy.get(".error-notification").contains("Whoops!");
-    cy.get(".error-notification").contains("Parse error while importing CSV file.");
+    cy.get(".error-notification").contains(
+      "Parse error while importing CSV file."
+    );
 
     // Dismiss the error
     cy.get(".error-notification .close").click();
     cy.get(".error-notification").should("not.exist");
   });
 
-  it("loads microworlds correctly", function() {
+  it("loads microworlds correctly", function () {
     cy.visit("/?microworld=maps");
     cy.get("#blockly-3").click();
     cy.get("[data-id='maps_clear']");
