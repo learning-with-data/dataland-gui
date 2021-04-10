@@ -12,44 +12,46 @@ const opts = {
   DEBUG: process.env.NODE_ENV === "development",
 };
 
+const commonModule = {
+  rules: [
+    {
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      use: [
+        { loader: "babel-loader" },
+        { loader: "ifdef-loader", options: opts },
+      ],
+    },
+    {
+      test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
+      use: {
+        loader: "url-loader",
+        options: {
+          limit: 50000,
+        },
+      },
+    },
+    {
+      test: /\.css$/,
+      use: [MiniCssExtractPlugin.loader, "css-loader"],
+    },
+    {
+      test: /\.html$/,
+      use: [
+        {
+          loader: "html-loader",
+        },
+      ],
+    },
+  ],
+};
+
 module.exports = [
   {
     mode: process.env.NODE_ENV || "development",
     name: "component",
     entry: "./src/index.js",
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: [
-            { loader: "babel-loader" },
-            { loader: "ifdef-loader", options: opts },
-          ],
-        },
-        {
-          test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
-          use: {
-            loader: "url-loader",
-            options: {
-              limit: 50000,
-            },
-          },
-        },
-        {
-          test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, "css-loader"],
-        },
-        {
-          test: /\.html$/,
-          use: [
-            {
-              loader: "html-loader",
-            },
-          ],
-        },
-      ],
-    },
+    module: commonModule,
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin({ parallel: 1 })],
@@ -81,39 +83,7 @@ module.exports = [
     mode: process.env.NODE_ENV || "development",
     name: "demo",
     entry: "./example/example.js",
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: [
-            { loader: "babel-loader" },
-            { loader: "ifdef-loader", options: opts },
-          ],
-        },
-        {
-          test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
-          use: {
-            loader: "url-loader",
-            options: {
-              limit: 50000,
-            },
-          },
-        },
-        {
-          test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, "css-loader"],
-        },
-        {
-          test: /\.html$/,
-          use: [
-            {
-              loader: "html-loader",
-            },
-          ],
-        },
-      ],
-    },
+    module: commonModule,
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "[name].js",
