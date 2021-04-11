@@ -100,7 +100,7 @@
     "react-virtualized-auto-sizer": "^1.0.4",
     "stats-lite": "^2.2.0",
     "vega": "^5.19.1",
-    "vega-lite": "^4.17.0",
+    "vega-lite": "^5.0.0",
     "xml2js": "^0.4.23"
   },
   "nyc": {
