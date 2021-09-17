@@ -42,6 +42,8 @@ class EditorComponent extends Component {
 
     this.blockly = null;
 
+    this.containerId = "editorContainer" + Math.random();
+
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
   }
@@ -51,7 +53,7 @@ class EditorComponent extends Component {
       this.props.microworld,
       () => this.props.projectDataColumns
     );
-    this.workspace = this.blockly.inject("editorContainer", {
+    this.workspace = this.blockly.inject(this.containerId, {
       toolbox: getBlocklyToolbox(this.props.microworld),
       ...blocklyOptions,
     });
@@ -92,7 +94,7 @@ class EditorComponent extends Component {
 
   render() {
     return (
-      <div id="editorContainer" style={{ width: "100%", height: "100%" }}></div>
+      <div id={this.containerId} style={{ width: "100%", height: "100%" }}></div>
     );
   }
 }
