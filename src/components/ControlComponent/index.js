@@ -3,18 +3,22 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import uniqueId from "lodash/uniqueId";
+
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Spinner from "react-bootstrap/Spinner";
 
 function ControlComponent(props) {
+  const loadLinkId = uniqueId("load-link-");
+
   return (
     <>
       <div>
         <Button
+          className="start-button"
           variant="success"
-          id="btn-start"
           style={{minWidth: "10em"}}
           onClick={props.handleStartPress}
           disabled={props.isInterpreterRunning}
@@ -33,9 +37,9 @@ function ControlComponent(props) {
           {!props.isInterpreterRunning && "⯈ Start"}
         </Button>{" "}
         <Button
+          className="stop-button"
           variant="danger"
           name="button"
-          id="btn-stop"
           style={{minWidth: "10em"}}
           onClick={props.handleStopPress}
           disabled={!props.isInterpreterRunning}
@@ -47,13 +51,12 @@ function ControlComponent(props) {
         <DropdownButton
           alignRight
           variant="outline-secondary"
-          id="file-dropdown"
-          className="mr-2"
+          className="mr-2 file-dropdown"
           title="File"
         >
           <Dropdown.Item
             onClick={props.handleProjectSavePress}
-            id="download-menuitem"
+            className="download-menuitem"
           >
             <svg
               title="download icon"
@@ -80,8 +83,8 @@ function ControlComponent(props) {
             Save project to your computer
           </Dropdown.Item>
           <Dropdown.Item
-            onClick={() => document.getElementById("loadLink").click()}
-            id="upload-menuitem"
+            onClick={() => document.getElementById(loadLinkId).click()}
+            className="upload-menuitem"
           >
             <svg
               title="upload icon"
@@ -110,7 +113,8 @@ function ControlComponent(props) {
         </DropdownButton>
         <input
           type="file"
-          id="loadLink"
+          id={loadLinkId}
+          className="upload-link"
           style={{ display: "none" }}
           accept=".dbp"
           onChange={props.handleProjectLoadPress}

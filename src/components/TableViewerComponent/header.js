@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 
 import Papa from "papaparse";
 
+import uniqueId from "lodash/uniqueId";
+
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -15,6 +17,9 @@ import { connectToRuntime } from "../connectToRuntime";
 import { error_occurred, project_modified } from "../../redux/actionCreators";
 
 function TableViewerHeaderComponent(props) {
+  const importBtnId = uniqueId("import-btn-");
+  const importLinkId = uniqueId("import-link-");
+
   const cardHeaderRef = useRef(null);
 
   const [showAddColumn, setShowAddColumn] = useState(false);
@@ -58,13 +63,14 @@ function TableViewerHeaderComponent(props) {
     <>
       <Card.Header
         ref={cardHeaderRef}
-        className="d-inline-flex justify-content-between align-items-center"
+        className="d-inline-flex justify-content-between align-items-center tableviewer-header"
       >
         <span>
           <Button
             size="sm"
-            id="btn-import-data"
-            onClick={() => document.getElementById("dataImportLink").click()}
+            id={importBtnId}
+            className="data-import-button"
+            onClick={() => document.getElementById(importLinkId).click()}
           >
             {isCsvLoading && (
               <>
@@ -81,7 +87,8 @@ function TableViewerHeaderComponent(props) {
           </Button>
           <input
             type="file"
-            id="dataImportLink"
+            id={importLinkId}
+            className="data-import-link"
             style={{ display: "none" }}
             accept=".csv"
             onChange={(e) => handleDataImport(e)}
