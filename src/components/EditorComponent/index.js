@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import uniqueId from "lodash/uniqueId";
+
 import DataLandTheme from "../../lib/blockly/theme";
 import getCustomBlockly from "../../lib/blockly/blocks";
 import getBlocklyToolbox from "../../lib/blockly/toolbox";
@@ -42,7 +44,7 @@ class EditorComponent extends Component {
 
     this.blockly = null;
 
-    this.containerId = "editorContainer" + Math.random();
+    this.containerId = uniqueId("editorContainer-");
 
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);

@@ -82,7 +82,7 @@ module.exports = [
   {
     mode: process.env.NODE_ENV || "development",
     name: "demo",
-    entry: "./example/example.js",
+    entry: {main: "./example/example.js", multi: "./example/multi-example.js"} ,
     module: commonModule,
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -106,6 +106,12 @@ module.exports = [
       new HtmlWebPackPlugin({
         template: "./example/example.html",
         filename: "./index.html",
+        chunks: ["main"]
+      }),
+      new HtmlWebPackPlugin({
+        template: "./example/multi-example.html",
+        filename: "./multi.html",
+        chunks: ["multi"]
       }),
       new MiniCssExtractPlugin({
         filename: "[name].css",

@@ -12,9 +12,8 @@ const HeaderComponent = React.memo((props) => {
     <header className="gui-header d-flex justify-content-between align-items-center">
       <div className="title ml-2 d-flex justify-content-between align-items-center">
         <Form.Control
-          id="title-input"
           defaultValue={props.initialProjectTitle}
-          className="mr-2"
+          className="mr-2 project-title-input"
           onBlur={(e) => props.onProjectTitleChange(e.target.value)}
         />{" "}
         <SaveStatusComponent />
