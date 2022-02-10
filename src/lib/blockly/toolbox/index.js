@@ -4,6 +4,9 @@ import MapsToolbox from "./maps";
 import OperatorsToolbox from "./operator";
 import VisualizationToolbox from "./visualization";
 
+import uniqueId from "lodash/uniqueId";
+
+
 /// #if DEBUG
 import DebugToolbox from "./debug";
 /// #endif
@@ -12,7 +15,7 @@ function getBlocklyToolbox(microworld) {
   return (
     "" +
     // eslint-disable-next-line quotes
-    '<xml id="toolbox" style="display: none">' +
+    '<xml id="'+ uniqueId('toolbox-') + '" style="display: none">' +
     ControlToolbox +
     OperatorsToolbox +
     DataToolbox +
