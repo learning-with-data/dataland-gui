@@ -3,8 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import uniqueId from "lodash/uniqueId";
-
 import DataLandTheme from "../../lib/blockly/theme";
 import getCustomBlockly from "../../lib/blockly/blocks";
 import getBlocklyToolbox from "../../lib/blockly/toolbox";
@@ -44,18 +42,15 @@ class EditorComponent extends Component {
 
     this.blockly = null;
 
-    this.containerId = uniqueId("editorContainer-");
+    this.container = React.createRef();
 
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
   }
 
   componentDidMount() {
-    this.blockly = getCustomBlockly(
-      this.props.microworld,
-      () => this.props.projectDataColumns
-    );
-    this.workspace = this.blockly.inject(this.containerId, {
+    this.blockly = getCustomBlockly( );
+    this.workspace = this.blockly.inject(this.container.current, {
       toolbox: getBlocklyToolbox(this.props.microworld),
       ...blocklyOptions,
     });
@@ -96,7 +91,11 @@ class EditorComponent extends Component {
 
   render() {
     return (
-      <div id={this.containerId} style={{ width: "100%", height: "100%" }}></div>
+      <div
+        ref={this.container}
+        data-projectdatacolumns={JSON.stringify(this.props.projectDataColumns)}
+        className="editorContainer"
+      ></div>
     );
   }
 }

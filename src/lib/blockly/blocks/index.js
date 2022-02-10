@@ -64,9 +64,17 @@ const standardBlocks = {
   },
 };
 
-function getCustomBlockly(microworld, getColumnsFunc) {
+function getCustomBlockly() {
   const generate_data_columns = function () {
-    const columns = getColumnsFunc();
+    const thisBlock = this.getSourceBlock();
+    let columns = [];
+    if (thisBlock !== null) {
+      columns = JSON.parse(
+        thisBlock.workspace.getInjectionDiv().parentNode.dataset
+          .projectdatacolumns
+      );
+    }
+
     if (columns && columns.length === 0) {
       return [["Row #", "__visible_id"]];
     } else {
@@ -87,6 +95,37 @@ function getCustomBlockly(microworld, getColumnsFunc) {
     VariableBlocks,
     DebugBlocks
   );
+
+  // // Extension to get data column names from current workspace's parent
+  // // This can be used later if generate_data_columns() function above
+  // // does not work as expected.
+  // // Note: In order to use this, type: "field_dropdown" in the block
+  // // definition needs to be changed to type: "input_dummy", along with
+  // // additional changes, as the field is being created dynamically, as
+  // // opposed to just the menu, as in generate_data_columns() above.
+  //
+  // if (!Blockly.Extensions.isRegistered("get_data_columns_extension")) {
+  //   Blockly.Extensions.register("get_data_columns_extension", function () {
+  //     var thisBlock = this;
+  //     thisBlock.getInput(BLOCKARG_DATA_COLUMN).appendField(
+  //       new Blockly.FieldDropdown(function () {
+  //         var columns = JSON.parse(
+  //           thisBlock.workspace.getInjectionDiv().parentNode.dataset
+  //             .projectdatacolumns
+  //         );
+  //
+  //         if (columns && columns.length === 0) {
+  //           return [["Row #", "__visible_id"]];
+  //         } else {
+  //           var menuitems = columns.map((x) => [x, x]);
+  //           menuitems.unshift(["Row #", "__visible_id"]);
+  //           return menuitems;
+  //         }
+  //       }),
+  //       BLOCKARG_DATA_COLUMN
+  //     );
+  //   });
+  // }
 
   // Monkey-patch to enable shadow blocks for variable_set input for now
   //

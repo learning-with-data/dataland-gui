@@ -4,12 +4,14 @@ import "cypress-file-upload";
 const path = require("path");
 
 describe("The GUI", () => {
-  function moveBlockfromToolbox(primitive_name, x, y) {
-    cy.get(`[data-id="${primitive_name}"]`)
+  function moveBlockfromToolbox(primitive_name, x, y, parent_selector = "") {
+    cy.get(parent_selector + " " + `[data-id="${primitive_name}"]`)
       .trigger("pointerdown", { button: 0, force: true })
       .trigger("pointermove", { clientX: x, clientY: y, force: true });
 
-    cy.get(".blocklyDragging.blocklySelected").as("newBlockId");
+    cy.get(parent_selector + " " + ".blocklyDragging.blocklySelected").as(
+      "newBlockId"
+    );
 
     cy.get("@newBlockId")
       .trigger("pointermove", { clientX: x, clientY: y, force: true })
@@ -61,7 +63,7 @@ describe("The GUI", () => {
     cy.get("#blockly-4").click();
     cy.get("[data-id='variables_set']").should("not.exist");
     //FIXME: force: true should not be needed below
-    cy.get(".blocklyFlyoutButton").click({force: true});
+    cy.get(".blocklyFlyoutButton").click({ force: true });
 
     cy.window().its("prompt").should("be.called");
     cy.get("[data-id='variables_set']");
@@ -85,6 +87,23 @@ describe("The GUI", () => {
       timeout: 10000,
     });
     cy.get(".tableviewer-header .data-import-button").contains("Import data");
+  });
+
+  it("shows correct dropdown menus in blocks after importing CSV file", function () {
+    const csvFixturePath = "../fixtures/sample1.csv";
+
+    cy.get(".tableviewer-header .data-import-link").attachFile(csvFixturePath);
+    cy.get("#blockly-2").click();
+
+    moveBlockfromToolbox("data_get", 700, 300);
+    cy.get(
+      ".blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City");
+    cy.get(".blocklyDropDownContent").contains("Latitude");
+    cy.get(".blocklyDropDownContent").contains("Longitude");
   });
 
   it("enables downloading projects with the correct file name", function () {
@@ -144,7 +163,9 @@ describe("The GUI", () => {
 
   it("shows an error when a non-valid CSV is loaded", function () {
     const invalidCsvFixturePath = "../fixtures/sample1.dbp";
-    cy.get(".tableviewer-header .data-import-link").attachFile(invalidCsvFixturePath);
+    cy.get(".tableviewer-header .data-import-link").attachFile(
+      invalidCsvFixturePath
+    );
 
     cy.get(".error-notification").contains("Whoops!");
     cy.get(".error-notification").contains(
@@ -166,21 +187,50 @@ describe("The GUI", () => {
     cy.get("[data-id='visualization_clear']");
   });
 
-  it("loads multiple instances in the same page correctly", function() {
+  it("loads multiple instances in the same page correctly", function () {
     cy.visit("/multi.html");
     cy.get("div#editor-1 div.gui-container").should("exist");
     cy.get("div#editor-2 div.gui-container").should("exist");
     cy.get("div#editor-3 div.gui-container").should("exist");
   });
 
-  it("loads data in multiple instances correctly", function() {
+  it("loads data in multiple instances correctly", function () {
     cy.visit("/multi.html");
 
     const csvFixturePath = "../fixtures/sample1.csv";
 
-    cy.get("div#editor-3 .tableviewer-header .data-import-link").attachFile(csvFixturePath);
-    cy.get("div#editor-3 .table-container").contains("New York City");
+    // Right table should update
+    cy.get("div#editor-2 .tableviewer-header .data-import-link").attachFile(
+      csvFixturePath
+    );
+    cy.get("div#editor-2 .table-container").contains("New York City");
     cy.get("div#editor-1 .table-container").contains("No data loaded");
+    cy.get("div#editor-3 .table-container").contains("No data loaded");
 
+    // Block menus should show up in the right places
+    cy.get("#blockly-7").click();
+    moveBlockfromToolbox("data_get", 700, 300, "div#editor-2");
+    cy.get(
+      "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City");
+    cy.get(".blocklyDropDownContent").contains("Latitude");
+    cy.get(".blocklyDropDownContent").contains("Longitude");
+
+    // Other workspaces should not show those menus
+    cy.get(
+      "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).type("{del}"); // This deletes the block in workspace 2, but is not strictly needed
+    cy.get("#blockly-c").click();
+    moveBlockfromToolbox("data_get", 700, 300, "div#editor-3");
+    cy.get(
+      "div#editor-3 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City").should("not.exist");
+    cy.get(".blocklyDropDownContent").contains("Latitude").should("not.exist");
+    cy.get(".blocklyDropDownContent").contains("Longitude").should("not.exist");
   });
 });
