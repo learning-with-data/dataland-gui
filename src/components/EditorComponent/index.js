@@ -3,8 +3,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import * as Blockly from "blockly/core";
+
 import DataLandTheme from "../../lib/blockly/theme";
-import getCustomBlockly from "../../lib/blockly/blocks";
 import getBlocklyToolbox from "../../lib/blockly/toolbox";
 
 import { connectToRuntime } from "../connectToRuntime";
@@ -40,8 +41,7 @@ class EditorComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.blockly = null;
-
+    this.workspace = null;
     this.container = React.createRef();
 
     this.activateBlock = this.activateBlock.bind(this);
@@ -49,8 +49,7 @@ class EditorComponent extends Component {
   }
 
   componentDidMount() {
-    this.blockly = getCustomBlockly( );
-    this.workspace = this.blockly.inject(this.container.current, {
+    this.workspace = Blockly.inject(this.container.current, {
       toolbox: getBlocklyToolbox(this.props.microworld),
       ...blocklyOptions,
     });
@@ -61,8 +60,8 @@ class EditorComponent extends Component {
 
   setCode(code) {
     try {
-      this.blockly.Xml.clearWorkspaceAndLoadFromXml(
-        this.blockly.Xml.textToDom(code),
+      Blockly.Xml.clearWorkspaceAndLoadFromXml(
+        Blockly.Xml.textToDom(code),
         this.workspace
       );
     } catch (err) {
@@ -72,8 +71,8 @@ class EditorComponent extends Component {
   }
 
   getCode() {
-    return this.blockly.Xml.domToText(
-      this.blockly.Xml.workspaceToDom(this.workspace)
+    return Blockly.Xml.domToText(
+      Blockly.Xml.workspaceToDom(this.workspace)
     );
   }
 

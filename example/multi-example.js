@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import Gui from "../src/index.js";
+import {Gui, initBlockly} from "../src/index.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 let params = new URL(document.location).searchParams;
 let microworld = params.get("microworld") ?? "plots";
 
+initBlockly();
 ReactDOM.render(
   <>
     <div
