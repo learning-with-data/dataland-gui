@@ -96,6 +96,7 @@ class Gui extends Component {
                 this.props.project_modified();
               }}
               microworld={this.props.microworld}
+              blocklyInjectionOptions={this.props.blocklyInjectionOptions}
             />
           </div>
           <div className="viz-data-column">
@@ -254,6 +255,7 @@ Gui.propTypes = {
   initialProjectTitle: PropTypes.string,
   initialProject: PropTypes.instanceOf(Uint8Array),
   microworld: PropTypes.string.isRequired,
+  blocklyInjectionOptions: PropTypes.object,
 
   backend: PropTypes.bool.isRequired,
   backendCodeSaveHandler: PropTypes.func,

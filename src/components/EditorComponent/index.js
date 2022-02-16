@@ -13,7 +13,7 @@ import { error_occurred } from "../../redux/actionCreators";
 
 import "./style.css";
 
-const blocklyOptions = {
+const blocklyInjectionOptions = {
   comments: true,
   disable: false,
   collapse: false,
@@ -51,7 +51,8 @@ class EditorComponent extends Component {
   componentDidMount() {
     this.workspace = Blockly.inject(this.container.current, {
       toolbox: getBlocklyToolbox(this.props.microworld),
-      ...blocklyOptions,
+      ...blocklyInjectionOptions,
+      ...this.props.blocklyInjectionOptions,
     });
     this.workspace.addChangeListener(() => {
       this.props.onCodeUpdated();
@@ -71,9 +72,7 @@ class EditorComponent extends Component {
   }
 
   getCode() {
-    return Blockly.Xml.domToText(
-      Blockly.Xml.workspaceToDom(this.workspace)
-    );
+    return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace));
   }
 
   activateBlock(blockId) {
@@ -107,6 +106,7 @@ EditorComponent.propTypes = {
   projectDataColumns: PropTypes.array,
 
   microworld: PropTypes.string.isRequired,
+  blocklyInjectionOptions: PropTypes.object,
 };
 
 export default connect(null, { error_occurred }, null, {

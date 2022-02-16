@@ -1,12 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import {Gui, initBlockly} from "../src/index.js";
+import { Gui, initBlockly } from "../src/index.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 let params = new URL(document.location).searchParams;
 let microworld = params.get("microworld") ?? "plots";
+let blocklyInjectionOptions = {
+  zoom: {
+    controls: true,
+    wheel: false,
+    startScale: 0.85,
+    maxScale: 4,
+    minScale: 0.25,
+    scaleSpeed: 1.1,
+  },
+};
 
 initBlockly();
 ReactDOM.render(
@@ -19,6 +29,7 @@ ReactDOM.render(
         initialProjectTitle="Untitled Project 1"
         backend={false}
         microworld={microworld}
+        blocklyInjectionOptions={blocklyInjectionOptions}
       />
     </div>
 
@@ -39,6 +50,7 @@ ReactDOM.render(
         initialProjectTitle="Untitled Project 2"
         backend={false}
         microworld={microworld}
+        blocklyInjectionOptions={blocklyInjectionOptions}
       />
     </div>
 
@@ -59,6 +71,7 @@ ReactDOM.render(
         initialProjectTitle="Untitled Project 3"
         backend={false}
         microworld={microworld}
+        blocklyInjectionOptions={blocklyInjectionOptions}
       />
     </div>
   </>,
