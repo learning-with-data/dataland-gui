@@ -30,7 +30,7 @@
 .gui-expanded {
     width: 96vw !important;
     height: 94vh !important;
-    position: absolute;
+    position: fixed;
     top:2vw;
     left:2vw;
     z-index: 999;
