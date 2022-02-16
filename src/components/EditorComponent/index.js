@@ -46,6 +46,7 @@ class EditorComponent extends Component {
 
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +58,7 @@ class EditorComponent extends Component {
     this.workspace.addChangeListener(() => {
       this.props.onCodeUpdated();
     });
+    window.addEventListener("resize", this.resize, false);
   }
 
   setCode(code) {
@@ -85,6 +87,22 @@ class EditorComponent extends Component {
 
   deactivateBlock(blockId) {
     this.workspace.highlightBlock(blockId, false);
+  }
+
+  resize() {
+    var editorContainer = this.container.current;
+    editorContainer.style.x = editorContainer.parentElement.offsetLeft + "px";
+    editorContainer.style.y = editorContainer.parentElement.offsetTop + "px";
+    editorContainer.style.width =
+      editorContainer.parentElement.offsetWidth + "px";
+    editorContainer.style.height =
+      editorContainer.parentElement.offsetHeight + "px";
+
+    Blockly.svgResize(this.workspace);
+  }
+
+  componentDidUpdate() {
+    this.resize();
   }
 
   render() {

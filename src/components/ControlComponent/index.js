@@ -19,7 +19,7 @@ function ControlComponent(props) {
         <Button
           className="start-button"
           variant="success"
-          style={{minWidth: "10em"}}
+          style={{ minWidth: "10em" }}
           onClick={props.handleStartPress}
           disabled={props.isInterpreterRunning}
         >
@@ -40,7 +40,7 @@ function ControlComponent(props) {
           className="stop-button"
           variant="danger"
           name="button"
-          style={{minWidth: "10em"}}
+          style={{ minWidth: "10em" }}
           onClick={props.handleStopPress}
           disabled={!props.isInterpreterRunning}
         >
@@ -48,6 +48,47 @@ function ControlComponent(props) {
         </Button>
       </div>
       <div className="d-flex">
+        <Button
+          size="sm"
+          variant="outline-dark"
+          className="mr-2"
+          active={props.isEditorExpanded}
+          onClick={props.handleExpandContractPress}
+        >
+          {!props.isEditorExpanded && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              title="Expand icon"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-arrows-angle-expand"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"
+              />
+            </svg>
+          )}
+          {props.isEditorExpanded && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              title="Contract Icon"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-arrows-angle-contract"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"
+              />
+            </svg>
+          )}
+        </Button>
+        {}
         <DropdownButton
           alignRight
           variant="outline-secondary"
@@ -129,8 +170,10 @@ ControlComponent.propTypes = {
   handleProjectLoadPress: PropTypes.func,
   handleStartPress: PropTypes.func,
   handleStopPress: PropTypes.func,
+  handleExpandContractPress: PropTypes.func,
 
   isInterpreterRunning: PropTypes.bool,
+  isEditorExpanded: PropTypes.bool,
 };
 
 const mapStateToProps = function (store) {

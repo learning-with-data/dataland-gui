@@ -31,6 +31,7 @@ class Gui extends Component {
 
     this.state = {
       projectTitle: this.props.initialProjectTitle,
+      expanded: false,
     };
 
     this.editor = React.createRef();
@@ -69,7 +70,7 @@ class Gui extends Component {
 
   render() {
     return (
-      <>
+      <div className={this.state.expanded ? "gui-expanded" : "gui-normal"}>
         <ErrorNotifierComponent />
         <HeaderComponent
           initialProjectTitle={this.props.initialProjectTitle}
@@ -82,10 +83,14 @@ class Gui extends Component {
           lastSaveRequestTimeStamp={this.state.backendSaveRequestTime}
         >
           <ControlComponent
+            isEditorExpanded={this.state.expanded}
             handleProjectSavePress={() => this.handleProjectFileSave()}
             handleProjectLoadPress={(e) => this.handleProjectFileLoad(e)}
             handleStartPress={() => this.startInterpreter()}
             handleStopPress={() => this.stopInterpreter()}
+            handleExpandContractPress={() => {
+              this.setState({ expanded: !this.state.expanded });
+            }}
           />
         </HeaderComponent>
         <div className="gui-container">
@@ -101,14 +106,17 @@ class Gui extends Component {
           </div>
           <div className="viz-data-column">
             <div className="viz-container">
-              <VisualizationComponent ref={this.visualizer} microworld={this.props.microworld} />
+              <VisualizationComponent
+                ref={this.visualizer}
+                microworld={this.props.microworld}
+              />
             </div>
             <div className="data-container">
               <TableViewerComponent />
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -229,7 +237,8 @@ class Gui extends Component {
         this.editor.current.activateBlock(null);
 
         if (this.props.backend) {
-          const thumbnailImageBuffer = await this.visualizer.current.getVisualizationImage();
+          const thumbnailImageBuffer =
+            await this.visualizer.current.getVisualizationImage();
           this.props.backendMetaDataSaveHandler({
             projectThumbnailBlob: thumbnailImageBuffer,
           });
