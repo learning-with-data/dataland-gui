@@ -34,6 +34,8 @@
     top:2vw;
     left:2vw;
     z-index: 999;
+    box-shadow: 10px -10px 10px 0px #EAEAEA;
+    border: 1px solid #D2D2D2;
 }
 
 .gui-normal {
