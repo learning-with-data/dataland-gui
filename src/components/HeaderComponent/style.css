@@ -1,4 +1,5 @@
 .gui-header {
   height: 3em;
-  border: 1px dotted black;
+  border: 1px solid gray;
+  background-color: white;
 }
