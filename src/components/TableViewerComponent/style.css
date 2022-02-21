@@ -16,12 +16,37 @@ div.fullscreen {
   font-size: small;
 }
 
-.data-table .data-table-header {
+.data-table .data-table-header span {
   text-transform: none !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap !important;
+}
+
+/*
+ * FIXME: A bunch of !importants below avoid
+ * the default row hover behavior of BaseTable
+ * This should be done properly, as in:
+ * https://autodesk.github.io/react-base-table/docs/advance
+*/
+
+.row-selected {
+  background-color: gray !important;
+  color: white !important;
+}
+
+.row-light {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+.row-dark {
+  background-color: #f2f2f2 !important;
+  color: inherit !important;
 }
 
 .data-placeholder {
-  background: lightgray;
+  background-color: lightgray;
 }
 
 #btn-import-data {
