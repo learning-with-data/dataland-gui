@@ -7,7 +7,7 @@ import DataTable from "./DataTable";
 import PrimTable from "./primitives";
 
 const _blankVisualizationSpec = {
-  $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   width: "container",
   height: "container",
   layer: [],
