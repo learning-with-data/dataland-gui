@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 import PropTypes from "prop-types";
 
 import Card from "react-bootstrap/Card";
-import Fullscreen from "react-full-screen";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { connectToRuntime } from "../connectToRuntime";
 
@@ -14,21 +14,16 @@ import TableView from "./tableview";
 import "./style.css";
 
 function TableViewerComponent(props) {
-  const [showFullScreenTable, setShowFullScreenTable] = useState(false);
+  const handle = useFullScreenHandle();
 
   return (
-    <Fullscreen
-      enabled={showFullScreenTable}
-      onChange={(isFull) => setShowFullScreenTable(isFull)}
-    >
+    <FullScreen handle={handle}>
       <Card className="w-100 h-100">
         <TableViewerHeaderComponent>
           <FullScreenButtonComponent
-            disabled={!props.projectData}
-            fullScreenButtonClickHandler={() =>
-              setShowFullScreenTable(!showFullScreenTable)
-            }
-            isCurrentlyFullScreen={showFullScreenTable}
+            disabled={Array.isArray(props.projectData) && props.projectData.length===0}
+            handle={handle}
+            isCurrentlyFullScreen={handle.active}
           />
         </TableViewerHeaderComponent>
         <Card.Body className="table-container">
@@ -40,7 +35,7 @@ function TableViewerComponent(props) {
           )}
         </Card.Body>
       </Card>
-    </Fullscreen>
+    </FullScreen>
   );
 }
 
