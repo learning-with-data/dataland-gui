@@ -23,7 +23,6 @@ function TableViewerComponent(props) {
           <FullScreenButtonComponent
             disabled={Array.isArray(props.projectData) && props.projectData.length===0}
             handle={handle}
-            isCurrentlyFullScreen={handle.active}
           />
         </TableViewerHeaderComponent>
         <Card.Body className="table-container">

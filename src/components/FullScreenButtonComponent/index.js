@@ -10,12 +10,12 @@ function FullScreenButtonComponent(props) {
       variant="outline-dark"
       disabled={props.disabled}
       onClick={() => {
-        props.isCurrentlyFullScreen
+        props.handle.active
           ? props.handle.exit()
           : props.handle.enter();
       }}
     >
-      {props.isCurrentlyFullScreen && (
+      {props.handle.active && (
         <svg
           title="Fullscreen icon"
           width="1em"
@@ -31,7 +31,7 @@ function FullScreenButtonComponent(props) {
           />
         </svg>
       )}
-      {!props.isCurrentlyFullScreen && (
+      {!props.handle.active && (
         <svg
           title="Exit fullscreen icon"
           width="1em"
@@ -53,8 +53,7 @@ function FullScreenButtonComponent(props) {
 
 FullScreenButtonComponent.propTypes = {
   disabled: PropTypes.bool,
-  handle: PropTypes.object,
-  isCurrentlyFullScreen: PropTypes.bool,
+  handle: PropTypes.object
 };
 
 export default FullScreenButtonComponent;
