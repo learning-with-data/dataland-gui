@@ -157,7 +157,7 @@ describe("The GUI", () => {
     cy.get(".error-notification").contains("Failed to load project.");
 
     // Dismiss the error
-    cy.get(".error-notification .close").click();
+    cy.get(".error-notification .btn-close").click();
     cy.get(".error-notification").should("not.exist");
   });
 
@@ -173,7 +173,7 @@ describe("The GUI", () => {
     );
 
     // Dismiss the error
-    cy.get(".error-notification .close").click();
+    cy.get(".error-notification .btn-close").click();
     cy.get(".error-notification").should("not.exist");
   });
 

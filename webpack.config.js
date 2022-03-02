@@ -91,7 +91,6 @@ module.exports = [
     devtool: "source-map",
     devServer: {
       port: 3000,
-      publicPath: "http://localhost:3000/",
     },
     plugins: [
       new CleanWebpackPlugin(),

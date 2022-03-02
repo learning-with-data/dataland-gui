@@ -20,8 +20,8 @@ function SaveStatusComponent(props) {
 
   const popover = (
     <Popover id="popover-basic">
-      <Popover.Title as="h3">Project save status</Popover.Title>
-      <Popover.Content>
+      <Popover.Header as="h3">Project save status</Popover.Header>
+      <Popover.Body>
         {props.needsSave
           ? "There are unsaved changes."
           : "All changes have been saved."}
@@ -31,7 +31,7 @@ function SaveStatusComponent(props) {
           {props.savedTimeStamp !== null &&
             dayjs(props.savedTimeStamp).format("LTS")}
         </span>
-      </Popover.Content>
+      </Popover.Body>
     </Popover>
   );
 

@@ -10,7 +10,7 @@ module.exports = {
     "plugin:jest/recommended",
     "plugin:react/recommended",
   ],
-  parser: "babel-eslint",
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

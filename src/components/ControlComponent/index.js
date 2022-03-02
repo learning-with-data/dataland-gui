@@ -116,7 +116,7 @@ function ControlComponent(props) {
         </Button>
         {}
         <DropdownButton
-          alignRight
+          align="end"
           variant="outline-secondary"
           className="mr-2 file-dropdown"
           title="File"
