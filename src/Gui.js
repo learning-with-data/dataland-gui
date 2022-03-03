@@ -168,7 +168,7 @@ class Gui extends Component {
     reader.onload = (file) => {
       this.handleProjectImport(file.target.result);
     };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file);
     this.props.project_modified();
   }
 
