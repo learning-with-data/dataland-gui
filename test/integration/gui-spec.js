@@ -224,7 +224,7 @@ describe("The GUI", () => {
       "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
     ).type("{del}"); // This deletes the block in workspace 2, but is not strictly needed
     cy.get("#blockly-c").click();
-    moveBlockfromToolbox("data_get", 700, 300, "div#editor-3");
+    moveBlockfromToolbox("data_get", 800, 800, "div#editor-3");
     cy.get(
       "div#editor-3 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
     ).click();
