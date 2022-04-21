@@ -4,12 +4,14 @@ import "cypress-file-upload";
 const path = require("path");
 
 describe("The GUI", () => {
-  function moveBlockfromToolbox(primitive_name, x, y) {
-    cy.get(`[data-id="${primitive_name}"]`)
+  function moveBlockfromToolbox(primitive_name, x, y, parent_selector = "") {
+    cy.get(parent_selector + " " + `[data-id="${primitive_name}"]`)
       .trigger("pointerdown", { button: 0, force: true })
       .trigger("pointermove", { clientX: x, clientY: y, force: true });
 
-    cy.get(".blocklyDragging.blocklySelected").as("newBlockId");
+    cy.get(parent_selector + " " + ".blocklyDragging.blocklySelected").as(
+      "newBlockId"
+    );
 
     cy.get("@newBlockId")
       .trigger("pointermove", { clientX: x, clientY: y, force: true })
@@ -61,7 +63,7 @@ describe("The GUI", () => {
     cy.get("#blockly-4").click();
     cy.get("[data-id='variables_set']").should("not.exist");
     //FIXME: force: true should not be needed below
-    cy.get(".blocklyFlyoutButton").click({force: true});
+    cy.get(".blocklyFlyoutButton").click({ force: true });
 
     cy.window().its("prompt").should("be.called");
     cy.get("[data-id='variables_set']");
@@ -72,19 +74,36 @@ describe("The GUI", () => {
   it("can import a CSV file", function () {
     const csvFixturePath = "../fixtures/sample1.csv";
 
-    cy.get("#dataImportLink").attachFile(csvFixturePath);
+    cy.get(".tableviewer-header .data-import-link").attachFile(csvFixturePath);
     cy.get(".table-container").contains("New York City");
   });
 
   it("shows spinner when importing a large CSV file", function () {
     const csvFixturePath = "../fixtures/chapel-hill-weather-ncei.csv";
 
-    cy.get("#dataImportLink").attachFile(csvFixturePath);
-    cy.get("#btn-import-data").contains("Loading");
+    cy.get(".tableviewer-header .data-import-link").attachFile(csvFixturePath);
+    cy.get(".tableviewer-header .data-import-button").contains("Loading");
     cy.get(".table-container").contains("CHAPEL HILL 4.3 WSW, NC US", {
       timeout: 10000,
     });
-    cy.get("#btn-import-data").contains("Import data");
+    cy.get(".tableviewer-header .data-import-button").contains("Import data");
+  });
+
+  it("shows correct dropdown menus in blocks after importing CSV file", function () {
+    const csvFixturePath = "../fixtures/sample1.csv";
+
+    cy.get(".tableviewer-header .data-import-link").attachFile(csvFixturePath);
+    cy.get("#blockly-2").click();
+
+    moveBlockfromToolbox("data_get", 700, 300);
+    cy.get(
+      ".blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City");
+    cy.get(".blocklyDropDownContent").contains("Latitude");
+    cy.get(".blocklyDropDownContent").contains("Longitude");
   });
 
   it("enables downloading projects with the correct file name", function () {
@@ -93,10 +112,10 @@ describe("The GUI", () => {
     const downloadsFolder = Cypress.config("downloadsFolder");
     const filename = path.join(downloadsFolder, projectTitle + ".dbp");
 
-    cy.get("#title-input").clear().type(projectTitle).blur();
+    cy.get(".project-title-input").clear().type(projectTitle).blur();
 
-    cy.get("#file-dropdown").click();
-    cy.get("#download-menuitem").click();
+    cy.get(".file-dropdown").click();
+    cy.get(".download-menuitem").click();
     cy.readFile(filename, { timeout: 1500 }).should("have.length.gt", 20);
   });
 
@@ -109,8 +128,8 @@ describe("The GUI", () => {
       },
     });
 
-    cy.get("#file-dropdown").click();
-    cy.get("#loadLink").attachFile({
+    cy.get(".file-dropdown").click();
+    cy.get(".upload-link").attachFile({
       filePath: projectFixturePath,
       encoding: "binary",
     });
@@ -120,8 +139,8 @@ describe("The GUI", () => {
     cy.get("[data-id='yN#Fr5u_-RIrzSRT~d-$").contains("City");
 
     cy.spy(window.console, "log").as("consoleLog");
-    cy.get("#btn-start").click();
-    cy.get("#btn-start").contains("Running");
+    cy.get(".start-button").click();
+    cy.get(".start-button").contains("Running");
     cy.log("@consoleLog");
     cy.get("@consoleLog").should("be.calledThrice");
     cy.get("@consoleLog").should("be.calledWith", "Los Angeles");
@@ -131,20 +150,22 @@ describe("The GUI", () => {
 
   it("shows an error when a non-valid project is loaded", function () {
     const invalidProjectFixturePath = "../fixtures/sample1.csv";
-    cy.get("#file-dropdown").click();
-    cy.get("#loadLink").attachFile(invalidProjectFixturePath);
+    cy.get(".file-dropdown").click();
+    cy.get(".upload-link").attachFile(invalidProjectFixturePath);
 
     cy.get(".error-notification").contains("Whoops!");
     cy.get(".error-notification").contains("Failed to load project.");
 
     // Dismiss the error
-    cy.get(".error-notification .close").click();
+    cy.get(".error-notification .btn-close").click();
     cy.get(".error-notification").should("not.exist");
   });
 
   it("shows an error when a non-valid CSV is loaded", function () {
     const invalidCsvFixturePath = "../fixtures/sample1.dbp";
-    cy.get("#dataImportLink").attachFile(invalidCsvFixturePath);
+    cy.get(".tableviewer-header .data-import-link").attachFile(
+      invalidCsvFixturePath
+    );
 
     cy.get(".error-notification").contains("Whoops!");
     cy.get(".error-notification").contains(
@@ -152,7 +173,7 @@ describe("The GUI", () => {
     );
 
     // Dismiss the error
-    cy.get(".error-notification .close").click();
+    cy.get(".error-notification .btn-close").click();
     cy.get(".error-notification").should("not.exist");
   });
 
@@ -164,5 +185,52 @@ describe("The GUI", () => {
     cy.visit("/?microworld=plots");
     cy.get("#blockly-3").click();
     cy.get("[data-id='visualization_clear']");
+  });
+
+  it("loads multiple instances in the same page correctly", function () {
+    cy.visit("/multi.html");
+    cy.get("div#editor-1 div.gui-container").should("exist");
+    cy.get("div#editor-2 div.gui-container").should("exist");
+    cy.get("div#editor-3 div.gui-container").should("exist");
+  });
+
+  it("loads data in multiple instances correctly", function () {
+    cy.visit("/multi.html");
+
+    const csvFixturePath = "../fixtures/sample1.csv";
+
+    // Right table should update
+    cy.get("div#editor-2 .tableviewer-header .data-import-link").attachFile(
+      csvFixturePath
+    );
+    cy.get("div#editor-2 .table-container").contains("New York City");
+    cy.get("div#editor-1 .table-container").contains("No data loaded");
+    cy.get("div#editor-3 .table-container").contains("No data loaded");
+
+    // Block menus should show up in the right places
+    cy.get("#blockly-7").click();
+    moveBlockfromToolbox("data_get", 700, 300, "div#editor-2");
+    cy.get(
+      "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City");
+    cy.get(".blocklyDropDownContent").contains("Latitude");
+    cy.get(".blocklyDropDownContent").contains("Longitude");
+
+    // Other workspaces should not show those menus
+    cy.get(
+      "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).type("{del}"); // This deletes the block in workspace 2, but is not strictly needed
+    cy.get("#blockly-c").click();
+    moveBlockfromToolbox("data_get", 800, 800, "div#editor-3");
+    cy.get(
+      "div#editor-3 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
+    ).click();
+    cy.get(".blocklyDropDownContent").contains("Row #");
+    cy.get(".blocklyDropDownContent").contains("City").should("not.exist");
+    cy.get(".blocklyDropDownContent").contains("Latitude").should("not.exist");
+    cy.get(".blocklyDropDownContent").contains("Longitude").should("not.exist");
   });
 });

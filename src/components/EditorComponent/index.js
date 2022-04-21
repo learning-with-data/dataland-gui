@@ -3,8 +3,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import * as Blockly from "blockly/core";
+
 import DataLandTheme from "../../lib/blockly/theme";
-import getCustomBlockly from "../../lib/blockly/blocks";
 import getBlocklyToolbox from "../../lib/blockly/toolbox";
 
 import { connectToRuntime } from "../connectToRuntime";
@@ -12,7 +13,7 @@ import { error_occurred } from "../../redux/actionCreators";
 
 import "./style.css";
 
-const blocklyOptions = {
+const blocklyInjectionOptions = {
   comments: true,
   disable: false,
   collapse: false,
@@ -40,30 +41,30 @@ class EditorComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.blockly = null;
+    this.workspace = null;
+    this.container = React.createRef();
 
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount() {
-    this.blockly = getCustomBlockly(
-      this.props.microworld,
-      () => this.props.projectDataColumns
-    );
-    this.workspace = this.blockly.inject("editorContainer", {
+    this.workspace = Blockly.inject(this.container.current, {
       toolbox: getBlocklyToolbox(this.props.microworld),
-      ...blocklyOptions,
+      ...blocklyInjectionOptions,
+      ...this.props.blocklyInjectionOptions,
     });
     this.workspace.addChangeListener(() => {
       this.props.onCodeUpdated();
     });
+    window.addEventListener("resize", this.resize, false);
   }
 
   setCode(code) {
     try {
-      this.blockly.Xml.clearWorkspaceAndLoadFromXml(
-        this.blockly.Xml.textToDom(code),
+      Blockly.Xml.clearWorkspaceAndLoadFromXml(
+        Blockly.Xml.textToDom(code),
         this.workspace
       );
     } catch (err) {
@@ -73,9 +74,7 @@ class EditorComponent extends Component {
   }
 
   getCode() {
-    return this.blockly.Xml.domToText(
-      this.blockly.Xml.workspaceToDom(this.workspace)
-    );
+    return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace));
   }
 
   activateBlock(blockId) {
@@ -90,9 +89,29 @@ class EditorComponent extends Component {
     this.workspace.highlightBlock(blockId, false);
   }
 
+  resize() {
+    var editorContainer = this.container.current;
+    editorContainer.style.x = editorContainer.parentElement.offsetLeft + "px";
+    editorContainer.style.y = editorContainer.parentElement.offsetTop + "px";
+    editorContainer.style.width =
+      editorContainer.parentElement.offsetWidth + "px";
+    editorContainer.style.height =
+      editorContainer.parentElement.offsetHeight + "px";
+
+    Blockly.svgResize(this.workspace);
+  }
+
+  componentDidUpdate() {
+    this.resize();
+  }
+
   render() {
     return (
-      <div id="editorContainer" style={{ width: "100%", height: "100%" }}></div>
+      <div
+        ref={this.container}
+        data-projectdatacolumns={JSON.stringify(this.props.projectDataColumns)}
+        className="editorContainer"
+      ></div>
     );
   }
 }
@@ -105,6 +124,7 @@ EditorComponent.propTypes = {
   projectDataColumns: PropTypes.array,
 
   microworld: PropTypes.string.isRequired,
+  blocklyInjectionOptions: PropTypes.object,
 };
 
 export default connect(null, { error_occurred }, null, {
