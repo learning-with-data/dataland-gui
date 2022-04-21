@@ -29,24 +29,24 @@ describe("The GUI", () => {
 
   it("opens every block category successfully", () => {
     // Control category
-    cy.get("#blockly-0").click();
+    cy.get("#blockly-0").click({ force: true });
     cy.get("[data-id='control_wait']");
 
     // Operators category
-    cy.get("#blockly-1").click();
+    cy.get("#blockly-1").click({ force: true });
     cy.get("[data-id='operator_boolean']");
 
     // Data category
-    cy.get("#blockly-2").click();
+    cy.get("#blockly-2").click({ force: true });
     cy.get("[data-id='data_filter']");
 
     // Visualization category
-    cy.get("#blockly-3").click();
+    cy.get("#blockly-3").click({ force: true });
     cy.get("[data-id='visualization_clear']");
   });
 
   it("moves the block to coding areas", function () {
-    cy.get("#blockly-0").click();
+    cy.get("#blockly-0").click({ force: true });
     cy.get(".blocklySvg .blocklyWorkspace")
       .contains("⯈ on project start")
       .should("not.exist");
@@ -60,7 +60,7 @@ describe("The GUI", () => {
         cy.stub(win, "prompt").returns("avariable");
       },
     });
-    cy.get("#blockly-4").click();
+    cy.get("#blockly-4").click({ force: true });
     cy.get("[data-id='variables_set']").should("not.exist");
     //FIXME: force: true should not be needed below
     cy.get(".blocklyFlyoutButton").click({ force: true });
@@ -93,7 +93,7 @@ describe("The GUI", () => {
     const csvFixturePath = "../fixtures/sample1.csv";
 
     cy.get(".tableviewer-header .data-import-link").attachFile(csvFixturePath);
-    cy.get("#blockly-2").click();
+    cy.get("#blockly-2").click({ force: true });
 
     moveBlockfromToolbox("data_get", 700, 300);
     cy.get(
@@ -179,11 +179,11 @@ describe("The GUI", () => {
 
   it("loads microworlds correctly", function () {
     cy.visit("/?microworld=maps");
-    cy.get("#blockly-3").click();
+    cy.get("#blockly-3").click({ force: true });
     cy.get("[data-id='maps_clear']");
 
     cy.visit("/?microworld=plots");
-    cy.get("#blockly-3").click();
+    cy.get("#blockly-3").click({ force: true });
     cy.get("[data-id='visualization_clear']");
   });
 
@@ -208,7 +208,7 @@ describe("The GUI", () => {
     cy.get("div#editor-3 .table-container").contains("No data loaded");
 
     // Block menus should show up in the right places
-    cy.get("#blockly-7").click();
+    cy.get("#blockly-7").click({ force: true });
     moveBlockfromToolbox("data_get", 700, 300, "div#editor-2");
     cy.get(
       "div#editor-2 .blocklySvg .blocklyWorkspace .blocklyDraggable text.blocklyDropdownText"
