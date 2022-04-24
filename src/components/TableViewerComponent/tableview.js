@@ -107,6 +107,7 @@ const TableView = React.memo((props) => {
               dataKey={"__visible_id"}
               key={-1}
               width={150}
+              resizable={true}
             />
             {props.columns.map((column, i) => {
               return (
@@ -116,6 +117,7 @@ const TableView = React.memo((props) => {
                   dataKey={column}
                   key={i}
                   width={150}
+                  resizable={true}
                 />
               );
             })}
