@@ -16,6 +16,7 @@
     justify-content: space-evenly;
     border: 1px dotted black;
     flex: 1 320px;
+    min-width: 1px; /* https://stackoverflow.com/a/14964944 */
 }
 
 .viz-container {
