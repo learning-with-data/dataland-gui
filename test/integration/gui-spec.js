@@ -65,10 +65,86 @@ describe("The GUI", () => {
     //FIXME: force: true should not be needed below
     cy.get(".blocklyFlyoutButton").click({ force: true });
 
+    // The variable block should show up
     cy.window().its("prompt").should("be.called");
     cy.get("[data-id='variables_set']");
     cy.get(".blocklyDraggable .blocklyText").contains("avariable");
     cy.get(".blocklyDraggable .blocklyText").contains("to");
+
+    // The variable monitor should show the variable
+    cy.get(".viz-var-container ul").contains("Variables").click();
+    cy.get(".viz-var-container .card-body").contains("avariable");
+  });
+
+  it("can delete a variable", function () {
+    cy.visit("/", {
+      onBeforeLoad(win) {
+        cy.stub(win, "prompt").returns("avariable");
+      },
+    });
+
+    cy.get("#blockly-4").click({ force: true });
+
+    // Create a variable
+    //FIXME: force: true should not be needed below
+    cy.get(".blocklyFlyoutButton").click({ force: true });
+
+    // Open variables monitor
+    cy.get(".viz-var-container ul").contains("Variables").click();
+    // Variables monitor should show "avariable"
+    cy.get(".viz-var-container .card-body").contains("avariable");
+
+    // First click puts the block in the workspace; second click shows the menu
+    cy.get("[data-id='variables_set']").click();
+    cy.get("[data-id='variables_set']").contains("avariable").click();
+
+    // Click the delete menu item
+    cy.contains(
+      ".blocklyMenuItemContent",
+      "Delete the 'avariable' variable"
+    ).click();
+
+    // The variables block should not exist (this was the only variable)
+    cy.get("#blockly-4").click({ force: true });
+    cy.get("[data-id='variables_set']").should("not.exist");
+
+    // The variable monitor should be empty
+    cy.get(".viz-var-container .card-body")
+      .contains("avariable")
+      .should("not.exist");
+  });
+
+  it("can rename a variable", function () {
+    var calls = 0;
+    cy.visit("/", {
+      onBeforeLoad(win) {
+        const vars = ["var1", "var2"];
+        cy.stub(win, "prompt").callsFake(() => {
+          return vars[calls++];
+        });
+      },
+    });
+
+    cy.get("#blockly-4").click({ force: true });
+
+    // Create a variable
+    //FIXME: force: true should not be needed below
+    cy.get(".blocklyFlyoutButton").click({ force: true });
+
+    // Open variables monitor
+    cy.get(".viz-var-container ul").contains("Variables").click();
+    // Variables monitor should show "var1"
+    cy.get(".viz-var-container .card-body").contains("var1");
+
+    // First click puts the block in the workspace; second click shows the menu
+    cy.get("[data-id='variables_set']").click();
+    cy.get("[data-id='variables_set']").contains("var1").click();
+
+    // Click the rename menu item
+    cy.contains(".blocklyMenuItemContent", "Rename variable...").click();
+
+    // Variables monitor should show "var2"
+    cy.get(".viz-var-container .card-body").contains("var2");
   });
 
   it("can import a CSV file", function () {

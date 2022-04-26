@@ -4,8 +4,8 @@ import {
 } from "../blockly/constants";
 
 class VariablesPrimTable {
-  constructor() {
-    this.varTable = {};
+  constructor(runtime) {
+    this.runtime = runtime;
 
     this.variables_set = (b) => this.primVariableSet(b);
     this.variables_get = (b) => this.primVariableGet(b);
@@ -15,14 +15,12 @@ class VariablesPrimTable {
     const variableName = block.thread.getBlockArg(block, BLOCKARG_VARIABLE_NAME);
     var variableValue = block.thread.getBlockArg(block, BLOCKARG_VARIABLE_VALUE);
 
-    if (!isNaN(variableValue)) variableValue = Number(variableValue);
-
-    this.varTable[variableName] = variableValue;
+    this.runtime.setVariable(variableName, variableValue);
   }
 
   primVariableGet(block) {
     const variableName = block.thread.getBlockArg(block, BLOCKARG_VARIABLE_NAME);
-    return this.varTable[variableName];
+    return this.runtime.getVariable(variableName);
   }
 }
 

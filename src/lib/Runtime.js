@@ -20,6 +20,7 @@ class Runtime extends EventEmitter {
     this._interpreter = null;
 
     this._data = null;
+    this._variables = {};
     this._visualizationSpec = _blankVisualizationSpec;
   }
 
@@ -62,6 +63,38 @@ class Runtime extends EventEmitter {
     }
   }
 
+  setVariable(variableName, variableValue) {
+    if (!isNaN(variableValue)) variableValue = Number(variableValue);
+
+    this._variables[variableName] = variableValue;
+
+    this.dispatchVariablesUpdate();
+  }
+
+  getVariable(variableName) {
+    return this._variables[variableName];
+  }
+
+  addVariable(variableName) {
+    this._variables[variableName] = null;
+    this.dispatchVariablesUpdate();
+  }
+
+  deleteVariable(variableName) {
+    delete this._variables[variableName];
+    this.dispatchVariablesUpdate();
+  }
+
+  renameVariable(oldVariableName, newVariableName) {
+    this._variables[newVariableName] = this._variables[oldVariableName];
+    delete this._variables[oldVariableName];
+    this.dispatchVariablesUpdate();
+  }
+
+  getVariables() {
+    return this._variables;
+  }
+
   dispatchVisualizationUpdate(cleared = false) {
     if (cleared) this._visualizationSpec = _blankVisualizationSpec;
     this.emit("visualization-updated", this._visualizationSpec);
@@ -69,6 +102,10 @@ class Runtime extends EventEmitter {
 
   dispatchDataUpdate() {
     this.emit("data-updated", this._data.getCurrentData());
+  }
+
+  dispatchVariablesUpdate() {
+    this.emit("variables-updated", this._variables);
   }
 
   async parseCode(code) {
