@@ -2,6 +2,8 @@ import React from "react";
 
 import PropTypes from "prop-types";
 
+import uniqueId from "lodash/uniqueId";
+
 import { getBounds } from "geolib";
 import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import * as vega from "vega";
@@ -94,7 +96,7 @@ function MapPlot(props) {
             color: color,
             fillColor: color,
             opacity: 0.7,
-            fillOpacity: 0.7
+            fillOpacity: 0.7,
           }}
           radius={size}
         />
@@ -123,8 +125,25 @@ function MapPlot(props) {
 }
 
 const MapVisualizationComponent = React.memo((props) => {
+  const elementId = uniqueId("map-container-");
+  const setMap = (map) => {
+    // https://stackoverflow.com/a/71006998
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    const container = document.getElementById(elementId);
+    resizeObserver.observe(container);
+  };
+
   return (
-    <MapContainer center={[0, 0]} zoom={1} scrollWheelZoom={true} {...props}>
+    <MapContainer
+      center={[0, 0]}
+      zoom={1}
+      scrollWheelZoom={true}
+      id={elementId}
+      whenCreated={setMap}
+      {...props}
+    >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

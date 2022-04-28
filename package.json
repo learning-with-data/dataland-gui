@@ -65,6 +65,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
+    "resize-observer-polyfill": "^1.5.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.1",
     "url-loader": "^4.1.1",
@@ -84,11 +85,12 @@
     "redux": "^4.1.2"
   },
   "dependencies": {
+    "allotment": "^1.12.1",
     "blockly": "^8.0.0",
     "dataland-interpreter": "git+https://github.com/learning-with-data/dataland-interpreter.git#5816eb4124948cf1e437b7b2b5ab05ba45a45b89",
     "geolib": "^3.3.3",
     "immutable": "^4.0.0",
-    "leaflet": "^1.7.1",
+    "leaflet": "^1.8.0",
     "lodash": "^4.17.21",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "pako": "^2.0.4",

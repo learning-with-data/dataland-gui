@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 
 import { Tabs, Tab } from "react-bootstrap";
 
+import { Allotment } from "allotment";
+
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
@@ -26,6 +28,7 @@ import {
   project_saved,
 } from "./redux/actionCreators";
 
+import "allotment/dist/style.css";
 import "./style.css";
 
 class Gui extends Component {
@@ -96,8 +99,15 @@ class Gui extends Component {
             }}
           />
         </HeaderComponent>
-        <div className="gui-container">
-          <div className="editor-column">
+        <Allotment
+          onChange={() => this.editor.current.resize()}
+          className="gui-container"
+        >
+          <Allotment.Pane
+            minsize={640}
+            preferredSize="66%"
+            className="editor-column"
+          >
             <EditorComponent
               ref={this.editor}
               onCodeUpdated={() => {
@@ -106,26 +116,38 @@ class Gui extends Component {
               microworld={this.props.microworld}
               blocklyInjectionOptions={this.props.blocklyInjectionOptions}
             />
-          </div>
-          <div className="viz-var-data-column">
-            <div className="viz-var-container">
-              <Tabs defaultActiveKey="visualization" className="m-1">
-                <Tab eventKey="visualization" title="Visualization" className="w-100 h-100">
-                  <VisualizationComponent
-                    ref={this.visualizer}
-                    microworld={this.props.microworld}
-                  />
-                </Tab>
-                <Tab eventKey="variables" title="Variables" className="w-100 h-100">
-                  <MonitorComponent/>
-                </Tab>
-              </Tabs>
-            </div>
-            <div className="data-container">
-              <TableViewerComponent />
-            </div>
-          </div>
-        </div>
+          </Allotment.Pane>
+          <Allotment.Pane className="viz-var-data-column">
+            <Allotment vertical={true}>
+              <Allotment.Pane preferredSize="50%" className="viz-var-container">
+                <div className="d-flex flex-column w-100 h-100">
+                  <Tabs defaultActiveKey="visualization" className="m-1">
+                    <Tab
+                      eventKey="visualization"
+                      title="Visualization"
+                      className="w-100 h-100"
+                    >
+                      <VisualizationComponent
+                        ref={this.visualizer}
+                        microworld={this.props.microworld}
+                      />
+                    </Tab>
+                    <Tab
+                      eventKey="variables"
+                      title="Variables"
+                      className="w-100 h-100"
+                    >
+                      <MonitorComponent />
+                    </Tab>
+                  </Tabs>
+                </div>
+              </Allotment.Pane>
+              <Allotment.Pane preferredSize="50%" className="data-container">
+                <TableViewerComponent />
+              </Allotment.Pane>
+            </Allotment>
+          </Allotment.Pane>
+        </Allotment>
       </div>
     );
   }

@@ -7,6 +7,7 @@ module.exports = {
   },
   setupFiles: ["jest-canvas-mock"],
   setupFilesAfterEnv: [
+    "<rootDir>/test/mocks/resizeObserverMock.js",
     "<rootDir>/test/utils/setupEnzymeTests.js",
     "<rootDir>/test/utils/setupSvgSupport.js",
   ],
