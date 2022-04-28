@@ -14,7 +14,7 @@ export default function (runtime) {
     new MapsPrimTable(runtime),
     new OperatorPrimTable(),
     new VisualizationPrimTable(runtime),
-    new VariablesPrimTable(),
+    new VariablesPrimTable(runtime),
     new DebugPrimTable()
   );
 }

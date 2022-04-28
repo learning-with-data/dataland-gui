@@ -4,7 +4,9 @@ import {
 } from "../constants";
 
 const toolbox = `
-    <category name="⚙ Control" categorystyle="control_category" id="control_category">
+    <category name="⚙ Control" categorystyle="control_category"
+        tooltip="Blocks to control the flow of the program (e.g., starting the program, waiting)"
+        id="control_category">
     <block type="event_onprojectstart" id="event_onprojectstart"/>
     <block type="control_repeat" id="control_repeat">
         <value name="${BLOCKARG_CONTROL_REPEAT_TIMES}">

@@ -55,8 +55,22 @@ class EditorComponent extends Component {
       ...blocklyInjectionOptions,
       ...this.props.blocklyInjectionOptions,
     });
-    this.workspace.addChangeListener(() => {
+    this.workspace.addChangeListener((event) => {
       this.props.onCodeUpdated();
+      // Deal with variables changing
+      switch (event.type) {
+        case Blockly.Events.VAR_CREATE:
+          this.props.addVariable(event.varName);
+          break;
+        case Blockly.Events.VAR_DELETE:
+          this.props.deleteVariable(event.varName);
+          break;
+        case Blockly.Events.VAR_RENAME:
+          this.props.renameVariable(event.oldName, event.newName);
+          break;
+        default:
+          break;
+      }
     });
     window.addEventListener("resize", this.resize, false);
   }
@@ -125,8 +139,18 @@ EditorComponent.propTypes = {
 
   microworld: PropTypes.string.isRequired,
   blocklyInjectionOptions: PropTypes.object,
+
+  addVariable: PropTypes.func,
+  deleteVariable: PropTypes.func,
+  renameVariable: PropTypes.func,
 };
 
 export default connect(null, { error_occurred }, null, {
   forwardRef: true,
-})(connectToRuntime(EditorComponent, { data: true, visualization: false }));
+})(
+  connectToRuntime(EditorComponent, {
+    data: true,
+    variables: false,
+    visualization: false,
+  })
+);

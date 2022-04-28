@@ -1,0 +1,5 @@
+.variable-monitor-value {
+    max-width: 12ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

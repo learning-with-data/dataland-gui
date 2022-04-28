@@ -5,11 +5,14 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import PropTypes from "prop-types";
 
+import { Tabs, Tab } from "react-bootstrap";
+
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
 import ErrorNotifierComponent from "./components/ErrorNotifierComponent";
 import HeaderComponent from "./components/HeaderComponent";
+import MonitorComponent from "./components/MonitorComponent";
 import TableViewerComponent from "./components/TableViewerComponent";
 import VisualizationComponent from "./components/VisualizationComponent";
 
@@ -104,12 +107,19 @@ class Gui extends Component {
               blocklyInjectionOptions={this.props.blocklyInjectionOptions}
             />
           </div>
-          <div className="viz-data-column">
-            <div className="viz-container">
-              <VisualizationComponent
-                ref={this.visualizer}
-                microworld={this.props.microworld}
-              />
+          <div className="viz-var-data-column">
+            <div className="viz-var-container">
+              <Tabs defaultActiveKey="visualization" className="m-1">
+                <Tab eventKey="visualization" title="Visualization" className="w-100 h-100">
+                  <VisualizationComponent
+                    ref={this.visualizer}
+                    microworld={this.props.microworld}
+                  />
+                </Tab>
+                <Tab eventKey="variables" title="Variables" className="w-100 h-100">
+                  <MonitorComponent/>
+                </Tab>
+              </Tabs>
             </div>
             <div className="data-container">
               <TableViewerComponent />

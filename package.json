@@ -84,7 +84,7 @@
     "redux": "^4.1.2"
   },
   "dependencies": {
-    "blockly": "^7.20211209.4",
+    "blockly": "^8.0.0",
     "dataland-interpreter": "git+https://github.com/learning-with-data/dataland-interpreter.git#5816eb4124948cf1e437b7b2b5ab05ba45a45b89",
     "geolib": "^3.3.3",
     "immutable": "^4.0.0",

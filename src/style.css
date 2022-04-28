@@ -10,16 +10,22 @@
     flex: 2 640px;
 }
 
-.viz-data-column {
+.viz-var-data-column {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     border: 1px dotted black;
     flex: 1 320px;
+    min-width: 1px; /* https://stackoverflow.com/a/14964944 */
 }
 
-.viz-container {
+.viz-var-container {
     flex: 0 0 50%;
+}
+
+.viz-var-container .tab-content {
+    width: 100%;
+    height: 100%;
 }
 
 .data-container {
