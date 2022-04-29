@@ -47,6 +47,10 @@ class EditorComponent extends Component {
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
     this.resize = this.resize.bind(this);
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.resize();
+    });
   }
 
   componentDidMount() {
@@ -72,7 +76,9 @@ class EditorComponent extends Component {
           break;
       }
     });
-    window.addEventListener("resize", this.resize, false);
+
+    // window.addEventListener("resize", this.resize, false);
+    this.resizeObserver.observe(this.container.current);
   }
 
   setCode(code) {

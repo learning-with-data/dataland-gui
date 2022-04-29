@@ -2,6 +2,8 @@ import React from "react";
 
 import PropTypes from "prop-types";
 
+import uniqueId from "lodash/uniqueId";
+
 import { getBounds } from "geolib";
 import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import * as vega from "vega";
@@ -19,22 +21,13 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function generate_scale(data, column, scaleType, range) {
-  const domain = data
-    .map((row) => row[column])
-    .filter((item) => !Number.isNaN(item));
+  const domain = data.map((row) => row[column]);
   const scaleFn = vega.scale(scaleType);
 
-  if (scaleType === "sequential") {
-    const scale = scaleFn()
-      .domain([Math.min(...domain), Math.max(...domain)])
-      .interpolator(range);
-    return scale;
-  } else {
-    const scale = scaleFn()
-      .domain([Math.min(...domain), Math.max(...domain)])
-      .range(range);
-    return scale;
-  }
+  const scale = scaleFn()
+    .domain([Math.min(...domain), Math.max(...domain)])
+    .range(range);
+  return scale;
 }
 
 function MapPlot(props) {
@@ -62,12 +55,14 @@ function MapPlot(props) {
 
     let colorScale;
     if (colorField !== undefined) {
-      colorScale = generate_scale(
-        data,
-        colorField,
-        "sequential",
-        vega.scheme("blues")
-      );
+      const first = data[0][colorField];
+      let scaleType = "linear";
+      let range = ["#f7fbff", "#08306b"];
+      if (typeof first === "string") {
+        scaleType = "ordinal";
+        range = vega.scheme("category20");
+      }
+      colorScale = generate_scale(data, colorField, scaleType, range);
     }
 
     return data.map((row, index) => {
@@ -94,7 +89,7 @@ function MapPlot(props) {
             color: color,
             fillColor: color,
             opacity: 0.7,
-            fillOpacity: 0.7
+            fillOpacity: 0.7,
           }}
           radius={size}
         />
@@ -123,8 +118,25 @@ function MapPlot(props) {
 }
 
 const MapVisualizationComponent = React.memo((props) => {
+  const elementId = uniqueId("map-container-");
+  const setMap = (map) => {
+    // https://stackoverflow.com/a/71006998
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    const container = document.getElementById(elementId);
+    resizeObserver.observe(container);
+  };
+
   return (
-    <MapContainer center={[0, 0]} zoom={1} scrollWheelZoom={true} {...props}>
+    <MapContainer
+      center={[0, 0]}
+      zoom={1}
+      scrollWheelZoom={true}
+      id={elementId}
+      whenCreated={setMap}
+      {...props}
+    >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
