@@ -143,7 +143,7 @@ class Gui extends Component {
                 </div>
               </Allotment.Pane>
               <Allotment.Pane preferredSize="50%" className="data-container">
-                <TableViewerComponent />
+                <TableViewerComponent hideDataImportButton={this.props.hideDataImportButton}/>
               </Allotment.Pane>
             </Allotment>
           </Allotment.Pane>
@@ -297,6 +297,7 @@ Gui.propTypes = {
   initialProject: PropTypes.instanceOf(Uint8Array),
   microworld: PropTypes.string.isRequired,
   blocklyInjectionOptions: PropTypes.object,
+  hideDataImportButton: PropTypes.bool,
 
   backend: PropTypes.bool.isRequired,
   backendCodeSaveHandler: PropTypes.func,
