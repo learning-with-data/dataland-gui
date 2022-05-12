@@ -5,7 +5,8 @@ import {
 } from "../constants";
 
 const toolbox = `
-    <category name="▦ Data" categorystyle="data_category" id="data_category">
+    <category name="▦ Data" categorystyle="data_category" id="data_category"
+        tooltip="Blocks that work with data in the table">
         <block type="data_row_count" id="data_row_count"/>
         <sep gap="32"/>
         <block type="data_get" id="data_get"/>

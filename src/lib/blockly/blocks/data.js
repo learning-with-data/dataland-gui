@@ -122,7 +122,7 @@ function DataBlocks(generate_data_columns) {
   };
 
   blocks["data_aggregate"] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
         id: "data_aggregate",
         message0: "group by %1 and set %2 to %3",
@@ -143,7 +143,7 @@ function DataBlocks(generate_data_columns) {
             type: "field_dropdown",
             name: BLOCKARG_DATA_AGGREGATION_FUNCTION,
             options: BLOCKDROPDOWN_AGGREGATE,
-          }
+          },
         ],
         args1: [
           {
@@ -155,8 +155,10 @@ function DataBlocks(generate_data_columns) {
         previousStatement: null,
         nextStatement: null,
         style: "data_blocks",
+        tooltip:
+          "This block will group rows with the same value into a single summary row",
       });
-    }
+    },
   };
 
   blocks["data_filter"] = {
@@ -200,6 +202,7 @@ function DataBlocks(generate_data_columns) {
         nextStatement: null,
         mutator: "data_filter_mutator",
         style: "data_blocks",
+        tooltip: "This block will filter rows that meet certain conditions",
       });
     },
   };

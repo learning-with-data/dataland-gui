@@ -4,7 +4,8 @@ import {
 } from "../constants";
 
 const toolbox = `
-    <category name="📊 Visualization" categorystyle="visualization_category" id="visualization_category">
+    <category name="📊 Visualization" categorystyle="visualization_category" id="visualization_category"
+        tooltip="Blocks to draw plots">
         <block type="visualization_clear" id="visualization_clear"/>
         <block type="visualization_set_title" id="visualization_set_title">
             <value name="${BLOCKARG_VISUALIZATION_TITLE}">

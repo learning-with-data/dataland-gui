@@ -13,6 +13,8 @@ blocks["event_onprojectstart"] = {
       inputsInline: true,
       nextStatement: null,
       style: "control_blocks",
+      tooltip:
+        "This block should be placed on top of any block stacks that you would like to run",
     });
   },
 };
@@ -102,6 +104,8 @@ blocks["control_if_else"] = {
       previousStatement: null,
       nextStatement: null,
       style: "control_blocks",
+      tooltip:
+        "This block will execute its 'if' section if the given condition is met; if the condition is not met, the 'else' section will be executed",
     });
   },
 };
