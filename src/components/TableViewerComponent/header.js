@@ -66,33 +66,37 @@ function TableViewerHeaderComponent(props) {
         className="d-inline-flex justify-content-between align-items-center tableviewer-header"
       >
         <span>
-          <Button
-            size="sm"
-            id={importBtnId}
-            className="data-import-button"
-            onClick={() => document.getElementById(importLinkId).click()}
-          >
-            {isCsvLoading && (
-              <>
-                <Spinner
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  className="mr-2"
-                />{" "}
-                Loading
-              </>
-            )}
-            {!isCsvLoading && "Import data"}
-          </Button>
-          <input
-            type="file"
-            id={importLinkId}
-            className="data-import-link"
-            style={{ display: "none" }}
-            accept=".csv"
-            onChange={(e) => handleDataImport(e)}
-          />{" "}
+          {!props.hideDataImportButton && (
+            <>
+              <Button
+                size="sm"
+                id={importBtnId}
+                className="data-import-button"
+                onClick={() => document.getElementById(importLinkId).click()}
+              >
+                {isCsvLoading && (
+                  <>
+                    <Spinner
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      className="mr-2"
+                    />{" "}
+                    Loading
+                  </>
+                )}
+                {!isCsvLoading && "Import data"}
+              </Button>
+              <input
+                type="file"
+                id={importLinkId}
+                className="data-import-link"
+                style={{ display: "none" }}
+                accept=".csv"
+                onChange={(e) => handleDataImport(e)}
+              />{" "}
+            </>
+          )}
           <Button
             disabled={props.projectData.length === 0}
             onClick={handleAddColumnShow}
@@ -138,6 +142,7 @@ TableViewerHeaderComponent.propTypes = {
   children: PropTypes.object,
   project_data_column_added: PropTypes.func,
   fullScreenButtonClickHandler: PropTypes.func,
+  hideDataImportButton: PropTypes.bool,
 
   setProjectData: PropTypes.func,
   addProjectDataColumn: PropTypes.func,

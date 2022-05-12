@@ -19,7 +19,7 @@ function TableViewerComponent(props) {
   return (
     <FullScreen handle={handle}>
       <Card className="w-100 h-100">
-        <TableViewerHeaderComponent>
+        <TableViewerHeaderComponent hideDataImportButton={props.hideDataImportButton}>
           <FullScreenButtonComponent
             disabled={Array.isArray(props.projectData) && props.projectData.length===0}
             handle={handle}
@@ -41,6 +41,7 @@ function TableViewerComponent(props) {
 TableViewerComponent.propTypes = {
   projectData: PropTypes.array,
   projectDataColumns: PropTypes.array,
+  hideDataImportButton: PropTypes.bool,
 };
 
 export default connectToRuntime(TableViewerComponent, {
