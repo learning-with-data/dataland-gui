@@ -16,6 +16,8 @@ blocks["variables_get"] = {
       ],
       output: null,
       style: "variable_blocks",
+      tooltip:
+        "This block is a variable that stores a value. You can view the current value of the variable in the 'Variable' panel on the right.",
     });
   },
 };
@@ -41,6 +43,8 @@ blocks["variables_set"] = {
       previousStatement: null,
       nextStatement: null,
       style: "variable_blocks",
+      tooltip:
+        "This block will assign a value to a variable. The value can be a number or text.",
     });
   },
 };

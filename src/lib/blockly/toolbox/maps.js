@@ -1,7 +1,8 @@
 import { BLOCKARG_MAPS_COLOR } from "../constants";
 
 const toolbox = `
-    <category name="🗺️ Maps" categorystyle="maps_category" id="maps_category">
+    <category name="🗺️ Maps" categorystyle="maps_category" id="maps_category"
+        tooltip="Blocks to make and adjust plots on a map">
         <block type="maps_clear" id="maps_clear"/>
         <sep gap="32"></sep>
         <block type="maps_set_latitude" id="maps_set_latitude"/>

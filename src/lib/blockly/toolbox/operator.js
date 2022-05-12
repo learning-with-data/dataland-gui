@@ -1,7 +1,8 @@
 import { BLOCKARG_OPERATOR_A, BLOCKARG_OPERATOR_B } from "../constants";
 
 const toolbox = `
-    <category name="± Operators" categorystyle="operator_category" id="operator_category">
+    <category name="± Operators" categorystyle="operator_category" id="operator_category"
+        tooltip="Blocks to do arithmetic and other operators.">
         <block type="operator_arithmetic" id="operator_arithmetic">
             <value name="${BLOCKARG_OPERATOR_A}">
                 <shadow type="math_number">

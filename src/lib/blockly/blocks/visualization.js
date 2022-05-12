@@ -109,6 +109,8 @@ function VisualizationBlocks(generate_data_columns) {
         previousStatement: null,
         nextStatement: null,
         style: "visualization_blocks",
+        tooltip:
+          "This block will set the color of plot marker based on the values in a column",
       });
     },
   };
@@ -128,6 +130,8 @@ function VisualizationBlocks(generate_data_columns) {
         previousStatement: null,
         nextStatement: null,
         style: "visualization_blocks",
+        tooltip:
+          "This block will set the type of plot marker (e.g., line, bar, or dot) ",
       });
     },
   };
