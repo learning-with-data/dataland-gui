@@ -65,41 +65,40 @@ function MapPlot(props) {
       colorScale = generate_scale(data, colorField, scaleType, range);
     }
 
-    return data.map((row, index) => {
-      // FIXME: We are going to end up with a lot of markers off the
-      // west coast of Africa due to this.
-      // Skip markers if data is missing.
-      const position = [row[latField] ?? 0, row[longField] ?? 0];
+    return data
+      .filter((row) => row[latField] !== null && row[longField] !== null)
+      .map((row, index) => {
+        const position = [row[latField] ?? 0, row[longField] ?? 0];
 
-      let size = 5;
-      if (row[sizeField] !== undefined) {
-        size = sizeScale(row[sizeField]);
-      }
+        let size = 5;
+        if (row[sizeField] !== undefined) {
+          size = sizeScale(row[sizeField]);
+        }
 
-      let color = layer.encoding.color;
-      if (row[colorField] !== undefined) {
-        color = colorScale(row[colorField]);
-      }
+        let color = layer.encoding.color;
+        if (row[colorField] !== undefined) {
+          color = colorScale(row[colorField]);
+        }
 
-      const marker = (
-        <CircleMarker
-          key={layer.name + index}
-          center={position}
-          pathOptions={{
-            color: color,
-            fillColor: color,
-            opacity: 0.7,
-            fillOpacity: 0.7,
-          }}
-          radius={size}
-        />
-      );
+        const marker = (
+          <CircleMarker
+            key={layer.name + index}
+            center={position}
+            pathOptions={{
+              color: color,
+              fillColor: color,
+              opacity: 0.7,
+              fillOpacity: 0.7,
+            }}
+            radius={size}
+          />
+        );
 
-      return [
-        marker,
-        { latitude: row[latField] ?? 0, longitude: row[longField] ?? 0 },
-      ];
-    });
+        return [
+          marker,
+          { latitude: row[latField] ?? 0, longitude: row[longField] ?? 0 },
+        ];
+      });
   });
 
   objects = objects.flat();
