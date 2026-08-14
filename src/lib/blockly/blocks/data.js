@@ -1,4 +1,4 @@
-import Blockly from "blockly/core";
+import * as Blockly from "blockly/core";
 
 import {
   BLOCKARG_DATA_AGGREGATION_FUNCTION,

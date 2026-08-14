@@ -12,6 +12,7 @@
 /test/integration/downloads
 /test/integration/screenshots
 /test/integration/videos
+/cypress
 
 # production
 /dist

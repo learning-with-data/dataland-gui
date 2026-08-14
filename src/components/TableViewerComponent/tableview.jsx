@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import BaseTable, { AutoResizer, Column } from "react-base-table";
-import "react-base-table/styles.css";
+import "react-base-table/dist/styles.css";
 
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 

@@ -103,9 +103,9 @@ function MapPlot(props) {
 
   objects = objects.flat();
 
-  let bounds = {};
+  // let bounds = {};
   if (objects.length > 0) {
-    bounds = getBounds(objects.map((item) => item[1]));
+    let bounds = getBounds(objects.map((item) => item[1]));
     map.fitBounds([
       [bounds.maxLat, bounds.maxLng],
       [bounds.minLat, bounds.minLng],

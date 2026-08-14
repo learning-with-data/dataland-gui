@@ -1,5 +1,5 @@
-/* eslint-disable quotes */
 import * as Blockly from "blockly/core";
+import { registerFieldColour } from "@blockly/field-colour";
 
 import { Tooltip } from "bootstrap";
 
@@ -28,10 +28,12 @@ class CategoryWithTooltips extends Blockly.ToolboxCategory {
 
   /** @override */
   createContainer_() {
+    // Call super so the div gets its id and the
+    // blocklyToolboxCategoryContainer class that Blockly's focus manager
+    // and click handler depend on.
     const container = /** @type {!HTMLDivElement} */ (
-      document.createElement("div")
+      super.createContainer_()
     );
-    container.classList.add(this.cssConfig_["container"]);
 
     if (this.toolboxItemDef_["tooltip"] !== undefined) {
       container.setAttribute("data-bs-toggle", "tooltip");
@@ -39,13 +41,13 @@ class CategoryWithTooltips extends Blockly.ToolboxCategory {
       container.setAttribute("title", this.toolboxItemDef_["tooltip"]);
 
       this.tooltip = new Tooltip(container);
+
+      container.addEventListener("click", () => {
+        this.tooltip?.hide();
+      });
     }
 
     return container;
-  }
-
-  onClick(){
-    this.tooltip?.hide();
   }
 
 }
@@ -57,19 +59,20 @@ function getBlocklyToolbox(microworld) {
     CategoryWithTooltips,
     true
   );
+  registerFieldColour();
 
   return (
     "" +
     // eslint-disable-next-line quotes
     '<xml id="' +
     uniqueId("toolbox-") +
-    '" style="display: none">' +
+    "\" style=\"display: none\">" +
     ControlToolbox +
     OperatorsToolbox +
     DataToolbox +
     (microworld === "maps" ? MapsToolbox : VisualizationToolbox) +
     // eslint-disable-next-line quotes
-    '<category name="⊡ Variables" categorystyle="variable_category" custom="VARIABLE"></category>' +
+    '<category name="⊡ Variables" toolboxitemid="variable_category" categorystyle="variable_category" custom="VARIABLE"></category>' +
     /// #if DEBUG
     DebugToolbox +
     /// #endif

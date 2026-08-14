@@ -1,4 +1,4 @@
-import pako from "pako";
+import * as pako from "pako";
 
 function createProjectBlob(code, data) {
   return pako.deflate(
@@ -11,7 +11,7 @@ function createProjectBlob(code, data) {
 }
 
 function loadProjectBlob(blob) {
-  var inflated = pako.inflate(blob, { to: "string" });
+  var inflated = pako.inflate(blob, { toText: true });
   var parsed = JSON.parse(inflated);
 
   return [parsed.code, parsed.data];

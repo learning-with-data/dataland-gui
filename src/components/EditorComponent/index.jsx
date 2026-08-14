@@ -17,7 +17,7 @@ const blocklyInjectionOptions = {
   comments: true,
   disable: false,
   collapse: false,
-  media: "blocks-media/",
+  media: "/blocks-media/node_modules/blockly/media/",
   readOnly: false,
   rtl: false,
   scrollbars: true,
@@ -84,7 +84,7 @@ class EditorComponent extends Component {
   setCode(code) {
     try {
       Blockly.Xml.clearWorkspaceAndLoadFromXml(
-        Blockly.Xml.textToDom(code),
+        Blockly.utils.xml.textToDom(code),
         this.workspace
       );
     } catch (err) {

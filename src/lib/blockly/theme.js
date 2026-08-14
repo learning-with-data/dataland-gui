@@ -33,7 +33,7 @@ const DataLandTheme = Blockly.Theme.defineTheme("dataland", {
       colourPrimary: "#3A79C2",
       colourSecondary: "#1A4D84",
       colourTertiary: "#142D4A",
-    }
+    },
   },
   categoryStyles: {
     control_category: {
@@ -53,7 +53,7 @@ const DataLandTheme = Blockly.Theme.defineTheme("dataland", {
     },
     variable_category: {
       colour: "#3A79C2",
-    }
+    },
   },
   componentStyles: {
     // https://developers.google.com/blockly/reference/js/Blockly.Theme?hl=ja#.ComponentStyle

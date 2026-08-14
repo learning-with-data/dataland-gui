@@ -1,6 +1,7 @@
 import "../../src/lib/DataTable";
 import DataTable from "../../src/lib/DataTable";
-import fs from "fs";
+
+import csvContent from "../fixtures/chapel-hill-weather-ncei.csv?raw";
 
 import Papa from "papaparse";
 
@@ -15,10 +16,6 @@ function getRandomInt(min, max) {
 describe("DataTable", () => {
   let csvParseResults;
   beforeAll(() => {
-    const csvContent = fs.readFileSync(
-      "test/fixtures/chapel-hill-weather-ncei.csv",
-      "utf-8"
-    );
     csvParseResults = Papa.parse(csvContent, parseConfig);
   });
 

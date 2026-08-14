@@ -1,5 +1,5 @@
 import * as Blockly from "blockly/core";
-import En from "blockly/msg/en";
+import * as En from "blockly/msg/en";
 Blockly.setLocale(En);
 
 import ControlBlocks from "./control";
@@ -131,46 +131,33 @@ Object.assign(
 // Based on the instructions at:
 // https://developers.google.com/blockly/guides/configure/web/toolbox#dynamic_categories
 // and the existing flyout callback at blockly/core/variables.js in Blockly
-Blockly.Variables.flyoutCategoryBlocks = function (workspace) {
-  var variableModelList = workspace.getVariablesOfType("");
+const originalGetToolboxCategoryCallback = Blockly.WorkspaceSvg.prototype.getToolboxCategoryCallback;
+Blockly.WorkspaceSvg.prototype.getToolboxCategoryCallback = function (key) {
+  const callback = originalGetToolboxCategoryCallback.call(this, key);
 
-  var xmlList = [];
-  if (variableModelList.length > 0) {
-    var mostRecentVariable = variableModelList[variableModelList.length - 1];
-    if (Blockly.Blocks["variables_set"]) {
-      var set_block = Blockly.utils.xml.createElement("block");
-      set_block.setAttribute("type", "variables_set");
-      set_block.setAttribute("id", "variables_set");
-      set_block.setAttribute("gap", 8);
-      const shadowValue = Blockly.Xml.textToDom(
-        `
-          <value name="${BLOCKARG_VARIABLE_VALUE}">
-            <shadow type="text">
-              <field name="TEXT"></field>
-            </shadow>
-          </value>
-          `
-      );
-      set_block.appendChild(shadowValue);
-      set_block.appendChild(
-        Blockly.Variables.generateVariableFieldDom(mostRecentVariable)
-      );
-      xmlList.push(set_block);
-    }
-    if (Blockly.Blocks["variables_get"]) {
-      variableModelList.sort(Blockly.VariableModel.compareByName);
-      for (var i = 0, variable; (variable = variableModelList[i]); i++) {
-        var get_block = Blockly.utils.xml.createElement("block");
-        get_block.setAttribute("type", "variables_get");
-        get_block.setAttribute("gap", 8);
-        get_block.appendChild(
-          Blockly.Variables.generateVariableFieldDom(variable)
-        );
-        xmlList.push(get_block);
+  if (key === Blockly.Variables.CATEGORY_NAME && callback) {
+    return function (workspace) {
+      const items = callback(workspace);
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.kind === "block" && item.type === "variables_set") {
+          item.inputs = item.inputs || {};
+          item.inputs[BLOCKARG_VARIABLE_VALUE] = {
+            shadow: {
+              type: "text",
+              fields: {
+                TEXT: "",
+              },
+            },
+          };
+        }
       }
-    }
+      return items;
+    };
   }
-  return xmlList;
+
+  return callback;
 };
 
 function initBlockly() {

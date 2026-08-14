@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import PropTypes from "prop-types";
 
-import { VegaLite } from "react-vega";
+import { VegaEmbed } from "react-vega";
 import Card from "react-bootstrap/Card";
 
 import MapVisualizationComponent from "../MapVisualizationComponent";
@@ -21,12 +21,9 @@ class VisualizationComponent extends Component {
 
     if (this.props.microworld === "plots") {
       visualizer = (
-        <VegaLite
+        <VegaEmbed
           spec={this.props.projectVisualizationSpec}
-          actions={false}
           className="h-100 w-100"
-          onParseError={(e) => console.log(e)}
-          onNewView={(v) => (this._view = v)}
         />
       );
     } else if (this.props.microworld === "maps") {

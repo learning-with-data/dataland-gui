@@ -7,19 +7,26 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("visitApp", (url = "/example/example.html", options = {}) => {
+  const originalOnBeforeLoad = options.onBeforeLoad;
+
+  cy.visit(url, {
+    ...options,
+    onBeforeLoad(win) {
+      // Block beforeunload listeners to prevent "Leave site?" prompts
+      const originalAddEventListener = win.addEventListener;
+      win.addEventListener = function (event, listener, options) {
+        if (event === "beforeunload") {
+          return;
+        }
+        return originalAddEventListener.call(this, event, listener, options);
+      };
+
+      // Call the original onBeforeLoad if provided (e.g., for console spying)
+      if (originalOnBeforeLoad) {
+        originalOnBeforeLoad(win);
+      }
+    },
+  });
+});

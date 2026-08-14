@@ -36,3 +36,7 @@
     width: 1em;
     height: 1em;
 }
+
+.tooltip {
+    pointer-events: none !important;
+}
