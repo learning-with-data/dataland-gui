@@ -43,8 +43,8 @@ function TableViewerHeaderComponent(props) {
       worker: true,
       complete: (results) => {
         if (results.errors.length > 0) {
-          console.log("Parse error while importing CSV file.");
-          console.log(results.errors);
+          console.error("Parse error while importing CSV file.");
+          console.error(results.errors);
           props.error_occurred(
             results.errors,
             "Parse error while importing CSV file."

@@ -5,11 +5,12 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import PropTypes from "prop-types";
 
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Offcanvas } from "react-bootstrap";
 
 import { Allotment } from "allotment";
 
 import { createProjectBlob, loadProjectBlob } from "./lib/projectio";
+import { AI_ENABLED } from "./config";
 import ControlComponent from "./components/ControlComponent";
 import EditorComponent from "./components/EditorComponent";
 import ErrorNotifierComponent from "./components/ErrorNotifierComponent";
@@ -17,7 +18,7 @@ import HeaderComponent from "./components/HeaderComponent";
 import MonitorComponent from "./components/MonitorComponent";
 import TableViewerComponent from "./components/TableViewerComponent";
 import VisualizationComponent from "./components/VisualizationComponent";
-
+import ChatPanel from "./components/AIChat/ChatPanel";
 import { connectToRuntime } from "./components/connectToRuntime";
 
 import {
@@ -27,32 +28,56 @@ import {
   project_modified,
   project_saved,
 } from "./redux/actionCreators";
+import { RuntimeContext } from "./components/connectToRuntime";
 
 import "allotment/dist/style.css";
 import "./style.css";
 
 class Gui extends Component {
+  static contextType = RuntimeContext;
+
   constructor(props) {
     super(props);
 
     this.state = {
       projectTitle: this.props.initialProjectTitle,
       expanded: false,
+      aiHelperOpen: false,
+      // Right offset (px) of the editor column from the viewport's right edge.
+      // Used to pin the AI Helper Offcanvas panel to the editor's right border
+      // so it tracks the live editor width (including sash drags). 0 = full width.
+      aiHelperRightOffset: 0,
     };
 
     this.editor = React.createRef();
     this.visualizer = React.createRef();
+    this.editorColumnRef = React.createRef();
 
     this.saveIntervalId = null;
 
     this.handleProjectImport = this.handleProjectImport.bind(this);
     this._handleBeforeUnload = this._handleBeforeUnload.bind(this);
+    this.updateAiHelperRightOffset = this.updateAiHelperRightOffset.bind(this);
+    this._handleWindowResize = this._handleWindowResize.bind(this);
   }
 
   componentDidMount() {
+    this.updateAiHelperRightOffset();
+    window.addEventListener("resize", this._handleWindowResize);
+
     // See if there is already existing code. Load if it exists.
     if (this.props.initialProject && this.props.initialProject.byteLength > 0) {
       this.handleProjectImport(this.props.initialProject);
+    }
+
+    // Track the editor column's size so the AI Helper Offcanvas panel always
+    // spans exactly the live editor width (including sash drags and resizes).
+    // Only needed when the AI Helper feature is enabled.
+    if (AI_ENABLED && this.editorColumnRef.current) {
+      this.aiHelperResizeObserver = new ResizeObserver(
+        this.updateAiHelperRightOffset
+      );
+      this.aiHelperResizeObserver.observe(this.editorColumnRef.current);
     }
 
     // Set up the API save timer
@@ -72,6 +97,10 @@ class Gui extends Component {
       clearInterval(this.backendSaveIntervalId);
     }
     window.removeEventListener("beforeunload", this._handleBeforeUnload);
+    window.removeEventListener("resize", this._handleWindowResize);
+    if (this.aiHelperResizeObserver) {
+      this.aiHelperResizeObserver.disconnect();
+    }
   }
 
   render() {
@@ -87,6 +116,7 @@ class Gui extends Component {
           }}
           lastSaveTimestamp={this.props.backendCodeSaveTimestamp}
           lastSaveRequestTimeStamp={this.state.backendSaveRequestTime}
+          onToggleAiHelper={() => this.setState({ aiHelperOpen: true })}
         >
           <ControlComponent
             isEditorExpanded={this.state.expanded}
@@ -107,15 +137,39 @@ class Gui extends Component {
             minsize={640}
             preferredSize="66%"
             className="editor-column"
+            ref={this.editorColumnRef}
           >
-            <EditorComponent
-              ref={this.editor}
-              onCodeUpdated={() => {
-                this.props.project_modified();
-              }}
-              microworld={this.props.microworld}
-              blocklyInjectionOptions={this.props.blocklyInjectionOptions}
-            />
+            <div className="editor-overlay-container">
+              <EditorComponent
+                ref={this.editor}
+                onCodeUpdated={() => {
+                  this.props.project_modified();
+                }}
+                microworld={this.props.microworld}
+                blocklyInjectionOptions={this.props.blocklyInjectionOptions}
+              />
+              {AI_ENABLED && (
+                <Offcanvas
+                  className="ai-helper-offcanvas"
+                  placement="start"
+                  show={this.state.aiHelperOpen}
+                  onHide={() => this.setState({ aiHelperOpen: false })}
+                  style={{ right: this.state.aiHelperRightOffset + "px" }}
+                >
+                  <Offcanvas.Header closeButton onHide={() => this.setState({ aiHelperOpen: false })}>
+                    <Offcanvas.Title>AI Helper</Offcanvas.Title>
+                  </Offcanvas.Header>
+                  <Offcanvas.Body>
+                    <ChatPanel
+                      microworld={this.props.microworld}
+                      projectData={this.props.projectData}
+                      projectDataColumns={this.props.projectDataColumns}
+                      toolContext={this.aiToolContext}
+                    />
+                  </Offcanvas.Body>
+                </Offcanvas>
+              )}
+            </div>
           </Allotment.Pane>
           <Allotment.Pane className="viz-var-data-column">
             <Allotment vertical={true}>
@@ -152,6 +206,40 @@ class Gui extends Component {
     );
   }
 
+  // Builds the context object the AI agent's tools use to reach the live
+  // project state. Rebuilt on each render so the editor ref (which is only
+  // available after EditorComponent mounts) is always current.
+  get aiToolContext() {
+    return {
+      runtime: this.context,
+      editor: this.editor.current,
+      // The visualization component, so the vision tool (getVisualizationImage)
+      // can rasterize the currently rendered chart.
+      visualizer: this.visualizer.current,
+      microworld: this.props.microworld,
+    };
+  }
+
+  //
+  // Methods that position the AI Helper Offcanvas
+  //
+  updateAiHelperRightOffset() {
+    const el = this.editorColumnRef.current;
+    if (!el) return;
+    // Distance from the editor column's right edge to the viewport's right edge.
+    // The Offcanvas panel is position:fixed, so `right: <this>px` pins its right
+    // edge to the editor's right border, keeping it over the editor only.
+    const rect = el.getBoundingClientRect();
+    const rightOffset = Math.max(0, window.innerWidth - rect.right);
+    if (rightOffset !== this.state.aiHelperRightOffset) {
+      this.setState({ aiHelperRightOffset: rightOffset });
+    }
+  }
+
+  _handleWindowResize() {
+    this.updateAiHelperRightOffset();
+  }
+
   //
   // Methods that save/load/import/export projects
   //
@@ -162,7 +250,7 @@ class Gui extends Component {
     try {
       [code, data] = loadProjectBlob(blob);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       this.props.error_occurred(err, "Failed to load project.");
       return;
     }
@@ -314,6 +402,7 @@ Gui.propTypes = {
   project_saved: PropTypes.func,
 
   projectData: PropTypes.array,
+  projectDataColumns: PropTypes.array,
   setProjectData: PropTypes.func,
   startInterpreter: PropTypes.func,
   stopInterpreter: PropTypes.func,

@@ -5,6 +5,9 @@ import {
   GUI_INTERPRETER_STOPPED,
   GUI_PROJECT_MODIFIED,
   GUI_PROJECT_SAVED,
+  AI_CHAT_MESSAGE_ADDED,
+  AI_CHAT_SET_TYPING,
+  AI_CHAT_HISTORY_CLEARED,
 } from "../actionsTypes";
 
 const initialState = {
@@ -12,6 +15,10 @@ const initialState = {
   interpreterStatus: "STOPPED",
   projectModifiedTimeStamp: null,
   projectSavedTimeStamp: null,
+  aiChat: {
+    history: [],
+    isTyping: false,
+  },
 };
 
 function reducer(state = initialState, action) {
@@ -38,6 +45,30 @@ function reducer(state = initialState, action) {
       return { ...state, interpreterStatus: "RUNNING" };
     case GUI_INTERPRETER_STOPPED:
       return { ...state, interpreterStatus: "STOPPED" };
+    case AI_CHAT_MESSAGE_ADDED:
+      return {
+        ...state,
+        aiChat: {
+          ...state.aiChat,
+          history: [...state.aiChat.history, action.payload],
+        },
+      };
+    case AI_CHAT_SET_TYPING:
+      return {
+        ...state,
+        aiChat: {
+          ...state.aiChat,
+          isTyping: action.payload,
+        },
+      };
+    case AI_CHAT_HISTORY_CLEARED:
+      return {
+        ...state,
+        aiChat: {
+          history: [],
+          isTyping: false,
+        },
+      };
     default:
       return state;
   }

@@ -47,6 +47,7 @@ class EditorComponent extends Component {
     this.activateBlock = this.activateBlock.bind(this);
     this.deactivateBlock = this.deactivateBlock.bind(this);
     this.resize = this.resize.bind(this);
+    this.loadJsonCode = this.loadJsonCode.bind(this);
 
     this.resizeObserver = new ResizeObserver(() => {
       this.resize();
@@ -88,13 +89,62 @@ class EditorComponent extends Component {
         this.workspace
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
       this.props.error_occurred(err, "Failed to load project into the editor.");
     }
   }
 
   getCode() {
     return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace));
+  }
+
+  getWorkspace() {
+    return this.workspace;
+  }
+
+  loadJsonCode(json) {
+    try {
+      Blockly.serialization.workspaces.load(json, this.workspace);
+      this.recenterBlocks();
+    } catch (err) {
+      console.error(err);
+      this.props.error_occurred(err, "Failed to load AI generated code.");
+    }
+  }
+
+  recenterBlocks() {
+    const blocks = this.workspace.getTopBlocks(true);
+    if (blocks.length === 0) return;
+
+    // Compute the center of the visible workspace area in workspace coordinates.
+    // metrics.viewLeft/viewTop and viewWidth/viewHeight are in pixels (relative
+    // to the workspace origin); divide by the scale to get workspace units.
+    const metrics = this.workspace.getMetrics();
+    const scale = this.workspace.getScale();
+    const centerX = (metrics.viewLeft + metrics.viewWidth / 2) / scale;
+    const centerY = (metrics.viewTop + metrics.viewHeight / 2) / scale;
+
+    // Calculate the total bounding box of all top-level blocks
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const block of blocks) {
+      const xy = block.getRelativeToSurfaceXY();
+      const { width, height } = block.getHeightWidth();
+      minX = Math.min(minX, xy.x);
+      minY = Math.min(minY, xy.y);
+      maxX = Math.max(maxX, xy.x + width);
+      maxY = Math.max(maxY, xy.y + height);
+    }
+
+    const contentWidth = maxX - minX;
+    const contentHeight = maxY - minY;
+
+    // Offset to center the content's bounding box around the workspace center
+    const offsetX = centerX - contentWidth / 2 - minX;
+    const offsetY = centerY - contentHeight / 2 - minY;
+
+    for (const block of blocks) {
+      block.moveBy(offsetX, offsetY);
+    }
   }
 
   activateBlock(blockId) {

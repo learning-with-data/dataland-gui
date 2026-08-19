@@ -42,6 +42,21 @@ describe("The GUI", () => {
     cy.get(".gui-container").should("exist");
   });
 
+  it("opens the AI Helper overlay when the AI Helper button is clicked", () => {
+    // The overlay should not be shown initially.
+    cy.get(".ai-helper-offcanvas.offcanvas.show").should("not.exist");
+
+    cy.get(".ai-helper-button").realClick();
+
+    // Clicking the AI Helper button should open the overlay over the editor.
+    // The placeholder is an attribute, so it must be matched with
+    // "have.attr" rather than "contain.text" (which only sees rendered text).
+    cy.get(".ai-helper-offcanvas.offcanvas.show")
+      .should("be.visible")
+      .find("input[placeholder='Ask AI to generate blocks, explain your data, or brainstorm questions...']")
+      .should("be.visible");
+  });
+
   it("opens every block category successfully", () => {
     // Control category
     cy.get(".blocklyToolboxCategory#control_category").realClick();

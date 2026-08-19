@@ -10,6 +10,7 @@ import path from "path";
 const ifdefPlugin = () => {
   return {
     name: "vite-plugin-ifdef",
+    enforce: "pre",
     transform(code, id) {
       if (!id.endsWith(".js") && !id.endsWith(".jsx")) return null;
 
@@ -92,6 +93,23 @@ export default defineConfig(() => {
       globals: true,
       environment: "jsdom",
       setupFiles: ["./test/setupTests.js"],
+      // Deterministic baseline for import.meta.env in unit tests. These
+      // values override whatever a local .env file defines, so tests are
+      // hermetic (e.g. a developer's .env with VITE_AI_VISION=true does not
+      // flip the module-level vision gate in AIService/ToolRegistry, and
+      // VITE_AI_ENABLED defaults to off, so the AI Helper UI is hidden
+      // unless a test opts in). Tests that need a different value use
+      // vi.stubEnv + vi.resetModules + a dynamic import (see
+      // AIServiceVision.test.js and AIAgentMaxTurns.test.js).
+      env: {
+        VITE_AI_ENABLED: "",
+        VITE_AI_VISION: "",
+        VITE_AI_MAX_TURNS: "",
+        // The dev server (npm start) sets DEV=true; vitest sets DEV=false.
+        // We enable it here so the dev-only token-usage path in
+        // AIService/AIAgent is exercised by the unit tests.
+        VITE_DEV: "true",
+      },
       coverage: {
         provider: "istanbul",
         reporter: ["json", "text", "html"],

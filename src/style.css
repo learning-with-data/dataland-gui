@@ -6,6 +6,33 @@
     flex-grow: 1;
 }
 
+.editor-overlay-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Position the Offcanvas panel over the editor column only.
+
+   The panel is `position: fixed` (Bootstrap's shown-state default), so its
+   containing block is the viewport. `left: 0` puts its left edge on the screen's
+   left edge (= the editor's left edge). The right edge is set dynamically by
+   `Gui.jsx` (inline `style.right` = the editor column's right offset from the
+   viewport's right edge), so the panel always spans exactly the live editor
+   width and tracks sash drags. `width: auto` lets the width derive from
+   left/right. `flex: none` keeps it out of the Allotment layout so it never
+   becomes a pane. The separate backdrop element keeps its own fixed inset. */
+.ai-helper-offcanvas {
+    left: 0 !important;
+    width: auto !important;
+    flex: none !important;
+    z-index: 1045;
+}
+
+.ai-helper-offcanvas .offcanvas-body {
+    height: 100%;
+}
+
 .viz-var-container .tab-content {
     width: 100%;
     height: 100%;

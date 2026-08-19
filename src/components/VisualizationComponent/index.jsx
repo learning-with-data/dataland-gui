@@ -24,6 +24,11 @@ class VisualizationComponent extends Component {
         <VegaEmbed
           spec={this.props.projectVisualizationSpec}
           className="h-100 w-100"
+          onRender={({ view }) => {
+            // Keep a handle on the Vega view so getVisualizationImage can
+            // rasterize the current chart (e.g. for the AI vision tool).
+            this._view = view;
+          }}
         />
       );
     } else if (this.props.microworld === "maps") {
@@ -61,7 +66,7 @@ class VisualizationComponent extends Component {
         const imageBlob = await this._getImageBlobFromView();
         return await imageBlob.arrayBuffer();
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 

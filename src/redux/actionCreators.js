@@ -25,3 +25,17 @@ export const project_modified = () => ({
 export const project_saved = () => ({
   type: actionsTypes.GUI_PROJECT_SAVED,
 });
+
+export const ai_chat_message_added = (message) => ({
+  type: actionsTypes.AI_CHAT_MESSAGE_ADDED,
+  payload: message,
+});
+
+export const ai_chat_set_typing = (isTyping) => ({
+  type: actionsTypes.AI_CHAT_SET_TYPING,
+  payload: isTyping,
+});
+
+export const ai_chat_history_cleared = () => ({
+  type: actionsTypes.AI_CHAT_HISTORY_CLEARED,
+});

@@ -1,6 +1,9 @@
 export const GUI_PROJECT_SAVED = "gui_project_saved";
 export const GUI_PROJECT_MODIFIED = "gui_project_modified";
-export const GUI_ERROR_OCCURRED = "gui_error_occurred";
 export const GUI_ERROR_CLEARED = "gui_error_cleared";
+export const GUI_ERROR_OCCURRED = "gui_error_occurred";
 export const GUI_INTERPRETER_STARTED = "gui_interpreter_started";
 export const GUI_INTERPRETER_STOPPED = "gui_interpreter_stopped";
+export const AI_CHAT_MESSAGE_ADDED = "ai_chat_message_added";
+export const AI_CHAT_SET_TYPING = "ai_chat_set_typing";
+export const AI_CHAT_HISTORY_CLEARED = "ai_chat_history_cleared";
