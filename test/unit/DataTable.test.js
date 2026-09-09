@@ -237,4 +237,85 @@ describe("DataTable", () => {
     expect(d.getCurrentData()[7].PRCP).toBeNaN();
   });
 
+  describe("pushFilter type-aware comparison", () => {
+    // These mirror the data_filter primitive's contract: the MATCH value may be
+    // a number or a string, and the column may hold numbers or numeric strings.
+    // eq/neq compare numerically when BOTH sides are numeric and fall back to
+    // string comparison otherwise, so a user doesn't need to know a column's
+    // type (the block language is type-agnostic).
+    const zips = [{ ZIPCode: 98103, Name: "A" }, { ZIPCode: 98103, Name: "B" }];
+
+    it("should match a numeric column with a numeric string test value (eq, all rows)", () => {
+      const d = new DataTable(zips);
+      d.pushFilter([["ZIPCode", "eq", "98103"]]);
+      // Both rows have ZIPCode 98103 (number), and the test value "98103" is a
+      // numeric string. Both sides are numeric, so the comparison is numeric and
+      // every row matches.
+      expect(d.getCurrentData()).toHaveLength(2);
+    });
+
+    it("should match a numeric column with a numeric test value (eq, all rows)", () => {
+      const d = new DataTable(zips);
+      d.pushFilter([["ZIPCode", "eq", 98103]]);
+      // Both sides are numbers; numeric comparison matches every row.
+      expect(d.getCurrentData()).toHaveLength(2);
+    });
+
+    it("should match a text column of numeric strings with a number test value (eq, all rows)", () => {
+      // A column stored as text (e.g. ZIP codes) holding numeric strings must
+      // still match a *number* test value: both sides look numeric, so the
+      // comparison is numeric. This is the case the old one-directional
+      // coercion missed (it only coerced the test value when the *cell* was a
+      // number, not the reverse).
+      const t = new DataTable([{ N: "98103" }, { N: "98103" }]);
+      t.pushFilter([["N", "eq", 98103]]);
+      expect(t.getCurrentData()).toHaveLength(2);
+    });
+
+    it("should treat a leading-zero string and a number as equal (eq)", () => {
+      // "01234" (string, e.g. a US ZIP code) and 1234 (number) are the same
+      // value with different formatting. Because both sides look numeric, the
+      // comparison is numeric (1234 === 1234) and they match. A string
+      // comparison would fail here, which is why numeric comparison is used
+      // when both sides are numeric.
+      const t = new DataTable([{ ZIP: "01234" }, { ZIP: "01234" }]);
+      t.pushFilter([["ZIP", "eq", 1234]]);
+      expect(t.getCurrentData()).toHaveLength(2);
+    });
+
+    it("should keep string semantics for genuinely text values (eq, all rows)", () => {
+      // A non-numeric value must still match by string equality: neither side
+      // is numeric, so the comparison is string-based.
+      const t = new DataTable([{ N: "cat" }, { N: "cat" }]);
+      t.pushFilter([["N", "eq", "cat"]]);
+      expect(t.getCurrentData()).toHaveLength(2);
+    });
+
+    it("should not match a numeric column when nothing satisfies a numeric string test value (lt, no rows)", () => {
+      const d = new DataTable(zips);
+      d.pushFilter([["ZIPCode", "lt", "1"]]);
+      // gt/lt/gte/lte are numeric operators: nothing in the column is < 1, so
+      // no row matches and the table is empty.
+      expect(d.getCurrentData()).toHaveLength(0);
+    });
+
+    it("should not match a text column with a non-numeric test value (neq, no rows)", () => {
+      // neq is the inverse of eq. For a text column, neither side is numeric
+      // (test value "cat"), so the comparison is string-based: "cat" != "cat"
+      // is false, so no row matches.
+      const t = new DataTable([{ N: "cat" }, { N: "cat" }]);
+      t.pushFilter([["N", "neq", "cat"]]);
+      expect(t.getCurrentData()).toHaveLength(0);
+    });
+
+    it("should match a numeric column with a non-numeric test value (neq, all rows)", () => {
+      // neq with a numeric column and a non-numeric test value: the cell is
+      // numeric but the test value is not, so the comparison is string-based
+      // (Number is not applied). 98103 != "cat" is true, so every row matches.
+      const d = new DataTable(zips);
+      d.pushFilter([["ZIPCode", "neq", "cat"]]);
+      expect(d.getCurrentData()).toHaveLength(2);
+    });
+  });
+
 });

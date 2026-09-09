@@ -162,11 +162,11 @@ ${blockArgumentTypes}
 ### Rules for Connecting Blocks:
 1. **Top-Level Blocks**: Only blocks that are NOT connected as a child to another block should appear in the top-level "blocks" array.
 2. **Statement Connections**: Connect a block after another via "next": { "block": { ... } }.
-3. **Value Connections (Real Blocks)**: Nest the child inside the parent's "inputs": { "INPUT_NAME": { "block": { ... } } }.
-4. **Value Connections (Shadow Blocks)**: Use "inputs": { "INPUT_NAME": { "shadow": { ... } } } for "text" or "math_number" values.
+3. **Value Connections (Real Blocks)**: Nest the child inside the parent's "inputs": { "INPUT_NAME": { "block": { ... } } }. ALWAYS provide a real block here: use a math_number block for numeric values and a text block for strings. The interpreter reads these as actual numbers/text, which is required for the code to behave correctly.
+4. **Shadow Blocks (rare)**: A "shadow" is only an editable *placeholder* that the user can replace. It does NOT evaluate as a real value, so numeric comparisons and conditions built on it silently fail. Only use "inputs": { "INPUT_NAME": { "shadow": { ... } } } when a slot is genuinely meant to hold a temporary, user-editable default; never for a value the program must actually compute or compare.
 5. **Unique IDs**: Every block object must have a unique "id" property.
 6. **Fields vs Inputs**: Use "fields" for primitive values and field_* arguments; use "inputs" ONLY for nesting other blocks (input_value arguments).
-7. **Block Types**: Use the available blocks listed above. "text" and "math_number" are always available for providing values to input_value arguments.
+7. **Block Types**: Use the available blocks listed above. "text" and "math_number" are always available for providing values to input_value arguments. For data_filter MATCH slots, use a math_number block for any value (numeric or text) - the comparison is type-aware, so the user does not need to know the column's type. Use a text block for other string values (titles, log messages, etc.).
 
 ### Blocks with Substacks (Temporary Context): data_aggregate and data_filter
 
@@ -233,6 +233,22 @@ The visualization blocks MUST be inside the data_aggregate substack:
 }
 
 Simpler charts follow the same "next" chain without a substack, e.g. a scatter plot of "column_x" vs "column_y" is: event_onprojectstart -> visualization_clear -> visualization_set_mark ("point") -> visualization_set_x ("column_x") -> visualization_set_y ("column_y").
+
+Example: Keep only the rows whose "Price" equals 25. The MATCH value MUST be a real math_number block (never a shadow), or the numeric comparison will not match any rows:
+{
+  "blocks": {
+    "blocks": [
+      {
+        "id": "block_3",
+        "type": "data_filter",
+        "fields": { "COLUMN0": "Price", "COMPARISON_OPERATOR0": "eq" },
+        "inputs": {
+          "MATCH0": { "block": { "id": "block_3a", "type": "math_number", "fields": { "NUM": 25 } } }
+        }
+      }
+    ]
+  }
+}
 
 Instructions:
 1. For non-code questions (explaining data, brainstorming questions, explaining a visualization), answer in clear, friendly Markdown prose. Do NOT include JSON or code unless the user asks for it.

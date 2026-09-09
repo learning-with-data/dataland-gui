@@ -37,9 +37,14 @@ const standardBlocks = {
         message0: "%1",
         args0: [
           {
-            type: "field_number",
+            // A field_input (rather than field_number) so the user can type any
+            // value — including non-numeric text — into a math_number slot. The
+            // block language is meant to be type-agnostic: the user shouldn't
+            // have to know whether a column is numeric. Type-aware comparison is
+            // handled at runtime (see DataTable.pushFilter).
+            type: "field_input",
             name: "NUM",
-            value: 0,
+            text: "0",
           },
         ],
         output: "Number",

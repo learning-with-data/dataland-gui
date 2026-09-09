@@ -80,10 +80,13 @@ describe("BlockSpecExtractor", () => {
     expect(spec["text"]["TEXT"].type).toBe("field_input");
   });
 
-  it("should correctly classify field_number arguments", () => {
-    // math_number has a field_number argument NUM
+  it("should classify math_number's NUM as a field_input (type-agnostic value block)", () => {
+    // math_number deliberately uses a field_input (not a field_number) so the
+    // user can type any value - including non-numeric text - into a
+    // math_number slot. The block language is type-agnostic, and the
+    // type-aware comparison happens at runtime (see DataTable.pushFilter).
     expect(spec["math_number"]).toBeDefined();
-    expect(spec["math_number"]["NUM"].type).toBe("field_number");
+    expect(spec["math_number"]["NUM"].type).toBe("field_input");
   });
 
   it("should correctly classify field_colour arguments", () => {

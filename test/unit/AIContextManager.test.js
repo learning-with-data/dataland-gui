@@ -96,5 +96,44 @@ describe("AIContextManager", () => {
       );
       expect(prompt).toContain("3 rows in total");
     });
+
+    describe("value-connection guidance (shadow vs. real block)", () => {
+      // The interpreter evaluates a real `math_number`/`text` block as a real
+      // number/string, but treats a `shadow` only as an editable placeholder
+      // that never evaluates. If the prompt ever regresses to telling the model
+      // to emit shadows for values, numeric filters stop matching, so these
+      // guard the corrected guidance.
+      it("should instruct the model to use a real block for value inputs", () => {
+        const prompt = AIContextManager.getSystemPrompt(
+          "plots",
+          [[1, 2]],
+          ["X", "Y"]
+        );
+        expect(prompt).toContain("Value Connections (Real Blocks)");
+        expect(prompt).toMatch(/inputs.*INPUT_NAME.*block/);
+        expect(prompt).toContain("math_number");
+      });
+
+      it("should no longer instruct the model to emit shadow values for every input", () => {
+        const prompt = AIContextManager.getSystemPrompt(
+          "plots",
+          [[1, 2]],
+          ["X", "Y"]
+        );
+        expect(prompt).not.toContain("Value Connections (Shadow Blocks)");
+        expect(prompt).not.toContain("for \"text\" or \"math_number\" values");
+      });
+
+      it("should include a data_filter example that uses a real math_number block", () => {
+        const prompt = AIContextManager.getSystemPrompt(
+          "plots",
+          [[1, 2]],
+          ["X", "Y"]
+        );
+        expect(prompt).toContain("\"MATCH0\": { \"block\": {");
+        expect(prompt).toContain("\"type\": \"math_number\"");
+        expect(prompt).toContain("\"NUM\": 25");
+      });
+    });
   });
 });

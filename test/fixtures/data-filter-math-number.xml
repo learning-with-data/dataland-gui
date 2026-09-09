@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="event_onprojectstart" id="hat_start" x="10" y="10">
+    <next>
+      <block type="data_filter" id="block_4" x="488" y="790">
+        <mutation hasAdditionalCondition="false"></mutation>
+        <field name="COLUMN0">ZIP Code</field>
+        <field name="COMPARISON_OPERATOR0">eq</field>
+        <value name="MATCH0">
+          <block type="math_number" id="block_4a">
+            <field name="NUM">98103</field>
+          </block>
+        </value>
+      </block>
+    </next>
+  </block>
+</xml>

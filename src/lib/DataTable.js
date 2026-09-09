@@ -165,6 +165,34 @@ class DataTable {
   }
 
   pushFilter(filter) {
+    // A filter value may arrive as a number (a real math_number block evaluated
+    // by the interpreter) or as a string (a text/shadow block, or a math_number
+    // whose field holds text — the user can type anything into it, since the
+    // block language is type-agnostic and the user shouldn't need to know
+    // whether a column is numeric). A column may likewise hold numbers or
+    // numeric strings.
+    //
+    // To keep the comparison "just working" across these combinations, eq/neq
+    // compare *numerically* whenever BOTH the cell and the test value look
+    // numeric, and fall back to *string* comparison otherwise. This means:
+    //   - 98103 (number)  matches "98103" (string)   (numeric)
+    //   - "01234" (string) matches 1234 (number)      (both numeric -> 1234 === 1234)
+    //
+    // The leading-zero case is intentional: "01234" and 1234 are the same value
+    // with different formatting (e.g. a US ZIP code), so they match. A purely
+    // string comparison would fail here, and a coercion that always produced a
+    // number would break genuine text columns. Comparing as numbers only when
+    // both sides are numeric sidesteps both problems.
+    //
+    // Note: gt/lt/gte/lte are inherently numeric operators, so they always
+    // coerce the test value to a number; a non-numeric test value there yields
+    // NaN and simply matches no row.
+    const looksNumeric = (v) =>
+      v !== null &&
+      v !== undefined &&
+      String(v).trim() !== "" &&
+      !Number.isNaN(Number(v));
+
     const data = this._dataList.last();
     const filteredData = data.filter((row) => {
       var expression = [];
@@ -176,25 +204,38 @@ class DataTable {
           var colName = condition[0];
           var comparison_operator = condition[1];
           var testValue = condition[2];
+          var cellValue = row[colName];
           switch (comparison_operator) {
             case "eq":
-              // TODO: This and "ne" will need to be more clever as 'match' will be a string
-              expression.push(row[colName] == testValue);
+              // Compare numerically when both sides are numeric (see method
+              // comment for the leading-zero rationale), else compare as
+              // strings so genuine text columns keep working.
+              expression.push(
+                looksNumeric(cellValue) && looksNumeric(testValue)
+                  ? Number(cellValue) === Number(testValue)
+                  : cellValue == testValue
+              );
               break;
             case "neq":
-              expression.push(row[colName] !== testValue);
+              // The inverse of eq: numeric comparison when both sides are
+              // numeric, string comparison otherwise.
+              expression.push(
+                looksNumeric(cellValue) && looksNumeric(testValue)
+                  ? Number(cellValue) !== Number(testValue)
+                  : cellValue != testValue
+              );
               break;
             case "gt":
-              expression.push(row[colName] > Number(testValue));
+              expression.push(Number(cellValue) > Number(testValue));
               break;
             case "lt":
-              expression.push(row[colName] < Number(testValue));
+              expression.push(Number(cellValue) < Number(testValue));
               break;
             case "gte":
-              expression.push(row[colName] >= Number(testValue));
+              expression.push(Number(cellValue) >= Number(testValue));
               break;
             case "lte":
-              expression.push(row[colName] <= Number(testValue));
+              expression.push(Number(cellValue) <= Number(testValue));
               break;
             default:
               console.warn(

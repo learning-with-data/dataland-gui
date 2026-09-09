@@ -23,6 +23,17 @@ class DataPrimTable {
     this.data_filter = (b) => this.primDataFilter(b);
     this.data_aggregate = (b) => this.primDataAggregate(b);
 
+    // Value blocks. The interpreter's real-value path (Thread.getBlockArg ->
+    // evalBlock) needs a primitive for each block type used as a value, but
+    // text/math_number are not core language primitives — they are utility
+    // blocks for supplying a value to an input. Without these, a real
+    // <block type="math_number"> inside a value input evaluates to
+    // undefined (the toolbox shadow path reads the field directly, which is
+    // why hand-dragged blocks worked but AI-generated blocks with real
+    // child blocks did not).
+    this.math_number = (b) => this.primMathNumber(b);
+    this.text = (b) => this.primText(b);
+
     this._data_restore = () => this._primDataRestore();
   }
 
@@ -102,6 +113,25 @@ class DataPrimTable {
 
     // Insert the content of the c-block
     block.thread.stack.push(block.statement);
+  }
+
+  // math_number uses a field_input (not field_number) so the user can type
+  // any value, including non-numeric text. When the content is numeric, emit a
+  // real number (what a number block ought to produce); otherwise pass the raw
+  // string through so text values like "cat" still work. Type-aware comparison
+  // at runtime (see DataTable.pushFilter) handles the rest.
+  primMathNumber(block) {
+    const value = block.thread.getBlockArg(block, "NUM");
+    if (value === undefined || value === null) return value;
+    const trimmed = String(value).trim();
+    if (trimmed !== "" && !Number.isNaN(Number(trimmed))) {
+      return Number(trimmed);
+    }
+    return value;
+  }
+
+  primText(block) {
+    return block.thread.getBlockArg(block, "TEXT");
   }
 
   _primDataRestore() {
